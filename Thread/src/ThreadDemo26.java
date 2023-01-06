@@ -2,7 +2,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 //这里直接使用方法获取的实例，成为“工厂方法”，这个类称为“工厂类”，这是一种设计模式“工厂模式”
 //工厂模式：使用普通方法代替构造方法，实例对象。可以弥补构造方法不能实现的功能。比如构造方法相同参数代表意义不同，无法构成构造方法重载，就可以使用普通方法来创建是实例
-//
 public class ThreadDemo26 {
     public static void main(String[] args) {
         //线程池里的线程都是前台线程，阻止进程的结束
