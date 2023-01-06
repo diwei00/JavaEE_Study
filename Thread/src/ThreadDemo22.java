@@ -53,54 +53,12 @@ class MyBlockingQueue {
 public class ThreadDemo22 {
     public static void main(String[] args) throws InterruptedException {
         MyBlockingQueue myBlockingQueue = new MyBlockingQueue();
-//        myBlockingQueue.put(1);
-//        myBlockingQueue.put(2);
-//        myBlockingQueue.put(3);
-//        System.out.println(myBlockingQueue.tack());
-//        System.out.println(myBlockingQueue.tack());
-//        System.out.println(myBlockingQueue.tack());
-//        myBlockingQueue.tack();
-        //生产者
-        Thread t1 = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                int count = 0;
-                while (true) {
-                    try {
-                        System.out.println("生产者：" + count);
-                        myBlockingQueue.put(count);
-                        Thread.sleep(100);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                    count++;
-                }
-            }
-        });
-        t1.start();
-        //消费者
-        Thread t2 = new Thread(new Runnable() {
-            @Override
-            public void run() {
-
-                while (true) {
-                    try {
-                        Integer tmp = myBlockingQueue.tack();
-                        System.out.println("消费者：" + tmp);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        });
-        t2.start();
-
-
-
-
-
+        myBlockingQueue.put(1);
+        myBlockingQueue.put(2);
+        myBlockingQueue.put(3);
+        System.out.println(myBlockingQueue.tack());
+        System.out.println(myBlockingQueue.tack());
+        System.out.println(myBlockingQueue.tack());
+        myBlockingQueue.tack();
     }
-
-
-
 }
