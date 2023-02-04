@@ -44,7 +44,7 @@ public class IODemo6 {
             }
 
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
         }
     }
 }

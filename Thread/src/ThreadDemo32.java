@@ -12,8 +12,8 @@ public class ThreadDemo32 {
         semaphore.acquire();
         semaphore.release();
         semaphore.acquire();
+        semaphore.acquire();
         //释放信号量（个数 +1），可以指定参数一次就释放多个
         //semaphore.release();
-
     }
 }

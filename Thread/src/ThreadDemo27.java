@@ -5,9 +5,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 //存在一些线程，处理任务
 //提交任务
 class MyThreadPool {
-
     private BlockingQueue<Runnable> queue = new LinkedBlockingQueue<>();
-
     //创建线程，处理任务
     public MyThreadPool(int n) {
         for(int i = 0; i < n; i++) {
@@ -28,8 +26,6 @@ class MyThreadPool {
     public void submit(Runnable take) throws InterruptedException {
         queue.put(take);
     }
-
-
 }
 public class ThreadDemo27 {
     public static void main(String[] args) throws InterruptedException {

@@ -40,8 +40,5 @@ public class IODemo1 {
         //返回file对象代表的目录下所有文件，以file对象表示
         File[] tmp2 = file.listFiles();
         System.out.println(tmp2.length);
-
-
     }
-
 }

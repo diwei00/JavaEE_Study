@@ -37,6 +37,5 @@ public class ThreadDemo31 {
         t1.join();
         t2.join();
         System.out.println(sum);
-
     }
 }

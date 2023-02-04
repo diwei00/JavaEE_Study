@@ -13,23 +13,19 @@ class MyTask implements Comparable<MyTask> {
     public long getTime() {
         return time;
     }
-
     public void run() {
         runnable.run();
     }
-
     @Override
     public int compareTo(MyTask o) {
         return (int) (this.time - o.time);
     }
 }
-
 class MyTimer {
-    //检查线程
+    //检测线程
     private Thread t = null;
     //存储任务
     private PriorityBlockingQueue<MyTask> priorityBlockingQueue = new PriorityBlockingQueue<>();
-
     public MyTimer() {
         t = new Thread(()-> {
                 while (true) {
@@ -58,7 +54,6 @@ class MyTimer {
         });
         t.start();
     }
-
     public void schedule(Runnable runnable, long time) {
         //时间转换
         MyTask myTask = new MyTask(runnable, System.currentTimeMillis() + time);
