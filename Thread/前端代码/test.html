@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- 基本文本框学习 -->
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>吴浩</title>
+</head>
+<body>
+    <!-- 单行文本框   密码文本框 -->
+    <input type="text">
+    <input type="password">
+    <div>
+        请选择性别：
+    </div>
+    <!-- 选择项  name值一样就会互斥 -->
+    <input type="radio" name="sex"> 男
+    <input type="radio" name="sex"> 女
+    <div>
+        大学生每天都干啥：
+    </div>
+    <!-- 多选项  checked设置默认选择项 -->
+    <input type="checkbox" checked> 吃饭
+    <input type="checkbox" > 睡觉
+    <input type="checkbox" > 学习
+    <!-- 按钮 value为按钮中显示的字符串 -->
+    <input type="button" value="我是个按钮">
+    <!-- 提交按钮，搭配from使用，触发from和服务器交互 -->
+    <input type="submit" value="按钮">
+    <!-- 文件选择框 -->
+    <input type="file">
+    <!-- 下拉菜单 -->
+    <select>
+        <option>北京</option>
+        <option>上海</option>
+        <option>广州</option>
+        <option>深圳</option>
+        <option>杭州</option>
+    </select>
+    <!-- 多行编辑框 -->
+    <textarea cols="30" rows="10"></textarea>
+
+    <label for="male">男</label> 
+    <input id="male" type="radio" name="sex">
+
+
+
+</body>
+</html>
