@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- css选择器学习 -->
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <!-- 使用link链接外部css文件 -->
+    <link rel="stylesheet" href="style.css">
+    <!-- 内部样式 -->
+    <style>
+        /* 标签选择器 */
+        p {
+            color: red;
+            font-size: 30px;
+        }
+        /* 类选择器 创建类，设置属性，然后标签里使用*/
+        /* 类和元素的对应都是多对多的关系 */
+        .one {
+            color: blue;
+        }
+        .two {
+            color: red;
+        }
+        .three {
+            font-size: 50px;
+        }
+        /* id选择器，使用# */
+        #oneDiv {
+            color: blue;
+            font-size: 20px;
+        }
+    </style>
+    <style>
+        /* 后代选择器，把多个基础的选择器组合一下*/
+        /* 找文件中所有ul下的li标签，li只要是ul的后代即可 */
+        ul li {
+            color: blue;
+            font-size: 60px;
+        }
+        /* 子选择器，把多个基础的选择器组合一下 */
+        /* 只找子元素，不找孙子元素 */
+        ol>li {
+            color: blueviolet;
+            font-size: 30px;
+        }
+        /* 并集选择器 */
+        /* 多组选择器应用了同样的样式 */
+        h3,h5 {
+            color: blue;
+            font-size: 20px;
+        }
+        .one1,.two2 {
+            font-size: 30px;
+        }
+    </style>
+    <style>
+        /* 伪类选择器 */
+        /* hover：鼠标悬停时的状态 */
+        /* active：鼠标按下时候的状态 */
+        #one:hover {
+            color: blueviolet;
+            font-size: 50px;
+        }
+        #one:active {
+            color: red;
+            font-size: 20px;
+        }
+    </style>
+</head>
+<body>
+    <!-- 内联样式 直接写到标签里，只对这个标签起作用-->
+    <p style="color: red; font-size: 50px;">
+        这是一个段落
+    </p>
+    <p>
+        这是另一个段落
+    </p>
+    <div class="one">
+        第一个
+    </div>
+    <!-- 标签使用类 -->
+    <div class="two three">
+        第二个
+    </div>
+    <!-- 声明这个标签的id，id不能重复，使用id选择器来设置 -->
+    <div id="oneDiv">
+        第三个
+    </div>
+    <ul>
+        <li>第一</li>
+        <li>第二</li>
+        <li>第三</li>
+    </ul>
+    <ol>
+        <li>第一</li>
+        <ul>
+            <li>kkkkk</li>
+        </ul>
+        <li>第二</li>
+        <li>第三</li>
+    </ol>
+    <h3>aaaaaa</h3>
+    <h5>bbbbbb</h5>
+    <a href="#" class="one1">链接</a>
+    <a href="#" class="two2">链接</a>
+    <div id="one">
+        哈哈哈哈哈
+    </div>
+</body>
+</html>
