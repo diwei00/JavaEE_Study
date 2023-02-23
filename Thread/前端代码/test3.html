@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>学习</title>
+    <style>
+        .one {
+            /* 设置字体大小，正方形边长为30px */
+            font-size: 30px;
+            /* 设置字体样式 */
+            font-family: 华文行楷;
+            /* 设置字体粗细，1 - 1000内 */
+            font-weight: 100;
+            /* 设置字体倾斜 */
+            font-style: italic;
+            /* 光的三原色：红绿蓝 */
+            /* 前端中为每个RGB分配一个字节，每个字节的范围：0 - 255 */
+            color: rgb(0, 0, 255);
+        }
+        .two {
+            font-size: 50px;
+            /* 十六进制表示 */
+            /* color: #ff00ff; */
+            /* AABBCC缩写形式，也可以直接使用单词表示 */
+            color: #f0f;
+
+        }
+        .three {
+           
+            color: rgb(0,0,255);
+            font-size: 50px;
+            /* 设置文本对齐方式 */
+            text-align: left;
+            /* 文本装饰，设置下划线之类的 */
+            /* underline：下划线  none：啥都没有，去掉自带的下划线 */
+            /* overline：上划线   line-through：删除线 */
+            text-decoration: line-through;
+            /* 设置缩进，首行缩进2个字 */
+            /* em：一个相对的量，字体设置多大，em就是多大（以文字尺寸为基础） */
+            /* 负数就是往左缩进 */
+            text-indent: 2em;
+            /* 行高：文字高度加行间距 */
+            line-height: 100px;
+            /* 背景颜色 */
+            background-color: #f0f;
+            /* 背景图片，默认是平铺的 */
+            background-image: url(狗狗.png);
+            /* 取消图片平铺 */
+            background-repeat: no-repeat;
+            /* 取消平铺图片出现在左上角，设置图片位置，（左右，上下）*/
+            /* top, left, right, bottom */
+            background-position:center center;
+            /* 坐标系，左上角为原点，高为Y，宽为X */
+            /* background-position: 10px 50px; */
+            /* 如果参数的两个值都是方位名词, 则前后顺序无关. (top left 和 left top 等效)
+               如果只指定了一个方位名词, 则第二个默认居中. (left 则意味着水平居中, top 意味着垂直居中. )
+               如果参数是精确值, 则的的第一个肯定是 x , 第二个肯定是 y. (100 200 意味着 x 为 100, y 为 200)
+               如果参数是精确值, 且只给了一个数值, 则该数值一定是 x 坐标, 另一个默认垂直居中.
+               如果参数是混合单位, 则第一个值一定为 x, 第二个值为 y 坐标. (100 center 表示横坐标为 100, 垂直居中) */
+
+            /* 设置图片尺寸 */
+            /* 可以填具体的数值: 如 40px 60px 表示宽度为 40px, 高度为 60px */
+            /* 也可以填百分比: 按照父元素的尺寸设置. */
+            /* contain：把图像图像扩展至最大尺寸，以使其宽度和高度完全适应内容区域. */
+            /* cover: 把背景图像扩展至足够大，以使背景图像完全覆盖背景区域。背景图像的某些部分也许无法显示在背景定位区域中。*/
+            background-size: auto;
+            
+
+
+        }
+    </style>
+</head>
+<body>
+    <div class="one">
+        哈哈哈哈
+    </div>
+    <div class="two">
+        啊啊啊啊啊
+    </div>
+    <div class="three">
+        哈哈哈哈哈哈
+    </div>
+    
+</body>
+</html>
