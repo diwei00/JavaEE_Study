@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>哈哈哈</title>
+    <style>
+        .one {
+            width: 300px;
+            height: 150px;
+            color: #f0f;
+            font-size: 50px;
+            background-color: orange;
+            text-align: center;
+            /* 圆角矩形 */
+            /* 值为内切圆半径，值越大，弧线越强烈 */
+            /* 圆形：让 border-radius 的值为正方形宽度的一半即可. */
+            /* 圆角矩形：让 border-radius 的值为矩形高度的一半即可 */
+            /* border-radius 是一个复合写法. 实际上可以针对四个角分别设置. */
+            border-radius: 20px;
+            /* 改变元素的显示模式 */
+            /* block：块级元素   inline：行内元素*/
+            /* 块级元素独占一行，行内元素不独占一行 */
+            /* 块级元素可以设置宽高, 行内元素不能设置宽高. */
+            /* 块级元素四个方向都能设置内外边距, 行内元素垂直方向不能设置. */
+            /* 块级元素比较正常，行内元素问题较大，存在一些特殊情况 */
+            display: block;
+            /* 盒子模型 */
+            /* 边框设置三元素：粗细，颜色，风格（注意三个要同时设置） */
+            /*  border： 10px blue dotted*/
+            /* 设置边框粗细 */
+            border-width: 10px;
+            /* 设置边框颜色 */
+            border-color: blue;
+            /* 设置边风格 */
+            /* 默认没边框. solid 实线边框 dashed 虚线边框 dotted 点线边框 */
+            border-style: dotted;
+            /* 设置四个方向的边框：border-top/bottom/left/right */
+            border-top: blueviolet;
+            /* 边框的设置会撑大盒子，这个设置就不会撑大盒子 */
+            box-sizing: border-box;
+            /* 内边距 */
+            /* 10px：上下左右 */
+            /* 10px 20px：上下10px，左右20px */
+            /* 10px 20px 30px 40px：上右下左（顺时针）*/
+            padding: 10px;
+            /* 外边距，和内边距使用类似 */
+            /* margin: 10px 20px; */
+            /* left和right都为auto浏览器自动调节 */
+            margin-left: auto;
+            margin-right: auto;
+
+        }
+    </style>
+</head>
+<body>
+    <div class="one">
+        哈哈哈哈哈
+    </div>
+    
+</body>
+</html>
