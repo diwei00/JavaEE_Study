@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>哈哈哈</title>
+    <style>
+        .one {
+            width: 100%;
+            height: 150px;
+            background-color: orange;
+            /* 开启弹性布局 */
+            /* 需要给元素的父元素设置 */
+            /* 此时不在是块元素或行内元素，而是弹性元素，遵守弹性布局，可以设置尺寸和边距 */
+            display: flex;
+            /* 设置这些元素的水平排列方式 */
+            justify-content: space-around;
+            /* 设置这些元素的垂直排列方式 */
+            align-items: center;
+        }
+        .two {
+            background-color:aqua;
+            width: 100px;
+        }
+    </style>
+</head>
+<body>
+    <div class="one">
+        <span class="two">1</span>
+        <span class="two">1</span>
+        <span class="two">1</span>
+    </div>
+    
+</body>
+</html>
