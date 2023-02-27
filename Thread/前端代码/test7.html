@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>js</title>
+    <!-- js -->
+    <!-- 内部式，写到script标签中，浏览器加载页面执行 -->
+    <script>
+        //浏览器出现弹框（模态对话框），会阻止用户操作页面其他部分
+        //alert("helo world");
+
+        //控制台打印字符串
+        console.log("hello")
+    </script>
+    <!-- 外部式，通过script标签引入js代码，引入的时候就会执行js代码 -->
+    <!-- <script src="add.js"></script> -->
+    <script>
+        // js中var的一些设定不符合常规编程语言，无脑使用let
+        // js定义变量不必写类型，变量的类型是通过变量的初始化确定的
+        // var a = 10;
+        // var a = 10;
+        let a = 10;
+        let b = 'hello';
+        let c = '10';
+        
+        console.log(a);
+        console.log(b);
+        //将10转换为字符串
+        console.log(a + b);
+        //将true转换为1
+        console.log(a + true);
+        //将true转换为字符串
+        console.log(b + true);
+        // ==触发隐式类型转换（true） ===不会触发隐式类型转换
+        console.log(a == c);
+        console.log(a === c);
+        //字符串长度
+        console.log(b.length);
+        //变量没有初始化，就是undefined类型
+        let e;
+        console.log(c + e);
+        //undefined类型和数字相加就是NAN，不是一个数字
+        console.log(e + a);
+        let f = null;
+        //null被转换0
+        console.log(f + a);
+        //null被转换为字符串
+        console.log(f + c);
+        {
+            //let设定符合常见编程语言
+            let d = 10;
+        }
+        
+        
+    </script>
+</head>
+<body>
+
+    <div>
+        哈哈哈哈哈
+    </div>
+    <!-- 行内式，js代码写到标签里面，点一下就执行 -->
+    <!-- <div onclick="alert('hello')">点一下</div> -->
+    
+</body>
+</html>
