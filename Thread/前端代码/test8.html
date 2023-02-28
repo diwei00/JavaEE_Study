@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DOM API</title>
+    <style>
+        .one {
+            font-size: 50px;
+            color: red;
+        }
+    </style>
+    <!-- DOM 文档对象模型 -->
+    <!-- 把html的每个标签，都是可以映射到js中一个对应的对象 -->
+    <!-- 标签上显示啥，都是可以通过js对象感知到 -->
+    <!-- js修改对象对应属性，能够影响到标签的显示 -->
+    
+</head>
+<body>
+    <div class="one">
+        啊哈哈哈哈哈
+    </div>
+    <div id="two">
+        hahah
+    </div>
+    <p>
+        <span>
+            <input type="text">
+        </span>
+    </p>
+    <script>
+        // document浏览器中的全局对象
+        // 任何一个页面都会有一个document对象
+        // 所有的 dom API都是通过document对象来展开的
+        // 如果有多个.one此时选中的是第一个，要想全部选中使用querySelectorAll（返回数组）
+        // 用选择器来选择具体标签
+        let elem = document.querySelector('.one')
+        //dir打印标签中的属性
+        console.dir(elem);
+        let elem2 = document.querySelector('#two');
+        console.log(elem2);
+        let elem3 = document.querySelector('p>span>input');
+        console.log(elem3);
+
+    </script>
+    
+</body>
+</html>
