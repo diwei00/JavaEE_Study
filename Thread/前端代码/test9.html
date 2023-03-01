@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Api</title>
+    <style>
+        .day {
+            background-color: aliceblue;
+            color: black;
+            height: 100px;
+            
+        }
+        .night {
+            background-color: black;
+            color: aliceblue;
+            height: 100px;
+        }
+    </style>
+    
+    
+</head>
+
+<body>
+    <div class="box">哈哈哈</div>
+    <div id="one" title="haha">哈哈哈哈哈哈</div>
+    <input type="text" id="two">
+    <button id="three">按钮</button>
+    <input type="password" id="four">
+    <button id="five">显示密码</button>
+    <div id="six" style="font-size: 20px;">哈哈</div>
+    <div class="day">hahah</div>
+    <button id="but">切换夜间模式</button>
+    <script>
+        //事件源
+        let div = document.querySelector('.box');
+        //鼠标点击事件   函数对事件进行处理
+        //innerHTML：获取到元素中的数据，可以进行修改
+        div.onclick = function() {
+            console.log(div.innerHTML);
+            div.innerHTML += 'a';
+        }
+
+        //获取修改元素属性
+        let div2 = document.querySelector('#one');
+        div2.onclick = function() {
+            //获取到标签属性
+            console.log(div2.id);
+            console.log(div2.title);
+            //修改元素属性
+            div2.title = 'aa';
+            console.log(div2.title);
+        }
+        //让数字加加
+        let button = document.querySelector('#three');
+        let div3 = document.querySelector('#two');
+        button.onclick = function() {
+            //value获取input标签里的内容(字符串)
+            let tmp = parseInt(div3.value);
+            tmp += 1;
+            div3.value = tmp;
+        }
+
+        //显示和隐藏密码
+        let but = document.querySelector('#five');
+        let input = document.querySelector('#four');
+        but.onclick = function() {
+            if(but.innerHTML == '显示密码') {
+                input.type = 'text';
+                but.innerHTML = '隐藏密码';
+            }else {
+                input.type = 'password';
+                but.innerHTML = '显示密码';
+
+            }
+        }
+
+        //修改内联样式
+        let div4 = document.querySelector('#six');
+        div4.onclick = function() {
+            //获取到内联css属性的字体大小(使用驼峰命名，对css名字进行修改)
+            console.log(div4.style.fontSize);
+            let tmp = (parseInt(div4.style.fontSize) + 5);
+            div4.style.fontSize = (tmp + 'px');
+
+        }
+
+        //修改元素应用的css类名
+        let div5 = document.querySelector('.day')
+        let tmp = document.querySelector('#but');
+        tmp.onclick = function() {
+            if(tmp.innerHTML == '切换夜间模式') {
+                //使用 className 获取到元素的类名，并且修改
+                div5.className = 'night';
+                tmp.innerHTML = '切换白天模式';
+            }else {
+                div5.className = 'day';
+                tmp.innerHTML = '切换夜间模式';
+            }
+        }
+
+
+    </script>
+
+    
+</body>
+</html>
