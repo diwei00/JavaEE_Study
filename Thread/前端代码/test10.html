@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>web api</title>
+</head>
+<body> 
+    <ul>
+        <li>11</li>
+        <li>22</li>
+        <li>33</li>
+    </ul>
+    <ol>
+        <li>11</li>
+        <li>22</li>
+    </ol>
+    <script>
+        //创建节点
+        let input = document.createElement('input');
+        input.value = 'hah';
+        //选中元素
+        let div = document.querySelector('ul');
+        //添加到dom树中。
+        //appendChild末尾添加  insertBefore把元素添加到指定元素前面（中间位置插入）
+        div.appendChild(input)
+
+        let ol = document.querySelector('ol');
+        for(let i = 3; i < 10; i++) {
+            //创建元素
+            let li = document.createElement('li');
+            li.innerHTML = i + '' + i;
+            //添加元素到dom树中
+            ol.appendChild(li);
+
+        }
+
+        //删除33这个元素
+        //选中ol下所有li标签，返回的是数组
+        let toDelete = document.querySelectorAll('ol>li')[2];
+        console.log(toDelete.innerHTML);
+        //parentElem.removeChild()删除选中的元素（父元素调用）
+        ol.removeChild(toDelete);
+
+    </script>
+
+</body>
+</html>
