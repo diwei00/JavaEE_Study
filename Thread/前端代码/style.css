@@ -1,0 +1,5 @@
+/* 外部样式  使用link进行关联 */
+p {
+    color: blue;
+    font-size: 50px;
+}
