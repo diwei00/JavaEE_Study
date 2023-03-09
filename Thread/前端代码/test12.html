@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>js ajax构造http请求</title>
+</head>
+<body>
+    <!-- 引入jquery -->
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+    <!-- ajax支持put delete等方法，可以灵活设置header和body -->
+    <!-- ajax为 异步 的发送http请求 -->
+    <!-- 执行发送请求之后，不必等待服务器的响应，代码继续往下执行 -->
+    <!-- 当响应回来之后，再由浏览器通知到代码中 -->
+    <script>
+        $.ajax({
+            type: 'get',
+            url: 'https://www.baidu.com?studentName=wuhaowuhao',
+            // success就声明了回调函数，当服务器返回相应浏览器就会触发该回调函数
+            // 正是这里的 回调函数 体现的ajax的异步
+            success: function(date) {
+                // date是响应的正文部分
+                console.log("当服务器返回的响应到达浏览器之后，浏览器触发回调，通知到代码中 ");
+            }
+        });
+        console.log("浏览器继续执行后续代码");
+    </script>
+</body>
+</html>
