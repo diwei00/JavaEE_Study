@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>测试</title>
+</head>
+<body>
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+    <script>
+        $.ajax({
+            type: 'get',
+            url: 'https://gatewayvip.kdgxyun.net/web/authmanage/auth/getUserInfo/1',
+            headers: {
+                // "Host": "gatewayvip.kdgxyun.net",
+                // "Connection": "keep-alive",
+                "Access-Control-Allow-Origin": "*",
+                "ACCESS_TOKEN": " eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0eXBlIjoiMSIsInVzZXJuYW1lIjoiMjAyMTk1MjczOTUwMjAwMzk3In0.DvHuKY0qZwjM9mzuKjfIW8--GyEt9Cg_kzHx0V5Vrto",
+                // "User-Agent": " Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/98.0.4758.102 Safari/537.36 MicroMessenger/7.0.20.1781(0x6700143B) NetType/WIFI MiniProgramEnv/Windows WindowsWechat/WMPF XWEB/6500",
+                "content-type": " application/x-www-form-urlencoded",
+                "Accept": " */*",
+                // "Sec-Fetch-Site": " same-origin",
+                // "Sec-Fetch-Mode": " cors",
+                // "Sec-Fetch-Dest": " empty",
+                // "Referer": " https://gatewayvip.kdgxyun.net/teaching/pages/timetable/index?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0eXBlIjoiMSIsInVzZXJuYW1lIjoiMjAyMTk1MjczOTUwMjAwMzk3In0.DvHuKY0qZwjM9mzuKjfIW8--GyEt9Cg_kzHx0V5Vrto&userType=1&mobileType=&thirdId=oQf0C40tML48-INMTfjXyfnZzNU0",
+                // "Accept-Encoding": " gzip, deflate, br",
+                "Accept-Language": " zh-CN,zh"
+            },
+            success: function(date) {
+                // date是响应的正文部分
+                console.log("当服务器返回的响应到达浏览器之后，浏览器触发回调，通知到代码中 ");
+                //打印json文件
+                console.log(date);
+                
+            }
+        });
+    </script>
+    
+</body>
+</html>
