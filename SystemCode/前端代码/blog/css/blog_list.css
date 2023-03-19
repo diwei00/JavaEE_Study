@@ -1,0 +1,52 @@
+/* 设置整个博客容器的样式 */
+.blog {
+    width: 100%;
+    padding: 20px;
+}
+.blog .title {
+    text-align: center;
+    font-size: 24px;
+    font-weight: 700;
+    padding: 10px;
+
+
+}
+.blog .date {
+    text-align: center;
+    color: rgb(15, 189, 114);
+    padding: 10px;
+}
+.blog .desc {
+    /* 缩进2个字 */
+    text-indent: 2em;
+} 
+.blog a {
+    /* 改为块元素 */
+    display: block;
+    height: 40px;
+    width: 120px;
+
+    /* 设置水平居中 */
+    margin-top: 20px;
+    margin-left: auto;
+    margin-right: auto;
+    /* 设置边框 */
+    border: 2px solid black;
+    /* 文字水平居中 */
+    text-align: center;
+    /* 文字垂直居中 */
+    line-height: 40px;
+    /* 去掉下划线 */
+    text-decoration: none;
+    color: black;
+    /* 圆角矩形 */
+    border-radius: 10px;
+
+    /* 给鼠标加个悬停过度按钮 */
+    transition: all 0.8s;
+}
+/* 鼠标到按钮上有一个变化 */
+.blog a:hover {
+    color: white;
+    background: #888;
+}
