@@ -1,0 +1,52 @@
+.blog-edit-container {
+    width: 1000px;
+    height: calc(100% - 50px);
+    margin: 0 auto;
+    
+}
+.blog-edit-container .title {
+    height: 50px;
+    /* 标题和按钮水平排列，使用弹性布局 */
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+}
+#title {
+    background-color: rgba(255, 255, 255, 0.7);
+    height: 40px;
+    width: 895px;
+    border: none;
+    padding-left: 10px;
+    font-size: 18px;
+    border-radius: 5px;
+
+    /* 去掉轮廓线，鼠标选中后的黑圈 */
+    outline: none;
+}
+/* 获得焦点 */
+/* 点击标题后，改变背景颜色 */
+#title:focus {
+    background-color: rgb(255, 255, 255);
+
+}
+#submit {
+    height: 40px;
+    width: 100px;
+    color: white;
+    background-color: orange;
+    border-radius: 5px;
+    border: none;
+}
+#submit:active {
+    background-color: #888;
+}
+#editor {
+    border-radius: 10px;
+    /* 这里虽然设置了透明，但由于里面的内容是不透明的，所以显示不出来 */
+    /* background-color: rgba(255, 255, 255, 0.7); */
+
+    /* 把背景和内容都设置为透明 */
+    opacity: 80%;
+
+}
