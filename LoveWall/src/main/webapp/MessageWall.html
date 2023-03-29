@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Love Wall</title>
+    <style>
+        /* 通配符选择器，选中页面所有元素 */
+        * {
+            /* 消除浏览器默认样式 */
+            padding: 0;
+            margin: 0;
+            /* 防止撑大盒子 */
+            box-sizing: border-box;
+        }
+        .container {
+            /* display: flex; */
+            width: 600px;
+            /* 外边距：垂直距离0，水平auto(居中) */
+            margin: 20px auto;
+        }
+        h1 {
+            text-align: center;
+        }
+        p {
+            text-align: center;
+            color: #666;
+            margin: 20px auto;
+        }
+        .row {
+            /* 开启弹性布局 */
+            display: flex;
+            height: 40px;
+            /* 水平方向居中 */
+            justify-content: center;
+            /* 垂直方向居中 */
+            align-items: center;
+        }
+        .row span {
+            width: 80px;
+        }
+        .row input {
+            width: 200px;
+            height: 30px;
+        }
+        button {
+            width: 280px;
+            height: 30px;
+            color: white;
+            background-color: orange;
+            /* 去掉边框 */
+            border: none;
+            /* 圆角矩形 */
+            border-radius: 5px;
+        }
+        /* 伪类选择器，鼠标按下时候的状态 */
+        button:active {
+            background-color: gray;
+        }
+
+        
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>表白墙</h1>
+        <p>输入后点击提交，会将信息显示在表格中</p>
+        <div class="row">
+            <span>谁：</span>
+            <input type="text">
+        </div>
+        <div class="row">
+            <span>对谁：</span>
+            <input type="text">
+        </div>
+        <div class="row">
+            <span>说：</span>
+            <input type="text">
+        </div>
+        <div class="row">
+            <button id="commit">提交</button>
+        </div>
+        <div class="row" id="rollback">
+            <button>撤销</button>
+        </div>
+    </div>
+    <!-- 引入jquery -->
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <script>
+        let container = document.querySelector('.container');
+        let inputs = document.querySelectorAll('input');
+        let commit = document.querySelector('#commit');
+        let rollback = document.querySelector('#rollback');
+        //按钮绑定点击事件
+        commit.onclick = function() {
+            let from = inputs[0].value;
+            let to = inputs[1].value;
+            let speak = inputs[2].value;
+            if(from == '' || to == '' || speak == '') {
+                return;
+            }
+
+            //创建div
+            let div = document.createElement('div');
+            //设置元素  所使用的类
+            div.innerHTML = from + '对' + to + '说：' + speak;
+            div.className = 'row';
+            //添加到dom树中
+            container.appendChild(div);
+
+            //清空input中内容
+            for(let input of inputs) {
+                input.value = '';
+            }
+
+            //发送post请求，提交数据
+            let body = {
+                "from": from,
+                "to": to,
+                "message": speak
+            };
+            //将js对象转换为json字符串
+            let strBody = JSON.stringify(body);
+            console.log("strBody: " + strBody);
+
+            $.ajax({
+                type: 'post',
+                url: 'message',
+                data: strBody,
+                contentType: "application/json; charset=uft8",
+                success: function(body) {
+                    console.log("数据发送成功");
+                }
+            });
+
+        }
+        rollback.onclick = function() {
+
+            //获取到所有row后，选中最后一个row删除
+            let rows = document.querySelectorAll('.row');
+            if(rows.length == 5) {
+                return;
+            }
+
+            let length = rows.length - 1;
+            container.removeChild(rows[length]);
+
+            //撤销发送请求，删除最后一条记录
+            $.ajax({
+                type: 'delete',
+                url: 'message',
+                success: function(body) {
+                    console.log("删除成功");
+                }
+            });
+
+        }
+
+        //页面加载的时候，发送get请求，获取所有数据
+        $.ajax({
+            type: 'get',
+            url: 'message',
+            success: function(body) {
+                //此处拿到的是js的对象数组
+                //jquery的ajax能够自动识别，将json字符串转换为对象数组
+                //遍历数组，把元素取出来，构造到页面中
+                let container = document.querySelector(".container");
+                for(let message of body) {
+                     //创建div
+                    let div = document.createElement('div');
+                    //设置元素  所使用的类
+                    div.innerHTML = message.from + '对' + message.to + '说：' + message.message;
+                    div.className = 'row';
+                    //添加到dom树中
+                    container.appendChild(div);
+                }
+            }
+        });
+
+    </script>
+    
+    
+</body>
+</html>
