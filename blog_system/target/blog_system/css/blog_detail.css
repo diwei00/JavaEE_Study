@@ -1,0 +1,15 @@
+.container-right .title {
+    text-align: center;
+    padding: 30px;
+    font-size: 28px;
+}
+.container-right .date {
+    color: rgb(15, 189, 114);
+    text-align: center;
+    padding: 10px;
+    font-size: 18px;
+}
+.container-right .content p {
+    text-indent: 2em;
+    padding: 10px 30px;
+}

@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>博客列表页</title>
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="css/blog_list.css">
+</head>
+<body>
+    <!-- 导航栏 -->
+    <div class="nav">
+        <img src="image/headPortrait.jpg" alt="头像">
+        <span class="title">我的博客系统</span>
+        <!-- 占位符，把后面a标签挤到后面去 -->
+        <div class="spacer"></div>
+
+        <a href="blog_list.html">主页</a>
+        <a href="blog_edit.html">写博客</a>
+        <a href="logout">注销</a>
+    </div>
+    <!-- 页面主体部分 -->
+    <div class="container">
+        <!-- 左侧部分 -->
+        <div class="container-left">
+            <div class="card">
+                <!-- 用户头像 -->
+                <img src="image/headPortrait2.png" alt="头像">
+                <!-- 用户名 -->
+                <h3></h3>
+                <a href="https://github.com/diwei00">github地址</a>
+                <div class="counter">
+                    <span>文章</span>
+                    <span>分类</span>
+                </div>
+                <div class="counter">
+                    <span id="count"></span>
+                    <span>1</span>
+                </div>
+            </div>
+
+        </div>
+        <!-- 右侧部分 -->
+        <div class="container-right">
+            <!-- 一篇博客 -->
+            <!-- <div class="blog"> -->
+                <!-- 博客标题 -->
+                <!-- <div class="title"> -->
+                    <!-- 我的第一篇博客 -->
+                <!-- </div> -->
+                <!-- 发布时间 -->
+                <!-- <div class="date"> -->
+                    <!-- 2023-3-1 -->
+                <!-- </div> -->
+                <!-- 内容摘要 -->
+                <!-- <div class="desc"> -->
+                    <!-- 我写的博客 Lorem ipsum dolor sit amet consectetur adipisicing elit. Harum vitae unde blanditiis repellendus? Fugiat incidunt provident odio dolor iste ratione minus ducimus? Nisi sint odio tempore praesentium est at amet? -->
+    
+                <!-- </div> -->
+                <!-- 查看全文按钮 -->
+                <!-- &gt;显示> -->
+                <!-- <a href="#">查看全文&gt;&gt;</a> -->
+            <!-- </div> -->
+        </div>
+    </div>
+    <!-- 引入jquery -->
+    <script src="./js/jquery.min.js"></script>
+    <script>
+        // 页面加载构造get请求，获取到博客数据页面
+        $.ajax({
+            type: 'get',
+            url: 'blog',
+            success: function(body) {
+                //响应数据为json字符串，jquery内置可以解析json字符串，解析为json对象数组
+                //直接遍历数组
+                let containerRight = document.querySelector('.container-right');
+                for(let blog of body) {
+                    // 构造页面内容
+                    // 构造blog
+                    let blogDiv = document.createElement('div');
+                    blogDiv.className = 'blog';
+                    //构造标题
+                    let titleDiv = document.createElement('div');
+                    titleDiv.className = 'title';
+                    titleDiv.innerHTML = blog.title;
+                    blogDiv.appendChild(titleDiv);
+                    // 构造发布时间
+                    let dateDiv = document.createElement('div');
+                    dateDiv.className = 'date';
+                    dateDiv.innerHTML = blog.postTime;
+                    blogDiv.appendChild(dateDiv);
+                    // 构造摘要
+                    let descDiv = document.createElement('div');
+                    descDiv.className = 'desc';
+                    descDiv.innerHTML = blog.content;
+                    blogDiv.appendChild(descDiv);
+                    // 构造查看全文按钮
+                    let a = document.createElement('a');
+                    a.innerHTML = '查看全文&gt;&gt;';
+                    // 点击之后跳转到详情页,为了让博客详情页确定是哪篇博客,吧blogId传过去
+                    a.href = 'blog_detail.html?blogId=' + blog.blogId;
+                    blogDiv.appendChild(a);
+
+
+                    // 将blogDiv添加到container-right父元素中
+                    containerRight.appendChild(blogDiv);
+
+                }
+            }
+        });
+        //判断用户是否登录请求，如果登录强制跳转到登录页面
+        function checkLogin() {
+            $.ajax({
+                type: 'get',
+                url: 'login',
+                success: function(body) {
+                    if(body.userId || body.userId > 0) {
+                        //登录成功
+                        console.log("登录成功");
+                        //把当前用户显示到界面上
+                        let h3 = document.querySelector('.container-left .card h3');
+                        h3.innerHTML = body.userName;
+
+                    }else {
+                        //当前未登录，强制跳转到登录页面
+                        location.assign("login.html");
+                    }
+                }
+            })
+
+        }
+        //调用函数
+        checkLogin();
+
+        //页面加载发起请求获取博客数量
+        function getCount() {
+            $.ajax({
+                type: 'get',
+                url: 'count',
+                success: function(body) {
+                    let count = document.querySelector('#count');
+                    count.innerHTML = body.count;
+                }
+
+            });
+        }
+        getCount();
+
+    </script>
+
+
+    
+</body>
+</html>

@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>博客详情页</title>
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="css/blog_detail.css">
+    <link rel="stylesheet" href="editor.md/css/editormd.min.css">
+</head>
+<body>
+     <!-- 导航栏 -->
+     <div class="nav">
+        <img src="image/headPortrait.jpg" alt="头像">
+        <span class="title">我的博客系统</span>
+        <!-- 占位符，把后面a标签挤到后面去 -->
+        <div class="spacer"></div>
+
+        <a href="" id="delete">删除博客</a>
+        <a href="blog_list.html">主页</a>
+        <a href="blog_edit.html">写博客</a>
+        <a href="logout">注销</a>
+    </div>
+    <!-- 页面主体部分 -->
+    <div class="container">
+        <!-- 左侧部分 -->
+        <div class="container-left">
+            <div class="card">
+                <!-- 用户头像 -->
+                <img src="image/headPortrait2.png" alt="头像">
+                <!-- 用户名 -->
+                <h3></h3>
+                <a href="https://github.com/diwei00">github地址</a>
+                <div class="counter">
+                    <span>文章</span>
+                    <span>分类</span>
+                </div>
+                <div class="counter">
+                    <span id="count"></span>
+                    <span>1</span>
+                </div>
+            </div>
+
+        </div>
+        <!-- 右侧部分 -->
+        <div class="container-right">
+            <!-- 博客标题 -->
+            <h3 class="title"></h3>
+            <!-- 发布时间 -->
+            <div class="date"></div>
+            <!-- 正文 -->
+            <!-- 改成id，为了搭配 editormd 进行格式转换 -->
+            <div id="content">
+                
+            </div>
+        </div>
+    </div>
+    <!-- 页面加载的时候发送请求，获取到具体博客数据 -->
+    <script src="./js/jquery.min.js"></script>
+    <!-- 这些依赖依赖于jquery，需要放在jquery加载之后 -->
+    <script src="editor.md/lib/marked.min.js"></script>
+    <script src="editor.md/lib/prettify.min.js"></script>
+    <script src="editor.md/editormd.js"></script>
+    <script>
+        $.ajax({
+            type: 'get',
+            url: 'blog' + location.search, // query string带上blogId（获取当前url中的query string）
+            success: function(body) {
+                // 处理响应，此处的body就是一篇博客的js对象（jquery自动解析）
+                //判断body，防止blog为null
+                if(body == null) {
+                    alert("当前" + location.search + "对应的博客不存在");
+                    return;
+                }
+                //设置标题
+                let divTitle = document.querySelector('.container-right .title');
+                divTitle.innerHTML = body.title;
+                //设置时间
+                let divDate = document.querySelector('.date');
+                divDate.innerHTML = body.postTime;
+                //设置正文
+                //这里得到的是markdown未渲染的数据，需要使用markdown进行渲染
+                editormd.markdownToHTML('content', {markdown: body.content});
+
+            }
+
+        });
+       //判断用户是否登录请求，如果登录强制跳转到登录页面
+       function checkLogin() {
+            $.ajax({
+                type: 'get',
+                url: 'login',
+                success: function(body) {
+                    if(body.userId || body.userId > 0) {
+                        //登录成功
+                        console.log("登录成功");
+                    }else {
+                        //当前未登录，强制跳转到登录页面
+                        location.assign("login.html");
+                    }
+                }
+            })
+
+        }
+        //调用函数
+        checkLogin();
+
+        //请求获取到博客作者，显示到界面上
+        function getAuthor() {
+            $.ajax({
+                type: 'get',
+                url: 'author' + location.search,
+                success: function(body) {
+                    //把user设置到界面上
+                    let h3 = document.querySelector('.container-left .card h3');
+                    h3.innerHTML = body.userName;
+                }
+            });
+        }
+        getAuthor();
+
+        //页面加载构造删除博客a标签中的href属性
+        let a = document.querySelector("#delete");
+        function constructHref() {
+            let path = "delete" + location.search;
+            a.href = path;
+        }
+        constructHref();
+
+        //页面加载发起请求获取当前作者博客数量
+        function getCountByUserId() {
+            $.ajax({
+                type: 'post',
+                url: 'count' + location.search,
+                success: function(body) {
+                    let count = document.querySelector('#count');
+                    count.innerHTML = body.count;
+                }
+
+            });
+        }
+        getCountByUserId();
+
+
+    </script>
+</body>
+</html>

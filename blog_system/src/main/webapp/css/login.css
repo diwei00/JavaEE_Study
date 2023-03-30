@@ -1,0 +1,57 @@
+.login-container {
+    width: 100%;
+    height: calc(100% - 50px);
+    
+    /* 为了使对话框垂直水平居中，使用弹性布局 */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+}
+.login-dialog {
+    width: 400px;
+    height: 330px;
+    background-color: rgba(255, 255, 288, 0.8);
+    border-radius: 10px;
+}
+.login-dialog h3 {
+    font-size: 30px;
+    text-align: center;
+    /* 顺时针设置位置 */
+    padding: 40px 0 35px 0;
+}
+.login-dialog .row {
+    height: 50px;
+    display: flex;
+    /* 相对父元素的位置 */
+    justify-content: center;
+    align-items: center;
+}
+.login-container .row span {
+    width: 80px;
+    font-size: 18px;
+}
+#username, #password {
+    width: 220px;
+    height: 40px;
+    border-radius: 5px;
+    /* 去掉边框 */
+    border: none;
+    /* 不靠左边框 */
+    padding-left: 5px;
+    font-size: 15px;
+    
+}
+#submit {
+    width: 300px;
+    height: 40px;
+    color: white;
+    background-color: orange;
+    border: none;
+    border-radius: 10px;
+    /* 外边距，往下挪 */
+    margin-top: 30px;
+}
+#submit:active {
+    background-color: #888;
+}

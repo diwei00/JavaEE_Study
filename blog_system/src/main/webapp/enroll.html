@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>注册</title>
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="css/enroll.css">
+</head>
+<body>
+     <!-- 导航栏 -->
+     <div class="nav">
+        <img src="image/headPortrait.jpg" alt="头像">
+        <span class="title">我的博客系统</span>
+        <!-- 占位符，把后面a标签挤到后面去 -->
+        <div class="spacer"></div>
+    </div>
+    <!-- 正文部分 -->
+    <!-- 贯穿整个页面的容器 -->
+    <div class="login-container">
+        <!-- 垂直水平居中的对话框 -->
+        <div class="login-dialog">
+            <!-- from表单发post请求 -->
+            
+            <h3>注册账户</h3>
+            <form action="enroll" method="post">
+                <div class="row">
+                    <span>请输入用户名</span>
+                    <input type="text" id="username" placeholder="手机号/邮箱" name="username">
+                </div>
+                <div class="row">
+                    <span>请输入密码</span>
+                    <input type="password" id="password" class="passBegin" name="passBegin">
+                </div>
+                <div class="row">
+                    <span>再次输入密码</span>
+                    <input type="password" id="password" class="passEnd" name="passEnd">
+                </div>
+                <div class="row">
+                    <input type="submit" value="注册" id="submit">
+                </div>
+            </form>
+            
+        </div>
+    </div>
+
+    
+</body>
+</html>
