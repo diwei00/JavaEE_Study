@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:content="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd">
+       <!--  将 bean（com.spring.demo.student）存到spring中，它的名字叫做 student  -->
+       <!--  存储到bean中需要明确是哪一个bean对象（使用包名 + 类名），确定存储到spring中的名字叫啥（id）  -->
+       <bean id="student" class="com.spring.demo.Student"></bean>
+
+       <bean id="stu" class="com.spring.demo.Student"></bean>
+       <bean id="teacher" class="com.spring.demo.Teacher"></bean>
+
+
+
+
+</beans>
