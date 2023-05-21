@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:content="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd">
+    <!--  为了提高spring效率，需要指定目录，它会在指定目录下查找带有5大类注解的类，将这些对象存储在spring中  -->
+    <!--  不会全盘扫描整个项目，会扫描指定目录下是所有子目录（递归）  -->
+    <content:component-scan base-package="com.spring.demo"></content:component-scan>
+
+</beans>
