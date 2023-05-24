@@ -1,0 +1,24 @@
+# 主配置文件（存放的是公共配置项）
+# 设置使用哪一个配置文件
+spring:
+  profiles:
+    active: test
+# 双引号是符合语义的，其他字符串所见即所得
+str1: 你\n好
+str2: '你\n好'
+str3: "你\n好"
+number: 10
+student:
+  id: 1
+  name: 张三
+  age: 18
+# 日志级别设置 root全局日志级别，下层具体的包下级别设置，只有大于等于该级别才会显示
+#logging:
+#  level:
+#    root: error
+#    com:
+#      example:
+#        demo:
+#          controller: error
+#          service: warn
+

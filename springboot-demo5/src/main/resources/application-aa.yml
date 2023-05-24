@@ -1,0 +1,9 @@
+server:
+  port: 9090
+spring:
+  datasource:
+    url: dbc:mysql://127.0.0.1:3306/testdb?characterEncoding=utf8
+    username: root
+    password: 123
+debug: true
+trace: true
