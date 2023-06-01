@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace：实现的接口 -->
+<mapper namespace="com.example.demo.mapper.ArticleMapper">
+    <!-- 多表联查，文章为主表   -->
+    <select id="getDetail" resultType="com.example.demo.entity.vo.ArticleInfoVO">
+        select a.*,u.username from articleinfo a
+        left join userinfo u on u.id=a.uid
+        where a.id=#{id}
+    </select>
+
+    <!--  查询作者的文章  -->
+    <select id="getListByUid" resultType="com.example.demo.entity.vo.ArticleInfoVO">
+        select a.*,u.username from articleinfo a
+        left join userinfo u on a.uid = u.id
+        where a.uid=#{uid}
+    </select>
+
+    <!-- <trim prefix="where" prefixOverrides="and">   -->
+    <!--  当trim中生成了代码，才会生成前缀和后缀。如果没有生成代码，则省略前缀和后缀  -->
+    <!-- <where>标签里如果有代码，就会生成where关键字，并且会自动去除 前缀 and，但是不会去除后缀   -->
+    <select id="getListByIdOrTitle" resultType="com.example.demo.entity.vo.ArticleInfoVO">
+        select * from articleinfo
+        <where>
+            <if test="id != null and id > 0">
+                id = #{id}
+            </if>
+            <if test="title != null and title != ''">
+                and title like concat('%', #{title}, '%')
+            </if>
+        </where>
+    </select>
+
+    <!--  <set>标签，如果标签里没有代码就会省略set关键字，否则生成set关键字，并且会自动去除 后缀“，”  -->
+    <update id="updateState">
+        update articleinfo
+        <set>
+            <if test="state != null and state >= 0">
+                state = #{state},
+            </if>
+            <if test="rcount != null and rcount >= 0">
+                rcount = #{rcount},
+            </if>
+        </set>
+        where id = 1
+    </update>
+
+    <!--  <foreach>标签，循环遍历，批量操作 -->
+    <!-- collection：要遍历的对象    item：遍历时的元素    open：前缀   close：后缀   separator：元素间的分隔符  -->
+    <!--  delete from articleinfo where id in ( ? , ? , ? )  -->
+    <delete id="delByIdList">
+        delete from articleinfo where id in
+        <foreach collection="idList" item="aid" open="(" close=")" separator=",">
+            #{aid}
+        </foreach>
+
+    </delete>
+
+
+
+
+
+</mapper>

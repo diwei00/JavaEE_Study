@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace：实现的接口 -->
+<mapper namespace="com.example.demo.mapper.UserMapper">
+    <!-- 处理数据库字段名和类属性名不一致   -->
+    <!-- 进行属性字段映射  property：属性   column：字段-->
+    <resultMap id="BaseMap" type="com.example.demo.entity.UserEntity">
+        <id property="id" column="id"></id>
+        <result property="username" column="username"></result>
+        <result property="pwd" column="password"></result>
+        <result property="img" column="photo"></result>
+        <result property="createtime" column="createtime"></result>
+    </resultMap>
+    <!--  mybatis使用xml方式实现接口  -->
+    <!--  id：方法名   resultType：返回值（需要写具体路径）  -->
+    <select id="getAll" resultType="com.example.demo.entity.UserEntity">
+        select * from userinfo
+    </select>
+
+    <!-- 参数传递 ${uid} 接收为直接替换    #{username} 预处理（占位符）以字符串式替换  -->
+    <!--  sql注入：错误的sql缺查出正确的数据。  -->
+    <!-- $ 直接替换，可能导致sql的原意会改变，产生sql注入。当值为int或sql关键字是没问题，都需要校验   -->
+    <!-- # 预处理，不会产生sql注入。这里的数据类型是已经确认了的，只需要填充即可。   -->
+    <select id="getUserById" resultType="com.example.demo.entity.UserEntity">
+        select * from userinfo where id = ${uid}
+    </select>
+
+    <select id="getUserByName" resultType="com.example.demo.entity.UserEntity">
+        select * from userinfo where username = #{username}
+    </select>
+
+    <!-- 当传递对象的时候，这里直接使用对象中的属性即可   -->
+    <!--  测试sql注入  -->
+    <select id="login" resultType="com.example.demo.entity.UserEntity">
+        select * from userinfo where username = '${username}' and password = '${password}'
+    </select>
+
+    <!-- 直接传sql关键字  -->
+    <select id="getAllByIdOrder" resultType="com.example.demo.entity.UserEntity">
+        select * from userinfo order by id ${order}
+    </select>
+
+    <update id="updatePassword">
+        update userinfo set password = #{newPassword} where id = #{id} and password = #{password}
+    </update>
+
+    <delete id="deleteById">
+        delete from userinfo where id = #{id}
+    </delete>
+
+    <insert id="addUser">
+        insert into userinfo (username, password) values(#{username}, #{password})
+    </insert>
+
+    <!-- 添加数据，并且返回添加后的id   -->
+    <!-- useGeneratedKeys：是否获取添加后的id  -->
+    <!-- keyProperty：获取后赋值到对象的这个属性中   -->
+    <insert id="addUserGetId" useGeneratedKeys="true" keyProperty="id">
+        insert into userinfo (username, password) values(#{username}, #{password})
+    </insert>
+
+    <!-- 模糊查询，使用concat进行字符串拼接   -->
+    <!-- 数据库字段名和类属性名不一致，可以使用resultMap进行属性字段映射，也可以使用as其别名   -->
+    <select id="getListByName" resultType="com.example.demo.entity.UserEntity">
+        select id,username,password as pwd from userinfo where username like concat('%', #{username}, '%')
+    </select>
+
+    <!-- 动态sql，为了保证数据一致性，sql根据业务动态变化（使用默认值）   -->
+    <!--  if标签 test中就是条件  -->
+    <insert id="addUser2">
+        insert into userinfo(username,
+        <if test="img != null and img != ''">
+            photo,
+        </if>
+        password) values(#{username},
+        <if test="img != null and img != ''">
+            #{img},
+        </if>
+        #{pwd})
+    </insert>
+
+    <!-- trim标签 prefix：头添加  suffix：尾添加  prefixOverrides：头删除  suffixOverrides：尾删除  -->
+    <insert id="addUser3">
+        insert into userinfo
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="username != null and username != ''">
+                username,
+            </if>
+            <if test="img != null and img != ''">
+                photo,
+            </if>
+            <if test="pwd != null and pwd != ''">
+                password,
+            </if>
+        </trim>
+        values
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="username != null and username != ''">
+                #{username},
+            </if>
+            <if test="img != null and img != ''">
+                #{img},
+            </if>
+            <if test="pwd != null and pwd != ''">
+                #{pwd},
+            </if>
+        </trim>
+    </insert>
+
+
+</mapper>
