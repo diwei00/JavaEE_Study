@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>博客大厅</title>
+    <link rel="stylesheet" href="css/list.css">
+    <link rel="stylesheet" href="css/blog_list.css">
+    <link rel="stylesheet" href="css/conmmon.css">
+
+    <script src="js/logout.js"></script>
+    <script src="js/login.js"></script>
+    <script src="js/jquery.min.js"></script>
+    <script src="js/urltools.js"></script>
+    <style>
+        
+        .nav{
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 50px;
+        }
+        .container{
+            padding-top: 50px;
+            height: auto;
+        }
+        .container-right{
+            width: auto;
+        }
+        .blog-pagnation-wrapper{
+            height: 40px;
+            margin: 16px 0;
+            text-align: center;
+        }
+        .blog-pagnation-item{
+            display: inline-block;
+            padding: 8px;
+            border: 1px solid #d0d0d5;
+            color: #333;
+        }
+        .blog-pagnation-item:hover{
+            background: #4e4eeb;
+            color: #fff;
+        }
+        .blog-pagnation-item.actvie{
+            background: #4e4eeb;
+            color: #fff;
+        }
+
+    </style>
+</head>
+
+<body>
+    <!-- 导航栏 -->
+    <div class="nav">
+        <img src="img/head.jpg" alt="">
+        <span class="title">我的博客系统</span>
+        <!-- 用来占据中间位置 -->
+        <span class="spacer"></span>
+        <span id="userElement" style="display: none;">
+            <a href="myblog_list.html">内容管理</a>
+            <a href="blog_add.html">写博客</a>
+            <a href="javascript:logout()">注销</a>
+        </span>
+        
+        
+        <span id="loginElement">
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <a href="login.html">登陆</a>
+        </span>
+        
+    </div>
+    <!-- 版心 -->
+    <div class="container">
+        <!-- 右侧内容详情 -->
+        <div class="container-right" style="width: 100%;">
+            <!-- 每一篇博客包含标题, 摘要, 时间 -->
+           <div id="artlist">
+
+           </div>
+           
+            <hr>
+            <div class="blog-pagnation-wrapper" id="pageDiv" style="display: none;">
+                <button class="blog-pagnation-item" onclick="doFirst()">首页</button> 
+                <button class="blog-pagnation-item" onclick="doPrev()">上一页</button>  
+                <button class="blog-pagnation-item" onclick="doNext()">下一页</button>
+                <button class="blog-pagnation-item" onclick="doLast()">末页</button>
+            </div>
+        </div>
+    </div>
+    <script>
+        // 分页默认值
+        var pageSize = 4;
+        var pageIndex = 1;
+        // 总页数
+        var pageCount = 1;
+        // 判断用户登录，控制状态栏显示
+        isLogin();
+
+        // 初始化参数
+        function pageInit() {
+            var paramPageSize = getParamByKey("pageSzie");
+            var paramPageIndex = getParamByKey("pageIndex");
+            if(paramPageSize != null) {
+                pageSize = paramPageSize;
+            }
+            if(paramPageIndex != null) {
+                pageIndex = paramPageIndex
+            }
+            doAjax();
+        }
+        pageInit();
+        // 点击首页
+        function doFirst() {
+            if(pageIndex <= 1) {
+                alert("已经在首页啦！");
+                return false;
+            }
+            pageIndex = 1;
+            location.href = "blog_list.html?pageIndex=" + pageIndex + "&pageSize=" + pageSize;
+        }
+        // 点击上一页
+        function doPrev() {
+            if(pageIndex <= 1) {
+                alert("已经在首页啦！");
+                return false;
+            }
+            pageIndex--;
+            location.href = "blog_list.html?pageIndex=" + pageIndex + "&pageSize=" + pageSize;
+        }
+        // 点击下一页
+        function doNext() {
+            if(pageIndex >= pageCount) {
+                alert("已经在末页啦！");
+                return false;
+            }
+            pageIndex++;
+            location.href = "blog_list.html?pageIndex=" + pageIndex + "&pageSize=" + pageSize;
+        }
+        // 点击末页
+        function doLast() {
+            if(pageIndex >= pageCount) {
+                alert("已经在末页啦！");
+                return false;
+            }
+            location.href = "blog_list.html?pageIndex=" + pageCount + "&pageSize=" + pageSize;
+
+        }
+
+        // 请求后端，得到数据展示列表
+        function doAjax() {
+            jQuery.ajax({
+                url: "/art/getlistbypage",
+                type: "POST",
+                data: {
+                    "pageSize": pageSize,
+                    "pageIndex": pageIndex
+                },
+                success:function(res) {
+                    if(res.code == 200 && res.data.length > 0) {
+                        // 从后端拿到数据，进行拼接
+                        var artListHtml = "";
+                        for(var i = 0; i < res.data.length; i++) {
+                            var item = res.data[i];
+                            artListHtml += '<div class="blog" >';
+                            artListHtml += '<div class="title">' + item.title + '</div>';
+                            artListHtml += '<div class="date">' + item.createtime + '</div>';
+                            artListHtml += '<div class="desc">' + item.content + '</div>';
+                            artListHtml += '<a href="blog_content.html?id=' + item.id + '" class="detail">查看全文 &gt;&gt;</a>';
+                            artListHtml += '</div>';
+                        }
+                        jQuery("#artlist").html(artListHtml);
+                        jQuery("#pageDiv").show();
+
+                    }else {
+                        // 服务器没有文章
+                        jQuery("#pageDiv").hide();
+                        jQuery("#artlist").html("<h2 style='margin-left:100px;margin-top:100px;'>暂无文章</h2>");
+                    }
+
+                }
+            });
+        }
+        // 计算总页数 
+        function getPageCount() {
+            jQuery.ajax({
+                url: "/art/getcount",
+                type: "POST",
+                data: {},
+                success:function(res) {
+                    if(res.code == 200 && res.data > 0) {
+                        // 计算总页数
+                        pageCount = Math.ceil(res.data / pageSize);
+                    }
+                }
+
+            });
+        }
+        getPageCount();
+
+    </script>
+</body>
+
+</html>

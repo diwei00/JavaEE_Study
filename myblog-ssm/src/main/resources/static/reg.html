@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>注册页面</title>
+    <link rel="stylesheet" href="css/conmmon.css">
+    <link rel="stylesheet" href="css/login.css">
+    <!-- 引入 jquery -->
+    <script src="./js/jquery.min.js"></script>
+    <style>
+        .login-dialog {
+            width: 400px;
+            height: 500px;
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <div class="nav">
+        <img src="img/head.jpg" alt="">
+        <span class="title">我的博客系统</span>
+        <!-- 用来占据中间位置 -->
+        <span class="spacer"></span>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <a href="blog_list.html">博客大厅</a>
+        <a href="login.html">登陆</a>
+        <!-- <a href="#">注销</a> -->
+    </div>
+    <!-- 版心 -->
+    <div class="login-container">
+        <!-- 中间的注册框 -->
+        <div class="login-dialog">
+            <h3>注册</h3>
+            <div class="row">
+                <span>用户名</span>
+                <input type="text" id="username">
+            </div>
+            <div class="row">
+                <span>密码</span>
+                <input type="password" id="password">
+            </div>
+            <div class="row">
+                <span>确认密码</span>
+                <input type="password" id="password2">
+            </div>
+            <div class="row">
+                <span>邮箱地址</span>
+                <input type="text" id="email">
+            </div>
+            <div class="row">
+                <span>验证码</span>
+                <input type="text" id="code">
+            </div>
+            <div class="row" style="padding-top: 10px">
+                <button id="getCode" onclick="mycode()">获取验证码</button>
+            </div>
+            <div class="row" style="padding-top: 20px">
+                <button id="submit" onclick="mysub()">注册</button>
+            </div>
+        </div>
+    </div>
+    <script>
+        var code;
+        function mysub() {
+            // 得到输入组件
+            var username = jQuery("#username");
+            var password = jQuery("#password");
+            var password2 = jQuery("#password2");
+            var email = jQuery("#email");
+            var getCode = jQuery("#code");
+
+            // 非空判断
+            if(username.val().trim() == "") {
+                alert("请先输入用户名！")
+                // 聚焦光标
+                username.focus();
+                return false;
+            }
+            if(password.val().trim() == "") {
+                alert("请先输入密码！");
+                password.focus();
+                return false;
+            }
+            if(password2.val().trim() == "") {
+                alert("请先输入确认密码！");
+                password2.focus();
+                return false;
+            }
+            if(password.val() != password2.val()) {
+                alert("两次输入密码不一致，请先检查！");
+                password.focus();
+                return false;
+            }
+            if(email.val().trim() == "") {
+                alert("请先输入邮箱！");
+                email.focus();
+                return false;
+            }
+            if(getCode.val().trim() == "") {
+                alert("请先输入验证码！");
+                getCode.focus();
+                return false;
+            }
+            // 判断验证码是否正确
+            if(getCode.val() != code) {
+                alert("验证码错误！");
+                getCode.val("");
+                getCode.focus();
+                return false;
+            }
+            // 防止用户注册多次点击注册按钮（后端会直接进行数据库操作），先禁用提交按钮
+            jQuery("#submit").attr("disabled", "disabled");
+
+            // 将当前页面数据提交到后端
+            jQuery.ajax({
+                url: "/user/reg",
+                type: "POST",
+                data: {
+                    "username": username.val().trim(),
+                    "password": password.val().trim(),
+                    "email": email.val().trim()
+                },
+                success:function(res) {
+                    // 根据后端返回的结果进行判断，再处理后续流程
+                    if(res.code == 200 && res.data == 1) {
+                        // 注册成功
+                        alert("注册成功！");
+                        location.href = "login.html";
+                    }else {
+                        // 注册失败
+                        alert("抱歉操作失败！" + res.msg);
+                        // 取消禁用
+                        jQuery("#submit").removeAttr("disabled");
+                    }
+                }
+
+            });
+        }
+        function mycode() {
+            // 得到邮箱地址
+            var email = jQuery("#email");
+            if(email.val() == "") {
+                alert("请先输入邮箱！");
+                email.focus();
+                return false;
+            }
+            if(!email.val().includes("@")) {
+                alert("邮箱格式错误！");
+                email.val("");
+                email.focus();
+                return false;
+            }
+            jQuery.ajax({
+                url: "/user/email",
+                type: "POST",
+                data: {
+                    "emailCode": email.val()
+                },
+                success:function(res) {
+                    if(res.code == 200 && res.data != null) {
+                        // 得到验证码，设置到变量code中
+                        code = res.data;
+                        alert("验证码已成功发送！");
+                    }else {
+                        alert("操作失败！" + res.msg);
+                    }
+                }
+            });
+        }
+
+    </script>
+</body>
+
+</html>

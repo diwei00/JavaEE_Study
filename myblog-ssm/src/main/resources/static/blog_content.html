@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>博客正文</title>
+    <link rel="stylesheet" href="css/conmmon.css">
+    <link rel="stylesheet" href="css/blog_content.css">
+    <link rel="stylesheet" href="editor.md/css/editormd.preview.min.css" />
+    <script src="js/jquery.min.js"></script>
+    <script src="editor.md/editormd.js"></script>
+    <script src="editor.md/lib/marked.min.js"></script>
+    <script src="editor.md/lib/prettify.min.js"></script>
+    <script src="js/jquery.min.js"></script>
+    <script src="js/urltools.js"></script>
+    <script src="js/logout.js"></script>
+    <script src="js/login.js"></script>
+</head>
+
+<body>
+    <style>
+        .container {
+            /* 使用 calc 计算高度 */
+            height: calc(100% - 50px);
+            /* 设置版心宽度 */
+            width: 1300px;
+            /* 水平居中 */
+            margin: 0 auto;
+            /* 使用弹性布局 */
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+        .container-left {
+            height: 100%;
+            width: 200px;
+            // 加上滚动条
+            overflow: auto;
+        }
+        .container-center {
+            height: 85%;
+            /* 和左侧部分中间留出 5px 间隙 */
+            width: 790px;
+            /* 如果内容溢出就自动加上滚动条 */
+            overflow: auto;
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 10px;
+        }
+        .text{
+            position: absolute;
+            top: 847px;
+            height: 15%;
+        }
+        #input{
+            width: 790px;
+            height: 80%;
+            border-radius: 10px;
+            background-color: rgba(255, 255, 255, 0.8);
+            border: none;
+            outline: none;
+            font-size: 16px;
+            padding: 12px 12px 12px 12px;
+
+        }
+        .sub button{
+            width: 790px;
+            height: 25px;
+            background-color: orange;
+            border-radius: 10px;
+            font-size: 16px;
+            border: none;
+        }
+
+        .container-right {
+            height: 100%;
+            /* 和左侧部分中间留出 5px 间隙 */
+            width: 300px;
+            /* 如果内容溢出就自动加上滚动条 */
+            overflow: auto;
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 10px;
+        }
+        .comment {
+            height: 80px;
+            width: 300px;
+            padding-left: 10px;
+
+        }
+        #submit:active {
+            background-color: #888;
+        }
+        #data {
+            color: #008000;
+            margin-top: 10px;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+    </style>
+    <!-- 导航栏 -->
+    <div class="nav">
+        <img src="img/head.jpg" alt="">
+        <span class="title">我的博客系统</span>
+        <!-- 用来占据中间位置 -->
+        <span class="spacer"></span>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <a href="blog_list.html">博客大厅</a>
+
+        <span id="userElement" style="display: none;">
+            <a href="blog_add.html">写博客</a>
+            <a href="javascript:logout()">注销</a>
+        </span>
+
+        <a href="login.html" id="loginElement">登陆</a>
+
+
+    </div>
+    <!-- 版心 -->
+    <div class="container">
+        <!-- 左侧个人信息 -->
+        <div class="container-left">
+            <div class="card">
+                <img src="img/headPortrait.png" class="avtar" alt="">
+                <h3 id="author2"></h3>
+                <a href="https://www.github.com">github 地址</a>
+                <div class="counter">
+                    <span>文章</span>
+                    <span>分类</span>
+                </div>
+                <div class="counter">
+                    <span id="artCount"></span>
+                    <span>1</span>
+                </div>
+            </div>
+        </div>
+        <!-- 右侧内容详情 -->
+        <div class="container-center">
+            <div class="blog-content">
+                <!-- 博客标题 -->
+                <h3 id="title">我的第一篇博客</h3>
+                <div class="date">
+                    作者:
+                    <span id="author"></span> &nbsp;&nbsp;&nbsp;
+                    阅读量:
+                    <span id="rcount"></span> &nbsp;&nbsp;&nbsp;
+                    发布时间:
+                    <span id="createtime"></span> &nbsp;&nbsp;&nbsp;
+                </div>
+                <!-- 博客正文 -->
+                <div id="editorDiv">
+
+                </div>
+            </div>
+            <div class="text">
+<!--                <input type="text" id="input" placeholder="在这里输入评论，100字以内哦！">-->
+                <textarea name="message" id="input" placeholder="在这里输入评论，100字以内哦！"></textarea>
+                <div class="sub">
+                    <button id="submit" onclick="getComment()">提交</button>
+                </div>
+            </div>
+        </div>
+        <div class="container-right">
+
+
+        </div>
+    </div>
+    <script type="text/javascript">
+            var editormd;
+            var id;
+            function initEdit(md){
+                editormd = editormd.markdownToHTML("editorDiv", {
+                markdown : md, // Also, you can dynamic set Markdown text
+                // htmlDecode : true,  // Enable / disable HTML tag encode.
+                // htmlDecode : "style,script,iframe",  // Note: If enabled, you should filter some dangerous HTML tags for website security.
+                });
+            }
+            function getDetail() {
+                id = getParamByKey("id");
+                if(id == null || id == undefined || id <= 0) {
+                    alert("非法参数！");
+                    return false;
+                }
+                jQuery.ajax({
+                    url: "/art/getdetail",
+                    type: "POST",
+                    data: {
+                        "id": id
+                    },
+                    success:function(res) {
+                        if(res.code == 200 && res.data != null && res.data.id > 0) {
+                            // 获取到正文，设置到页面
+                            jQuery("#title").html(res.data.title);
+                            jQuery("#author").html(res.data.username);
+                            jQuery("#author2").html(res.data.username);
+                            jQuery("#rcount").html(res.data.rcount);
+                            jQuery("#createtime").html(res.data.createtime);
+                            initEdit(res.data.content);
+                        }else {
+                            alert("操作失败，请重试！" + res.msg);
+                        }
+
+                    }
+                });
+            }
+            // 页面加载获取正文数据
+            getDetail();
+
+            function increaseRCount() {
+                jQuery.ajax({
+                    url: "/art/increasercount",
+                    type: "POST",
+                    data: {
+                        "id": id
+                    },
+                    success:function(res) {}
+                });
+
+            }
+            increaseRCount();
+            // 判断用户登录，控制状态栏显示
+            isLogin();
+            function getMyArtCount() {
+                jQuery.ajax({
+                    url: "/art/count",
+                    type: "POST",
+                    data:{},
+                    success:function(res) {
+                        // 登录
+                        if(res.code == 200 && res.data >= 0) {
+
+                            jQuery("#artCount").html(res.data);
+                        }else {
+                            // 未登录默认显示2
+                            jQuery("#artCount").html(2);
+
+                        }
+                    }
+                });
+            }
+            getMyArtCount();
+            function getComment(){
+                var input = jQuery("#input");
+                // 非空判断
+                if(input.val() == "") {
+                    alert("请先输入评论正文！");
+                    input.focus();
+                    return false;
+                }
+                // 提交数据到后端
+                jQuery.ajax({
+                   url: "/art/comment",
+                    type: "POST",
+                    data: {
+                        "aid": id,
+                        "content": input.val()
+                    },
+                    success:function (res) {
+                       if(res.code == 200 && res.data == 1) {
+                           // 更新评论区
+                           updateComment();
+                           // 刷新页面
+                           location.href = location.href;
+                       }else {
+                           if(res.code == -2) {
+                               alert(res.msg);
+                               location.href = "login.html";
+                           }else {
+                               alert("操作失败！" + res.msg);
+                           }
+
+                       }
+                    }
+
+                });
+            }
+            function updateComment() {
+
+                // 请求后端得到所用评论
+                jQuery.ajax({
+                   url: "/art/get_comment",
+                   type: "POST",
+                   data: {
+                       "aid": id
+                   },
+                   success:function (res) {
+                       if(res.code == 200 && res.data.length > 0) {
+                            var artHtml = "";
+                            for(var i = 0; i < res.data.length; i++) {
+                                var item = res.data[i];
+                                artHtml += '<div id="data">' + item.createtime + '</div>'
+                                artHtml += '<div class="comment">';
+                                artHtml += item.content;
+                                artHtml += '</div>';
+                                artHtml += '<hr>';
+                            }
+                           jQuery(".container-right").html(artHtml);
+                       }else {
+                           jQuery(".container-right").html("<h2 style='margin-left:100px;margin-top:60px;'>暂无评论</h2>");
+                       }
+                   }
+                });
+            }
+            updateComment();
+    </script>
+</body>
+
+</html>
