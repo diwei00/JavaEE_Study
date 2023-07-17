@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>测试websocket</title>
+</head>
+<body>
+
+    <input type="text" id="message">
+    <button id="send">发送</button>
+    <script>
+        // 创建一个websocket实例，并且绑定路由
+        // 客户端创建实例的时候，请求后端websocket接口，进行协议升级
+        let websocket = new WebSocket("ws://127.0.0.1:8080/test");
+
+        websocket.onopen = function() {
+            // 连接建立完成后自动执行
+            console.log("连接建立完成");
+        }
+        websocket.onclose = function() {
+            // 连接断开后，自动执行
+            console.log("连接断开");
+        }
+        websocket.onerror = function() {
+            // 连接出现异常时自动执行
+            console.log("连接出现异常");
+        }
+        websocket.onmessage = function(e) {
+            // 收到消息后自动执行
+            console.log("收到消息" + e.data);
+        }
+
+        let message = document.querySelector("#message");
+        let send = document.querySelector("#send")
+        send.onclick = function() {
+            console.log("websocket发送消息")
+            websocket.send(message.value);
+        }
+    </script>
+
+    
+</body>
+</html>

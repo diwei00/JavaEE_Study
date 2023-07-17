@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>网页聊天程序</title>
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="css/client.css">
+    <!-- 引入 jquery, 注意, 这个引入操作要在使用之前! 否则会找不到相关函数的定义 -->
+    
+</head>
+<body>
+    <!-- 作为遮罩层, 实现背景模糊的效果 -->
+    <div class="cover"></div>
+    <!-- 这个 div 作为整个界面的总的容器 -->
+    <div class="client-container">
+        <!-- 中间的聊天区域 -->
+        <div class="main">
+            <!-- 左侧区域, 显示好友列表和会话列表 -->
+            <div class="left">
+                <!-- 当前登录用户的用户名 -->
+                <div class="user" id="username">
+                    
+                </div>
+                <!-- 这是搜索框 -->
+                <div class="search">
+                    <!-- 搜索框中的输入框 -->
+                    <input type="text">
+                    <!-- 点击按钮进行搜索 -->
+                    <button></button>
+                </div>
+                <!-- 标签页 -->
+                <div class="tab">
+                    <!-- 会话列表标签 -->
+                    <div class="tab-session"></div>
+                    <!-- 好友列表标签 -->
+                    <div class="tab-friend"></div>
+                </div>
+                <!-- 会话列表 -->
+                <ul class="list" id="session-list">
+                    <li>
+                        <h3>lisi</h3>
+                        <p>晚上吃啥</p>
+                    </li>
+                    <li class="selected">
+                        <h3>lisi</h3>
+                        <p>晚上吃啥</p>
+                    </li>
+                    <li>
+                        <h3>lisi</h3>
+                        <p>晚上吃啥</p>
+                    </li>
+                    <li>
+                        <h3>lisi</h3>
+                        <p>晚上吃啥</p>
+                    </li>
+                    <li>
+                        <h3>lisi</h3>
+                        <p>晚上吃啥</p>
+                    </li>
+                    <li>
+                        <h3>lisi</h3>
+                        <p>晚上吃啥</p>
+                    </li>
+                </ul>
+                <!-- 好友列表 -->
+                <ul class="list hide" id="friend-list">
+                    <li>
+                        <h4>lisi</h4>
+                    </li>
+                    <li>
+                        <h4>lisi</h4>
+                    </li>
+                    <li>
+                        <h4>lisi</h4>
+                    </li>
+                    <li>
+                        <h4>lisi</h4>
+                    </li>
+                    <li>
+                        <h4>lisi</h4>
+                    </li>
+                </ul>
+                
+
+            </div>
+            <!-- 右侧区域, 显示聊天编辑框 -->
+            <div class="right">
+                <!-- 会话标题 -->
+                <div class="title"></div>
+                <!-- 消息区 -->
+                <div class="message-show">
+                    <!-- <div class="message message-left">
+                        <div class="box">
+                            <h4>lisi</h4>
+                            <p>今天吃啥</p>
+                        </div>
+                    </div>
+                    <div class="message message-right">
+                        <div class="box">
+                            <h4>zhangsan</h4>
+                            <p>随便</p>
+                        </div>
+                    </div> -->
+                </div>
+                <!-- 消息编辑框 -->
+                <textarea class="message-input" placeholder="点击这里发送消息哦！"></textarea>
+                <!-- 发送按钮 -->
+                <div class="ctrl">
+                    <button>发送</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <script src="js/client.js"></script>
+
+    
+</body>
+</html>

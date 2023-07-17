@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>登录页面</title>
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="css/login.css">
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <div class="nav">
+        网页聊天室
+    </div>
+    <!-- 主窗口区 -->
+    <div class="login-container">
+        <div class="login-dialog">
+            <h3>登录</h3>
+            <div class="row">
+                <span>用户名</span>
+                <input type="text" id="username">
+            </div>
+            <div class="row">
+                <span>密码</span>
+                <input type="password" id="password">
+            </div>
+            <div class="row">
+                <button id="submit" onclick="submit()">登录</button>
+            </div>
+        </div>
+    </div>
+    <script>
+        function submit() {
+            var username = jQuery("#username");
+            var password = jQuery("#password");
+            if(username.val().trim() == "" ) {
+                alert("请先输入用户名！");
+                username.focus();
+                return false;
+            }
+            if(password.val().trim() == "") {
+                alert("请先输入密码！");
+                password.focus();
+                return false;
+            }
+            jQuery.ajax({
+                url: "/user/login",
+                type: "POST",
+                data: {
+                    "username": username.val().trim(),
+                    "password": password.val().trim()
+                },
+                success:function(res) {
+                    if(res.data.userId <= 0) {
+                        // 登录失败
+                        alert("用户名或密码错误！");
+                        username.val("");
+                        password.val("");
+                    }else {
+                        // 登录成功
+                        location.href = "client.html";
+                    }
+                }
+            });
+            
+        }
+
+
+
+    </script>
+
+</body>
+</html>
