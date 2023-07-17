@@ -8,6 +8,29 @@
         (select friendId from friend where userId=#{userId})
     </select>
 
+    <select id="searchFriendList" resultType="com.example.chatroom.entity.Friend">
+        select username as friendName,userId as friendId from user
+        where username like concat('%', #{username}, '%')
+    </select>
+
+    <select id="selectFriendNameByUserId" resultType="java.lang.String">
+        select username from user where userId = #{userId}
+    </select>
+
+    <!-- fromId添加userId消息为input   -->
+    <insert id="addAddFriend">
+        insert into add_friend values(#{fromId}, #{userId}, #{input}, now())
+    </insert>
+
+    <!--  查找当前用户都有哪些用户添加他了，当前用户就是被加用户  -->
+    <select id="getAddFriendList" resultType="com.example.chatroom.entity.vo.AddFriendResponseVO">
+        select fromId as userId, username, `input` from add_friend,user
+        where user.userId = add_friend.fromId
+        and add_friend.userId=#{userId}
+        order by postTime desc
+
+    </select>
+
 
 
 

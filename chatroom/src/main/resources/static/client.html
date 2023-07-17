@@ -26,9 +26,9 @@
                 <!-- 这是搜索框 -->
                 <div class="search">
                     <!-- 搜索框中的输入框 -->
-                    <input type="text">
+                    <input type="text" placeholder="搜索好友">
                     <!-- 点击按钮进行搜索 -->
-                    <button></button>
+                    <button id="search-button"></button>
                 </div>
                 <!-- 标签页 -->
                 <div class="tab">
@@ -36,6 +36,8 @@
                     <div class="tab-session"></div>
                     <!-- 好友列表标签 -->
                     <div class="tab-friend"></div>
+                    <!-- 添加好友标签 -->
+                    <div class="tab-add-friend"></div>
                 </div>
                 <!-- 会话列表 -->
                 <ul class="list" id="session-list">
@@ -51,18 +53,7 @@
                         <h3>lisi</h3>
                         <p>晚上吃啥</p>
                     </li>
-                    <li>
-                        <h3>lisi</h3>
-                        <p>晚上吃啥</p>
-                    </li>
-                    <li>
-                        <h3>lisi</h3>
-                        <p>晚上吃啥</p>
-                    </li>
-                    <li>
-                        <h3>lisi</h3>
-                        <p>晚上吃啥</p>
-                    </li>
+                    
                 </ul>
                 <!-- 好友列表 -->
                 <ul class="list hide" id="friend-list">
@@ -72,15 +63,54 @@
                     <li>
                         <h4>lisi</h4>
                     </li>
+                    
+                </ul>
+                <!-- 添加好友列表 -->
+                <ul class="list hide" id="add-friend-list">
                     <li>
-                        <h4>lisi</h4>
+                        <h3>lisi</h3>
+                        <p>交个朋友</p>
+                        <button>同意</button>
+                        <button>拒绝</button>
+
                     </li>
                     <li>
-                        <h4>lisi</h4>
+                        <h3>lisi</h3>
+                        <p>交个朋友</p>
+                        <button>同意</button>
+                        <button>拒绝</button>
                     </li>
                     <li>
-                        <h4>lisi</h4>
+                        <h3>lisi</h3>
+                        <p>交个朋友</p>
+                        <button>同意</button>
+                        <button>拒绝</button>
                     </li>
+                    <li>
+                        <h3>lisi</h3>
+                        <p>交个朋友</p>
+                        <button>同意</button>
+                        <button>拒绝</button>
+                    </li>
+                    <li>
+                        <h3>lisi</h3>
+                        <p>交个朋友</p>
+                        <button>同意</button>
+                        <button>拒绝</button>
+                    </li>
+                    <li>
+                        <h3>lisi</h3>
+                        <p>交个朋友</p>
+                        <button>同意</button>
+                        <button>拒绝</button>
+                    </li>
+                    <li>
+                        <h3>lisi</h3>
+                        <p>交个朋友</p>
+                        <button>同意</button>
+                        <button>拒绝</button>
+                    </li>
+                    
                 </ul>
                 
 
@@ -88,27 +118,50 @@
             <!-- 右侧区域, 显示聊天编辑框 -->
             <div class="right">
                 <!-- 会话标题 -->
-                <div class="title"></div>
-                <!-- 消息区 -->
-                <div class="message-show">
-                    <!-- <div class="message message-left">
-                        <div class="box">
-                            <h4>lisi</h4>
-                            <p>今天吃啥</p>
+                <div class="session">
+                    <div class="title"></div>
+                    <!-- 消息区 -->
+                    <div class="message-show">
+                        <!-- <div class="message message-left">
+                            <div class="box">
+                                <h4>lisi</h4>
+                                <p>今天吃啥</p>
+                            </div>
                         </div>
+                        <div class="message message-right">
+                            <div class="box">
+                                <h4>zhangsan</h4>
+                                <p>随便</p>
+                            </div>
+                        </div> -->
                     </div>
-                    <div class="message message-right">
-                        <div class="box">
-                            <h4>zhangsan</h4>
-                            <p>随便</p>
-                        </div>
-                    </div> -->
+                    <!-- 消息编辑框 -->
+                    <textarea class="message-input" placeholder="点击这里发送消息哦！"></textarea>
+                    <!-- 发送按钮 -->
+                    <div class="ctrl">
+                        <button>发送</button>
+                    </div>
                 </div>
-                <!-- 消息编辑框 -->
-                <textarea class="message-input" placeholder="点击这里发送消息哦！"></textarea>
-                <!-- 发送按钮 -->
-                <div class="ctrl">
-                    <button>发送</button>
+                
+
+                <!-- 表示搜索好友列表 -->
+                <div class="friends hide">
+                    <div class="title-friend">用户搜索结果</div>
+                    <!-- 一条搜索结果 -->
+                    <div class="friends-show">
+                        <!-- <div class="friend">
+                            <span>wuhao</span>
+                            <input type="text" placeholder="发送添加好友申请">
+                            <button id="add-button">添加</button>
+                        </div>
+                        <div class="friend">
+                            <span>wuhao</span>
+                            <input type="text" placeholder="发送添加好友申请">
+                            <button id="add-button">添加</button>
+                        </div> -->
+                        
+                    </div>
+                    
                 </div>
             </div>
         </div>

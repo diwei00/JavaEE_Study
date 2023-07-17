@@ -35,6 +35,11 @@ public class MessageSessionController {
     private MessageService messageService;
 
 
+    /**
+     * 获取会话列表
+     * @param request
+     * @return
+     */
     @GetMapping("/sessionList")
     public UnifyResult getMessageSessionList(HttpServletRequest request) {
         // 由于拦截器这个接口用户一定会登录，这里就不需要判空了

@@ -5,8 +5,11 @@ import com.example.chatroom.component.OnlineUserManager;
 import com.example.chatroom.entity.Friend;
 import com.example.chatroom.entity.Message;
 import com.example.chatroom.entity.User;
-import com.example.chatroom.entity.vo.MessageRequestVO;
+import com.example.chatroom.entity.dto.AddFriendRequestDTO;
+import com.example.chatroom.entity.dto.MessageRequestDTO;
+import com.example.chatroom.entity.vo.AddFriendResponseVO;
 import com.example.chatroom.entity.vo.MessageResponseVO;
+import com.example.chatroom.service.FriendService;
 import com.example.chatroom.service.MessageService;
 import com.example.chatroom.service.MessageSessionService;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -40,6 +43,9 @@ public class WebSocket extends TextWebSocketHandler {
     @Autowired
     private MessageService messageService;
 
+    @Autowired
+    private FriendService friendService;
+
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
         // websocket建立成功后自动调用
@@ -62,22 +68,60 @@ public class WebSocket extends TextWebSocketHandler {
             System.out.println("当前用户未登录，无法进行消息转发！");
             return;
         }
-        // 客户端发送的消息转换为java对象
-        MessageRequestVO messageRequest = objectMapper.readValue(message.getPayload(), MessageRequestVO.class);
-        if(messageRequest.getType().equals("message")) {
-            // 进行消息转发
+        MessageRequestDTO messageRequest = null;
+        AddFriendRequestDTO addFriendRequest = null;
+        // 判断websocket类型，根据不同类型进行不同类型的消息转发工作
+        if(message.getPayload().toString().contains("message")) {
+            System.out.println(message.getPayload());
+            // 客户端发送的消息转换为java对象
+             messageRequest = objectMapper.readValue(message.getPayload(), MessageRequestDTO.class);
+            // 进行聊天消息转发
             transferMessage(user, messageRequest);
+        }else if(message.getPayload().toString().contains("addFriend")){
+            addFriendRequest = objectMapper.readValue(message.getPayload(), AddFriendRequestDTO.class);
+            // 进行好友申请消息转发
+            transferMessageAddFriend(user, addFriendRequest);
         }else {
             System.out.println("message type 有误！");
         }
+
     }
 
     /**
-     * 进行消息转发工作
+     * 好友申请消息转发
+     * @param user
+     * @param addFriendRequest
+     */
+    private void transferMessageAddFriend(User user, AddFriendRequestDTO addFriendRequest) throws IOException {
+        // 1. 构造响应对象
+        AddFriendResponseVO addFriendResponse = new AddFriendResponseVO();
+        addFriendResponse.setInput(addFriendRequest.getInput());
+        // 根据userId查找数据库
+        String username = friendService.selectFriendNameByUserId(user.getUserId());
+        addFriendResponse.setUsername(username);
+        addFriendResponse.setUserId(user.getUserId());
+
+
+        String resp = objectMapper.writeValueAsString(addFriendResponse);
+        // 2. 转发消息（用户在线就直接接收消息），（不在线，存储数据库，用户登录就会加载数据库，获得好友申请信息）
+        WebSocketSession webSocketSession = onlineUserManager.getSession(addFriendRequest.getUserId());
+        // 用户可能未在线，需要判断一下
+        if(webSocketSession != null) {
+            webSocketSession.sendMessage(new TextMessage(resp));
+        }
+        System.out.println("[添加好友消息转发] " + addFriendResponse.toString());
+
+        // 3. 存储数据库
+        friendService.addAddFriend(user.getUserId(), addFriendRequest.getUserId(), addFriendRequest.getInput());
+
+    }
+
+    /**
+     * 进行聊天消息转发工作
      * @param fromUser 发送消息的用户
      * @param messageRequest 客户端发送的消息
      */
-    private void transferMessage(User fromUser, MessageRequestVO messageRequest) throws IOException {
+    private void transferMessage(User fromUser, MessageRequestDTO messageRequest) throws IOException {
         // 构造响应对象
         MessageResponseVO messageResponse = new MessageResponseVO();
         messageResponse.setType("message");

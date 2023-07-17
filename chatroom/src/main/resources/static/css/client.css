@@ -118,7 +118,7 @@
 
 .main .left .tab .tab-session {
     height: 100%;
-    width: 50%;
+    width: 33.3%;
 
     background-image: url(../img/对话.png);
     background-repeat: no-repeat;
@@ -129,12 +129,22 @@
 
 .main .left .tab .tab-friend {
     height: 100%;
-    width: 50%;
+    width: 33.3%;
 
     background-image: url(../img/用户2.png);
     background-repeat: no-repeat;
     background-size: 30px 30px;
     background-position: center center;
+}
+.main .left .tab .tab-add-friend {
+    height: 100%;
+    width: 33.3%;
+
+    background-image: url(../img/添加好友2.png);
+    background-repeat: no-repeat;
+    background-size: 33px 33px;
+    background-position: center center;
+    
 }
 
 .main .left .list {
@@ -142,6 +152,7 @@
 
     /* 如果里面的内容太多了, 就自动提供一个滚动条 */
     overflow: auto;
+    
 }
 
 .main .left .list li {
@@ -156,7 +167,7 @@
 }
 
 /* 这个样式是给会话列表使用的 */
-.main .left .list li h4,
+.main .left .list li h3,
 .main .left .list li p {
     height: 20px;
     font-size: 14px;
@@ -168,7 +179,29 @@
     height: 40px;
     line-height: 40px;
     font-size: 20px;
+    
 }
+
+/* 这个样式是给添加好友列表用的 */
+.main .left #add-friend-list li{
+    height: 87px;
+    padding: 10px 20px;
+    color: white;
+    border-top: 1px solid black;
+}
+
+.main .left #add-friend-list li button{
+    width: 49%;
+    height: 23px;
+    margin-top: 5px;
+}
+
+.main .left #add-friend-list li button:active {
+    background-color: rgb(89, 182, 63);
+    color: white;
+}
+
+
 
 /* 应用了这个 css 类的元素就会被自动隐藏 */
 .hide {
@@ -272,6 +305,61 @@
 }
 
 .main .right .ctrl button:active {
+    background-color: rgb(89, 182, 63);
+    color: white;
+}
+
+.main .right .title-friend {
+    height: 50px;
+    line-height: 50px;
+    font-size: 20px;
+    text-align: center;
+    border-bottom: 1px solid #ccc;
+}
+.main .right .friend {
+    width: 100%;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 10px;
+}
+.main .right .friends-show {
+    height: 650px;
+    border-top: 1px solid #ccc;
+
+    /* 如果里面的内容太多了, 就自动提供一个滚动条 */
+    overflow: auto;
+}
+.main .right .friends-show span {
+    height: 35px;
+    width: 10%;
+    line-height: 35px;
+    
+    
+}
+.main .right .friends-show input {
+    height: 35px;
+    width: 60%;
+    margin-right: 10px;
+    margin-left: 10px;
+    padding-left: 8px;
+    border: none;
+    outline: none;
+    border-radius: 5px;
+    
+}
+.main .right .friends-show button {
+    height: 35px;
+    width: 10%;
+    border-radius: 5px;
+    
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    
+}
+.main .right .friends-show button:active {
     background-color: rgb(89, 182, 63);
     color: white;
 }

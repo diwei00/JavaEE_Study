@@ -4,16 +4,20 @@ function initSwitchTab() {
     var tabFriend = jQuery(".tab .tab-friend");
     var sessionList = jQuery("#session-list");
     var friendList = jQuery("#friend-list");
+    var tabAddFriend = jQuery(".tab .tab-add-friend");
+    var addFriendList = jQuery("#add-friend-list");
 
     // 选中会话列表
     tabSession.click(function() {
         // 设置css属性
         tabSession.css("backgroundImage", 'url(img/对话.png)')
         tabFriend.css("backgroundImage", 'url(img/用户2.png)')
+        tabAddFriend.css("backgroundImage", 'url(img/添加好友2.png)');
         
         // 会话列表显示，好友列表隐藏（设置html属性）
         sessionList.attr("class", "list");
         friendList.attr("class", "list hide");
+        addFriendList.attr("class", "list hide");
 
     });
     // 选中好友列表
@@ -21,9 +25,25 @@ function initSwitchTab() {
 
         tabSession.css("backgroundImage", 'url(img/对话2.png)')
         tabFriend.css("backgroundImage", 'url(img/用户.png)')
+        tabAddFriend.css("backgroundImage", 'url(img/添加好友2.png)');
         // 会话列表隐藏，好友列表显示
         sessionList.attr("class", "list hide");
         friendList.attr("class", "list");
+        addFriendList.attr("class", "list hide");
+    });
+
+    // 选中添加好友列表
+    tabAddFriend.click(function () {
+        // 设置css属性
+        tabSession.css("backgroundImage", 'url(img/对话2.png)')
+        tabFriend.css("backgroundImage", 'url(img/用户2.png)')
+        tabAddFriend.css("backgroundImage", 'url(img/添加好友.png)');
+
+        // 会话列表显示，好友列表隐藏（设置html属性）
+        sessionList.attr("class", "list hide");
+        friendList.attr("class", "list hide");
+        addFriendList.attr("class", "list");
+
     });
 }
 initSwitchTab();
@@ -149,6 +169,12 @@ function clickSession(currentLi) {
     // 获取指定会话历史消息
     let sessionId = currentLi.getAttribute("message-session-id");
     getHistoryMessage(sessionId);
+
+    let session = document.querySelector(".right .session");
+    let friends = document.querySelector(".right .friends");
+    // 控制右侧页面显示
+    session.className = "session";
+    friends.className = "friends hide";
 
 
 }
@@ -316,6 +342,10 @@ websocket.onmessage = function(e) {
     if(resp.type == "message") {
         // 进行页面内容设置
         handleMessage(resp);
+    }else if(resp.type == "addFriend"){
+        // 进行好友申请区域页面设置
+        handleAddFriend(resp);
+
     }else {
         console.log("resp的type有误！");
     }
@@ -403,4 +433,186 @@ function findSessionLi(targetSessionId) {
     }
     // 两个客户端之间没有会话
     return null;
+}
+
+// 实现好友搜索功能
+function searchFriends() {
+    let input = document.querySelector(".search input");
+    let searchButton = document.querySelector(".search #search-button");
+    let friendsShow = document.querySelector(".right .friends-show");
+    let session = document.querySelector(".right .session");
+    let friends = document.querySelector(".right .friends");
+    searchButton.onclick = function() {
+        if(input.value == null || input.value == "") {
+            // 用户没有输入啥也不做
+            return;
+        }
+        friendsShow.innerHTML = "";
+        // 控制右侧页面显示
+       session.className = "session hide";
+       friends.className = "friends";
+        
+        // 提交数据到服务器
+        jQuery.ajax({
+            url: "friend/searchFriend",
+            type: "POST",
+            data: {
+                "username": input.value
+            },
+            success:function(res) {
+                input.value = "";
+
+                if(res.data != null && res.data.length > 0) {
+                    // 查找到好友
+                    for(let user of res.data) {
+                        let div = document.createElement('div');
+                        div.className = "friend";
+                        div.setAttribute("userId", user.friendId);
+                        div.setAttribute("username",  user.friendName);
+
+                        let input = document.createElement('input');
+                        input.type = "text";
+                        input.placeholder = "发送添加好友申请";
+
+
+                        div.innerHTML += '<span userId='+ user.friendId+'>'+ user.friendName +'</span>';
+                        div.appendChild(input);
+                        let button = document.createElement("button");
+                        button.innerHTML = "添加";
+                        div.appendChild(button);
+                        // div.innerHTML += '<button onclick="addFriend(div, input)">添加</button>';
+                        friendsShow.appendChild(div);
+                        // 绑定点击事件
+                        button.onclick = function () {
+                            addFriend(div, input);
+                        }
+                    }
+                }else {
+                    friendsShow.innerHTML += '<h3 style="padding-left: 40%; margin-top: 10px">不存在当前用户</h3>';
+                }
+            }
+        });
+    }
+
+}
+searchFriends();
+
+// 实现好友添加功能
+function addFriend(div, input) {
+    // 用户未输入好友添加申请
+    if(input.value == null || input.value == '') {
+        alert("请先输入好友添加申请！");
+        return;
+    }
+    // 如果已经是好友就不能再进行添加操作
+    let addUserName = div.getAttribute("username");
+    let friendList = document.querySelectorAll(".main .left #friend-list h4");
+    let username = document.querySelector(".main .left .user").innerHTML;
+    for(let friend of friendList) {
+        if(addUserName == friend.innerHTML || addUserName == username) {
+            alert("你们已经是好友，无需再次添加！");
+            input.value = "";
+            return;
+
+        }
+    }
+    // 客户端通过websocket进行好友添加请求发送
+    // 服务器进行消息转发
+    // 客户端在线，直接调整好友请求列表
+    // 客户端如果不在线，页面加载走数据库进行查询（服务端进行数据保存）
+
+    // 构造请求对象
+    let req = {
+        type: "addFriend",
+        userId: div.getAttribute("userId"),
+        input: input.value
+    };
+    req = JSON.stringify(req);
+    // 发送数据
+    websocket.send(req);
+    alert("好友添加请求已发送！");
+    input.value = "";
+
+
+}
+// 实现接收好友添加功能
+function handleAddFriend(resp) {
+    // 构建添加好友列表
+    let addFriendList = document.querySelector(".main .left #add-friend-list");
+    let li = document.createElement('li');
+    li.innerHTML = '<h3>'+ resp.username +'</h3>'
+    + '<p>'+ resp.input +'</p>';
+
+    let agreeButton = document.createElement("button");
+    let refuseButton = document.createElement("button");
+    agreeButton.innerHTML = "同意"
+    refuseButton.innerHTML = "拒绝"
+    li.appendChild(agreeButton);
+    li.appendChild(refuseButton);
+
+    addFriendList.appendChild(li);
+
+    // 置顶当前li标签
+    addFriendList.insertBefore(li, addFriendList.children[0]);
+
+     // 为按钮绑定点击事件
+    agreeButton.onclick = function() {
+        // 同意好友请求
+        agreeAddFriend();
+    }
+    refuseButton.onclick = function() {
+        // 拒绝好友请求
+        refuseAddFriend();
+    }
+
+}
+
+// 实现用户登录获取历史好友请求
+function getHistoryAddFriend() {
+    jQuery.ajax({
+        url: "friend/getAddFriend",
+        type: "GET",
+        data: {},
+        success:function(res) {
+            // 首先清空原来消息内容
+            let addFriendList = document.querySelector(".main .left #add-friend-list");
+            addFriendList.innerHTML = "";
+            if(res.data != null && res.data.length > 0) {
+                // 存在历史好友请求
+                // 遍历构造到好友请求列表
+                for(let friend of res.data) {
+                    let li = document.createElement("li");
+                    li.innerHTML = '<h3>'+ friend.username +'</h3>'
+                    + '<p>'+ friend.input +'</p>';
+                    let agreeButton = document.createElement("button");
+                    let refuseButton = document.createElement("button");
+                    agreeButton.innerHTML = "同意"
+                    refuseButton.innerHTML = "拒绝"
+                    li.appendChild(agreeButton);
+                    li.appendChild(refuseButton);
+
+                    addFriendList.appendChild(li);
+
+                    // 为按钮绑定点击事件
+                    agreeButton.onclick = function() {
+                        // 同意好友请求
+                        agreeAddFriend();
+                    }
+                    refuseButton.onclick = function() {
+                        // 拒绝好友请求
+                        refuseAddFriend();
+                    }
+                }
+            }
+        }
+    });
+}
+getHistoryAddFriend();
+// 同意好友请求
+function agreeAddFriend() {
+
+}
+// 拒绝好友请求
+function refuseAddFriend() {
+
 }

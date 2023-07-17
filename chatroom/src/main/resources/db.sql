@@ -75,4 +75,16 @@ insert into message values (10, 2, 1, '随便', '2000-05-01 17:09:00');
 insert into message values(7, 1, 2, '晚上一起约?', '2000-05-02 12:00:00');
 
 
+-- 创建添加好友请求表
+drop table if exists add_friend;
+create table add_friend(
+    fromId int, -- 添加好友者
+    userId int, -- 被添加好友者
+    input varchar(255), -- 添加信息
+    postTime datetime -- 添加时间
+);
+insert into add_friend values(1, 2, 'aaa', now());
+insert into add_friend values(2, 1, 'aaa', now());
+
+
 
