@@ -34,4 +34,13 @@ public class FriendService {
     public List<AddFriendResponseVO> getAddFriendList(Integer userId) {
         return friendMapper.getAddFriendList(userId);
     }
+
+
+    public Integer deleteAddFriend(Integer fromId, Integer userId) {
+        return friendMapper.deleteAddFriend(fromId, userId);
+    }
+
+    public Integer agreeAddFriend(Integer fromId, Integer userId) {
+        return friendMapper.addFriend(fromId, userId);
+    }
 }

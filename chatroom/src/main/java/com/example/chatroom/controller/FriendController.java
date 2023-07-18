@@ -7,6 +7,7 @@ import com.example.chatroom.entity.User;
 import com.example.chatroom.entity.vo.AddFriendResponseVO;
 import com.example.chatroom.service.FriendService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
@@ -68,4 +69,22 @@ public class FriendController {
         return UnifyResult.success(addFriendList);
 
     }
+
+    /**
+     * 拒绝好友申请
+     * @param user
+     * @param userId
+     * @return
+     */
+    @PostMapping("refuseAddFriend")
+    public UnifyResult deleteAddFriend(@SessionAttribute(ApplicationVariable.SESSION_KEY_USERINFO) User user, Integer userId) {
+        if(userId == null) {
+            return UnifyResult.fail(-1, "参数有误");
+        }
+        // 删除数据库中所有关于这条申请记录（因为允许多次添加同一个好友）
+        int result = friendService.deleteAddFriend(userId, user.getUserId());
+        return UnifyResult.success(result);
+    }
+
+
 }

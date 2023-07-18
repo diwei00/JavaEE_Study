@@ -20,4 +20,8 @@ public interface FriendMapper {
     Integer addAddFriend(@Param("fromId") Integer fromId, @Param("userId") Integer userId, @Param("input") String input);
 
     List<AddFriendResponseVO> getAddFriendList(@Param("userId") Integer userId);
+
+    int deleteAddFriend(@Param("fromId") Integer fromId, @Param("userId") Integer userId);
+
+    int addFriend(@Param("friendId") Integer fromId, @Param("userId") Integer userId);
 }

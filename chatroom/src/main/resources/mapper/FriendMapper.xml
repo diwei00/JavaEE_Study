@@ -31,6 +31,15 @@
 
     </select>
 
+    <delete id="deleteAddFriend">
+        delete from add_friend where fromId=#{fromId} and userId=#{userId}
+    </delete>
+
+    <!--  好友申请后，用户互为对方好友  -->
+    <insert id="addFriend">
+        insert into friend values (#{friendId}, #{userId}),(#{userId}, #{friendId})
+    </insert>
+
 
 
 

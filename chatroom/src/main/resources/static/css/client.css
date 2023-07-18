@@ -220,6 +220,17 @@
     text-align: center;
     border-bottom: 1px solid #ccc;
 }
+.main .right .title-deleteFriend {
+    
+    display: flex;
+
+}
+.main .right #deleteFriend {
+    display: flex;
+    width: 10p;
+    height: 7px;
+    justify-content: flex-start;
+}
 
 .main .right .message-show {
     height: 550px;

@@ -12,6 +12,7 @@ import java.util.concurrent.ConcurrentHashMap;
 @Component
 public class OnlineUserManager {
 
+    // 这里可能涉及并发，多个客户端同时登录
     private ConcurrentHashMap<Integer, WebSocketSession> sessions = new ConcurrentHashMap<>();
 
     // 用户上线

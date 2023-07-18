@@ -7,14 +7,14 @@ drop table if exists  user;
 create table user(
     userId int primary key auto_increment,
     username varchar(20) unique,
-    password varchar(10) not null,
+    password varchar(65) not null,
     email varchar(20) not null
 );
 -- 添加一条数据
-insert into user values(1, 'wuhao', '123', '2945608334@qq.com');
-insert into user values(2, 'zhansan', '123', '2945608334@qq.com');
-insert into user values(3, 'lisi', '123', '2945608334@qq.com');
-insert into user values(4, 'wangwu', '123', '2945608334@qq.com');
+-- insert into user values(1, 'wuhao', '123', '2945608334@qq.com');
+-- insert into user values(2, 'zhansan', '123', '2945608334@qq.com');
+-- insert into user values(3, 'lisi', '123', '2945608334@qq.com');
+-- insert into user values(4, 'wangwu', '123', '2945608334@qq.com');
 
 
 -- 创建 用户-好友 关联表

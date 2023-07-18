@@ -26,11 +26,13 @@ public class MyConfig implements WebMvcConfigurer {
                 .addPathPatterns("/**")
                 .excludePathPatterns("/login.html")
                 .excludePathPatterns("/register.html")
+                .excludePathPatterns("/forget_password.html")
                 .excludePathPatterns("/css/**")
                 .excludePathPatterns("/img/**")
                 .excludePathPatterns("/user/login")
                 .excludePathPatterns("/user/reg")
                 .excludePathPatterns("/test.html")
+                .excludePathPatterns("/user/email")
                 ;
     }
 }

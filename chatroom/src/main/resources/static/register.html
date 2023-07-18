@@ -12,20 +12,18 @@
     <style>
         .login-dialog {
             width: 400px;
-            height: 320px;
+            height: 495px;
             background-color: rgb(220, 220, 220, 0.9);
             border-radius: 15px;
         }
-        .login-dialog {
-            width: 400px;
-            height: 400px;
-            background-color: rgb(220, 220, 220, 0.9);
-            border-radius: 15px;
-        }
+       
     </style>
      <!-- 导航栏 -->
      <div class="nav">
         网页聊天室
+        <span style="width: 83%;"></span>
+        <a href="login.html">登录</a>
+        <a href="forget_password.html">忘记密码</a>
     </div>
     <!-- 主窗口区 -->
     <div class="login-container">
@@ -48,17 +46,27 @@
                 <input type="text" id="email">
             </div>
             <div class="row">
+                <span>验证码</span>
+                <input type="text" id="code">
+            </div>
+            <div class="row">
+                <button id="get-code" onclick="getCode()">获取验证码</button>
+            </div>
+            <div class="row">
                 <button id="submit" onclick="submit()">注册</button>
             </div>
         </div>
     </div>
     <script>
+        let code = null;
         function submit() {
+            // 记录验证码
             var username = jQuery("#username");
             var password = jQuery("#password");
             var password2 = jQuery("#password2");
             var email = jQuery("#email");
             var emailStr = email.val().trim();
+            var codeInput = jQuery("#code");
             if(username.val().trim() == "") {
                 alert("请先输入用户名！");
                 username.focus();
@@ -95,6 +103,12 @@
                 email.focus();
                 return false;
             }
+            // 验证码校验
+            if(code != codeInput.val().trim()) {
+                alert("验证码错误！");
+                codeInput.val("");
+                return;
+            }
             jQuery.ajax({
                 url: "/user/reg",
                 type: "POST",
@@ -110,6 +124,7 @@
                         password.val("");
                         password2.val("");
                         email.val("");
+                        codeInput.val("");
                     
                     }else {
                         // 注册成功
@@ -118,6 +133,41 @@
                     }
                 }
             });
+        }
+
+        function getCode() {
+            var email = jQuery("#email");
+            var emailStr = email.val().trim();
+            // 非空校验
+            if(emailStr == "") {
+                alert("请先输入邮箱地址！");
+                email.focus();
+                return false;
+            }
+            // 邮箱格式校验
+            if(emailStr.search("@") == -1) {
+                alert("邮箱格式错误，请重新输入！");
+                email.val("");
+                email.focus();
+                return false;
+            }
+            jQuery.ajax({
+                url: "user/email",
+                type: "GET",
+                data: {
+                    email: emailStr
+                },
+                success:function(res) {
+                    if(res.data != null) {
+                        alert("验证码发送成功！");
+                        code = res.data;
+
+                    }else {
+                        alert("验证码发送失败！");
+                    }
+                }
+            });
+            
         }
     </script>
 </body>

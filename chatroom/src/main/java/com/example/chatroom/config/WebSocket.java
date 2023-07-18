@@ -6,8 +6,10 @@ import com.example.chatroom.entity.Friend;
 import com.example.chatroom.entity.Message;
 import com.example.chatroom.entity.User;
 import com.example.chatroom.entity.dto.AddFriendRequestDTO;
+import com.example.chatroom.entity.dto.AgreeAddFriendRequestDTO;
 import com.example.chatroom.entity.dto.MessageRequestDTO;
 import com.example.chatroom.entity.vo.AddFriendResponseVO;
+import com.example.chatroom.entity.vo.AgreeAddFriendResponseVO;
 import com.example.chatroom.entity.vo.MessageResponseVO;
 import com.example.chatroom.service.FriendService;
 import com.example.chatroom.service.MessageService;
@@ -70,6 +72,7 @@ public class WebSocket extends TextWebSocketHandler {
         }
         MessageRequestDTO messageRequest = null;
         AddFriendRequestDTO addFriendRequest = null;
+        AgreeAddFriendRequestDTO agreeAddFriendRequest = null;
         // 判断websocket类型，根据不同类型进行不同类型的消息转发工作
         if(message.getPayload().toString().contains("message")) {
             System.out.println(message.getPayload());
@@ -81,10 +84,49 @@ public class WebSocket extends TextWebSocketHandler {
             addFriendRequest = objectMapper.readValue(message.getPayload(), AddFriendRequestDTO.class);
             // 进行好友申请消息转发
             transferMessageAddFriend(user, addFriendRequest);
+        }else if(message.getPayload().toString().contains("friend")){
+            agreeAddFriendRequest = objectMapper.readValue(message.getPayload(), AgreeAddFriendRequestDTO.class);
+            // 进行同意好友消息转发
+            transferMessageFriend(user, agreeAddFriendRequest);
         }else {
             System.out.println("message type 有误！");
         }
 
+    }
+
+    /**
+     * 同意好友消息转发
+     * @param user
+     * @param agreeAddFriendRequest
+     */
+    private void transferMessageFriend(User user, AgreeAddFriendRequestDTO agreeAddFriendRequest) throws IOException {
+        // 1. 删除好友申请数据库关于这个申请记录
+        friendService.deleteAddFriend(agreeAddFriendRequest.getUserId(), user.getUserId());
+        // 2. 转发给双方各自好友信息（用户在线）
+        // 向当前处理好友请求用户通知
+        // 构造响应对象
+        String agreeUserName = friendService.selectFriendNameByUserId(agreeAddFriendRequest.getUserId());
+        AgreeAddFriendResponseVO agreeAddFriendResponse = new AgreeAddFriendResponseVO();
+        agreeAddFriendResponse.setType("friend");
+        agreeAddFriendResponse.setFriendId(agreeAddFriendRequest.getUserId());
+        agreeAddFriendResponse.setFriendName(agreeUserName);
+
+        String resp1 = objectMapper.writeValueAsString(agreeAddFriendResponse);
+        WebSocketSession webSocketSession1 = onlineUserManager.getSession(user.getUserId());
+        webSocketSession1.sendMessage(new TextMessage(resp1));
+        System.out.println("[同意好友消息转发] " + resp1);
+
+        // 向当前被处理用户通知
+        AgreeAddFriendResponseVO agreeAddFriendResponse2 = new AgreeAddFriendResponseVO();
+        agreeAddFriendResponse2.setType("friend");
+        agreeAddFriendResponse2.setFriendName(user.getUsername());
+        agreeAddFriendResponse2.setFriendId(user.getUserId());
+        String resp2 = objectMapper.writeValueAsString(agreeAddFriendResponse2);
+        WebSocketSession webSocketSession2 = onlineUserManager.getSession(agreeAddFriendRequest.getUserId());
+        webSocketSession2.sendMessage(new TextMessage(resp2));
+        // 3. 保存用户之间好友信息
+        friendService.agreeAddFriend(user.getUserId(), agreeAddFriendRequest.getUserId());
+        System.out.println("[同意好友消息转发] " + resp2);
     }
 
     /**

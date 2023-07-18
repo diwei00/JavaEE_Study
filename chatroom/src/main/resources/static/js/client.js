@@ -96,9 +96,6 @@ function getFriendList() {
                     li.onclick = function() {
                         clickFriend(friend);
                     }
-
-
-                    
                 }
 
             }else {
@@ -346,6 +343,9 @@ websocket.onmessage = function(e) {
         // 进行好友申请区域页面设置
         handleAddFriend(resp);
 
+    }else if(resp.type == "friend"){
+        // 同意好友请求，构造页面内容
+        handleAgreeFriend(resp);
     }else {
         console.log("resp的type有误！");
     }
@@ -499,12 +499,12 @@ searchFriends();
 
 // 实现好友添加功能
 function addFriend(div, input) {
-    // 用户未输入好友添加申请
+    // 1. 用户未输入好友添加申请
     if(input.value == null || input.value == '') {
         alert("请先输入好友添加申请！");
         return;
     }
-    // 如果已经是好友就不能再进行添加操作
+    // 2. 如果已经是好友就不能再进行添加操作
     let addUserName = div.getAttribute("username");
     let friendList = document.querySelectorAll(".main .left #friend-list h4");
     let username = document.querySelector(".main .left .user").innerHTML;
@@ -513,9 +513,9 @@ function addFriend(div, input) {
             alert("你们已经是好友，无需再次添加！");
             input.value = "";
             return;
-
         }
     }
+
     // 客户端通过websocket进行好友添加请求发送
     // 服务器进行消息转发
     // 客户端在线，直接调整好友请求列表
@@ -540,6 +540,8 @@ function handleAddFriend(resp) {
     // 构建添加好友列表
     let addFriendList = document.querySelector(".main .left #add-friend-list");
     let li = document.createElement('li');
+    // 用li标签存储当前申请用户id
+    li.setAttribute("userId", resp.userId);
     li.innerHTML = '<h3>'+ resp.username +'</h3>'
     + '<p>'+ resp.input +'</p>';
 
@@ -558,11 +560,11 @@ function handleAddFriend(resp) {
      // 为按钮绑定点击事件
     agreeButton.onclick = function() {
         // 同意好友请求
-        agreeAddFriend();
+        agreeAddFriend(li);
     }
     refuseButton.onclick = function() {
         // 拒绝好友请求
-        refuseAddFriend();
+        refuseAddFriend(li);
     }
 
 }
@@ -582,6 +584,8 @@ function getHistoryAddFriend() {
                 // 遍历构造到好友请求列表
                 for(let friend of res.data) {
                     let li = document.createElement("li");
+                    // 用li标签存储当前申请用户id
+                    li.setAttribute("userId", friend.userId);
                     li.innerHTML = '<h3>'+ friend.username +'</h3>'
                     + '<p>'+ friend.input +'</p>';
                     let agreeButton = document.createElement("button");
@@ -596,11 +600,11 @@ function getHistoryAddFriend() {
                     // 为按钮绑定点击事件
                     agreeButton.onclick = function() {
                         // 同意好友请求
-                        agreeAddFriend();
+                        agreeAddFriend(li);
                     }
                     refuseButton.onclick = function() {
                         // 拒绝好友请求
-                        refuseAddFriend();
+                        refuseAddFriend(li);
                     }
                 }
             }
@@ -608,11 +612,70 @@ function getHistoryAddFriend() {
     });
 }
 getHistoryAddFriend();
-// 同意好友请求
-function agreeAddFriend() {
+// 同意好友请求，通过websocket进行发送
+function agreeAddFriend(li) {
+    // 这里需要使用websocket进行通信，因为同意后，双方页面需要接收到服务器推送
+    // 构造请求对象
+    let req = {
+        type: "friend",
+        userId: li.getAttribute("userid")
+    };
+    req = JSON.stringify(req);
+    websocket.send(req);
+    console.log("同意好友请求" + req);
+
+    /// 遍历所有li标签，删除所有关于点击用户的li标签
+    deleteHtml(li);
 
 }
 // 拒绝好友请求
-function refuseAddFriend() {
+function refuseAddFriend(li) {
+    // 直接删除好友申请表中的记录
+    // 用户可能向同一个好友发送多条添加信息，直接全部删除
+    jQuery.ajax({
+       url: "friend/refuseAddFriend",
+       type: "POST", 
+       data: {
+           userId: li.getAttribute("userid")
+        },
+        success:function(res) {
+            // 遍历所有li标签，删除所有关于点击用户的li标签
+            deleteHtml(li);
+        }
+
+    });
+
+}
+
+// 删除li标签
+function deleteHtml(li) {
+    let lis = document.querySelectorAll(".main .left #add-friend-list li");
+    for(let addFriendLi of lis) {
+        if(addFriendLi.getAttribute("userid") == li.getAttribute("userid")) {
+            // 移除li中标签
+            while (addFriendLi.firstChild) {
+                addFriendLi.removeChild(addFriendLi.firstChild);
+            }
+            addFriendLi.remove();
+            
+        }
+    }
+}
+
+// 同意好友请求，接收服务器推送消息
+function handleAgreeFriend(resp) {
+    // 构造好友列表
+    let friendList = document.querySelector(".main .left #friend-list");
+    let li = document.createElement("li");
+    li.setAttribute("friend-id", resp.friendId);
+    li.innerHTML = '<h4>'+ resp.friendName +'</h4>';
+    friendList.appendChild(li);
+
+    // 为每个li标签添加点击属性
+    li.onclick = function() {
+        clickFriend(resp);
+    }
+
+
 
 }
