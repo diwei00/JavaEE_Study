@@ -39,22 +39,22 @@ public class MyConfig implements WebMvcConfigurer {
      * 添加拦截规则
      * @param registry
      */
-//    @Override
-//    public void addInterceptors(InterceptorRegistry registry) {
-//        registry.addInterceptor(loginInterceptor)
-//                .addPathPatterns("/**")
-//                .excludePathPatterns("/login.html")
-//                .excludePathPatterns("/register.html")
-//                .excludePathPatterns("/forget_password.html")
-//                .excludePathPatterns("/css/**")
-//                .excludePathPatterns("/img/**")
-//                .excludePathPatterns("/image/**")
-//                .excludePathPatterns("/user/login")
-//                .excludePathPatterns("/user/reg")
-//                .excludePathPatterns("/user/email")
-//                .excludePathPatterns("/user/verifyEmail")
-//                .excludePathPatterns("/user/changePassword")
-//                .excludePathPatterns("/user/getcode")
-//                .excludePathPatterns("/test.html");
-//    }
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(loginInterceptor)
+                .addPathPatterns("/**")
+                .excludePathPatterns("/login.html")
+                .excludePathPatterns("/register.html")
+                .excludePathPatterns("/forget_password.html")
+                .excludePathPatterns("/css/**")
+                .excludePathPatterns("/img/**")
+                .excludePathPatterns("/image/**")
+                .excludePathPatterns("/user/login")
+                .excludePathPatterns("/user/reg")
+                .excludePathPatterns("/user/email")
+                .excludePathPatterns("/user/verifyEmail")
+                .excludePathPatterns("/user/changePassword")
+                .excludePathPatterns("/user/getcode")
+                .excludePathPatterns("/test.html");
+    }
 }
