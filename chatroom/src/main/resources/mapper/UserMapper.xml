@@ -9,6 +9,14 @@
         select * from user where username=#{username}
     </select>
 
+    <select id="getEmailByUserId" resultType="java.lang.String">
+        select email from user where username=#{username}
+    </select>
+
+    <update id="changePassword">
+        update user set password=#{newPassword} where username=#{username}
+    </update>
+
 
 
 

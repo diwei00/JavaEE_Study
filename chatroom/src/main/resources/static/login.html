@@ -29,14 +29,43 @@
                 <input type="password" id="password">
             </div>
             <div class="row">
+                <span>验证码</span>
+                <input id="code_input" style="width: 80px;">&nbsp;&nbsp;
+                <img onclick="refreshCode()" id="codeimg"
+                      style="display: none;height: 40px;width: 110px">
+            </div>
+            <div class="row">
                 <button id="submit" onclick="submit()">登录</button>
             </div>
+            
         </div>
     </div>
     <script>
+        // 加载验证码
+        function initCode() {
+            jQuery.ajax({
+                url: "/user/getcode",
+                type: "GET",
+                data: {},
+                success:function (res) {
+                   if(res.code == 200 && res.data.length > 0) {
+                       jQuery("#codeimg").attr("src", res.data);
+                       jQuery("#codeimg").show();
+                   }
+                }
+            });
+        }
+        initCode();
+        // 点击切换验证码
+        function refreshCode() {
+            initCode();
+        }
+
+
         function submit() {
             var username = jQuery("#username");
             var password = jQuery("#password");
+            var codeInput = jQuery("#code_input");
             if(username.val().trim() == "" ) {
                 alert("请先输入用户名！");
                 username.focus();
@@ -47,19 +76,36 @@
                 password.focus();
                 return false;
             }
+            if(codeInput.val().trim() == "") {
+                alert("请先输入验证码！");
+                codeInput.focus();
+                return false;
+            }
+            
             jQuery.ajax({
                 url: "/user/login",
                 type: "POST",
                 data: {
                     "username": username.val().trim(),
-                    "password": password.val().trim()
+                    "password": password.val().trim(),
+                    "code": codeInput.val().trim()
                 },
                 success:function(res) {
-                    if(res.data.userId <= 0) {
+                    if(res.code <= 0) {
                         // 登录失败
-                        alert("用户名或密码错误！");
-                        username.val("");
-                        password.val("");
+                        alert("抱歉登录失败！" + res.msg);
+                        initCode();
+
+                        if(res.code == -1) {
+                            // 用户名或密码错误
+                            username.val("");
+                            password.val("");
+                            codeInput.val("");
+                        }else {
+                            // 验证码错误
+                            codeInput.val("");
+                        }
+                       
                     }else {
                         // 登录成功
                         location.href = "client.html";

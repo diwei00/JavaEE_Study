@@ -668,14 +668,13 @@ function handleAgreeFriend(resp) {
     let friendList = document.querySelector(".main .left #friend-list");
     let li = document.createElement("li");
     li.setAttribute("friend-id", resp.friendId);
-    li.innerHTML = '<h4>'+ resp.friendName +'</h4>';
+    li.innerHTML = '<h4>' + resp.friendName + '</h4>';
     friendList.appendChild(li);
 
     // 为每个li标签添加点击属性
-    li.onclick = function() {
+    li.onclick = function () {
         clickFriend(resp);
     }
-
 
 
 }

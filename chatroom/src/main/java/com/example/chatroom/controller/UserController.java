@@ -1,6 +1,7 @@
 package com.example.chatroom.controller;
 
 import com.example.chatroom.common.ApplicationVariable;
+import com.example.chatroom.common.CheckCodeTools;
 import com.example.chatroom.common.UnifyResult;
 import com.example.chatroom.entity.User;
 import com.example.chatroom.service.UserService;
@@ -11,10 +12,7 @@ import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -31,6 +29,10 @@ public class UserController {
     @Autowired
     private JavaMailSenderImpl mailSender;
 
+    // 验证码工具类
+    @Autowired
+    private CheckCodeTools codeTools;
+
     // 用于加盐加密，由于关闭了框架的加载，这里需要new对象
     BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
@@ -42,9 +44,9 @@ public class UserController {
      * @return
      */
     @PostMapping("/login")
-    public UnifyResult login(String username, String password, HttpServletRequest request) {
+    public UnifyResult login(String username, String password, String code, HttpServletRequest request) {
         // 非空校验
-        if(!StringUtils.hasLength(username) || !StringUtils.hasLength(password)) {
+        if(!StringUtils.hasLength(username) || !StringUtils.hasLength(password)  || !StringUtils.hasLength(code)) {
             return UnifyResult.fail(-1, "参数有误！");
         }
         // 根据用户名查找数据库得到User对象
@@ -52,8 +54,15 @@ public class UserController {
         // 使用加盐加密进行密码校验
         if(user == null || !passwordEncoder.matches(password, user.getPassword())) {
             User userFail = new User();
-            return UnifyResult.fail(-1, "登录失败，用户名或密码错误！", userFail);
+            return UnifyResult.fail(-1, "用户名或密码错误！", userFail);
         }
+        // 校验验证码，从session中获取
+        HttpSession sessionCode =  request.getSession(false);
+        String checkCode = (String) sessionCode.getAttribute(ApplicationVariable.SESSION_KEY_CHECK_CODE);
+        if(!checkCode.equals(code)) {
+            return UnifyResult.fail(-2, "验证码错误！");
+        }
+
         // 登录成功，创建用户会话
         HttpSession session = request.getSession(true);
         session.setAttribute(ApplicationVariable.SESSION_KEY_USERINFO, user);
@@ -98,7 +107,7 @@ public class UserController {
      * @param request
      * @return
      */
-    @GetMapping("userInfo")
+    @GetMapping("/userInfo")
     public UnifyResult getUserInfo(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
         if(session == null) {
@@ -115,6 +124,11 @@ public class UserController {
         return UnifyResult.success(user);
     }
 
+    /**
+     * 邮件发送
+     * @param email
+     * @return
+     */
     @GetMapping("/email")
     public UnifyResult getCode(String email) {
         if (email == null) {
@@ -138,6 +152,57 @@ public class UserController {
 
         mailSender.send(message);
         return UnifyResult.success(code);
+    }
+
+    /**
+     * 修改密码。邮箱验证
+     * @param username
+     * @return
+     */
+    @PostMapping("/verifyEmail")
+    public UnifyResult verifyEmail(String username) {
+        if(!StringUtils.hasLength(username)) {
+            return UnifyResult.fail(-1, "参数有误！");
+        }
+        String emailDB = userService.getEmail(username);
+        return UnifyResult.success(emailDB);
+    }
+
+    /**
+     * 修改密码
+     * @param newPassword
+     * @param username
+     * @return
+     */
+    @PostMapping ("/changePassword")
+    public UnifyResult changePassword(String newPassword, String username) {
+        // 非空校验
+        if(!StringUtils.hasLength(newPassword) && !StringUtils.hasLength(username)) {
+            return UnifyResult.fail(-1, "参数有误！");
+        }
+        int result = userService.changePassword(passwordEncoder.encode(newPassword), username);
+        return UnifyResult.success(result);
+    }
+
+
+
+    /**
+     * 生成session 保存图片验证码
+     * @param request 验证码路径（需要映射）
+     * @return
+     */
+    @RequestMapping("/getcode")
+    public UnifyResult getCode(HttpServletRequest request) {
+        // 存储验证码图片 图片名称 + 验证码
+        String[] codeArr = codeTools.createImage();
+
+        // 将验证码存储到session中
+        HttpSession session = request.getSession(true);
+        session.setAttribute(ApplicationVariable.SESSION_KEY_CHECK_CODE, codeArr[1]);
+
+        // 响应图片名字到前端
+        return UnifyResult.success("/image/" + codeArr[0]);
+
     }
 
 }

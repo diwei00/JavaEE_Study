@@ -11,7 +11,7 @@
 
 .login-dialog {
     width: 400px;
-    height: 320px;
+    height: 340px;
     background-color: rgb(220, 220, 220, 0.9);
     border-radius: 15px;
 }
@@ -22,7 +22,7 @@
 }
 .login-dialog h3 {
     text-align: center;
-    padding: 50px 0;
+    padding: 40px 0;
 }
 
 .login-dialog .row {
@@ -64,7 +64,7 @@ button {
     font-size: 15px;
 
     border-radius: 10px;
-    margin-top: 20px;
+    margin-top: 38px;
 }
 
 button:active {

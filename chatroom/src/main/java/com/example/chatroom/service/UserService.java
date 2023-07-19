@@ -29,4 +29,12 @@ public class UserService {
 
         return userMapper.insert(user);
     }
+
+    public String getEmail(String username) {
+        return userMapper.getEmailByUserId(username);
+    }
+
+    public int changePassword(String newPassword, String username) {
+        return userMapper.changePassword(newPassword, username);
+    }
 }
