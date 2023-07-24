@@ -60,8 +60,6 @@
         function refreshCode() {
             initCode();
         }
-
-
         function submit() {
             var username = jQuery("#username");
             var password = jQuery("#password");
@@ -95,7 +93,6 @@
                         // 登录失败
                         alert("抱歉登录失败！" + res.msg);
                         initCode();
-
                         if(res.code == -1) {
                             // 用户名或密码错误
                             username.val("");

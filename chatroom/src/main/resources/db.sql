@@ -23,9 +23,9 @@ create table friend(
     userId int,
     friendId int
 );
-insert into friend values (1, 2),(2, 1);
-insert into friend values (1, 3),(3, 1);
-insert into friend values (1, 4),(4, 1);
+-- insert into friend values (1, 2),(2, 1);
+-- insert into friend values (1, 3),(3, 1);
+-- insert into friend values (1, 4),(4, 1);
 
 -- 创建会话表
 drop table if exists message_session;
@@ -35,8 +35,8 @@ create table message_session(
     lastTime datetime
 );
 
-insert into message_session values(1, '2000-05-01 00:00:00');
-insert into message_session values(2, '2000-06-01 00:00:00');
+-- insert into message_session values(1, '2000-05-01 00:00:00');
+-- insert into message_session values(2, '2000-06-01 00:00:00');
 
 -- 创建 会话-用户 关联表（用户与会话为多对多关系）
 drop table if exists message_session_user;
@@ -45,8 +45,8 @@ create table message_session_user(
     userId int
 );
 
-insert into message_session_user values (1, 1),(1, 2);
-insert into message_session_user values (2, 1),(2, 3);
+-- insert into message_session_user values (1, 1),(1, 2);
+-- insert into message_session_user values (2, 1),(2, 3);
 
 -- 创建消息表
 drop table if exists message;
@@ -58,21 +58,21 @@ create table message(
     postTime datetime -- 消息发送时间
 );
 
-
--- wuhao和zhangsan发的消息
-insert into message values (1, 1, 1, '今晚吃啥', '2000-05-01 17:00:00');
-insert into message values (2, 2, 1, '随便', '2000-05-01 17:01:00');
-insert into message values (3, 1, 1, '那吃面?', '2000-05-01 17:02:00');
-insert into message values (4, 2, 1, '不想吃', '2000-05-01 17:03:00');
-insert into message values (5, 1, 1, '那你想吃啥', '2000-05-01 17:04:00');
-insert into message values (6, 2, 1, '随便', '2000-05-01 17:05:00');
-insert into message values (11, 1, 1, '那吃米饭炒菜?', '2000-05-01 17:06:00');
-insert into message values (8, 2, 1, '不想吃', '2000-05-01 17:07:00');
-insert into message values (9, 1, 1, '那你想吃啥?', '2000-05-01 17:08:00');
-insert into message values (10, 2, 1, '随便', '2000-05-01 17:09:00');
-
--- wuhao和lisi发的消息
-insert into message values(7, 1, 2, '晚上一起约?', '2000-05-02 12:00:00');
+--
+-- -- wuhao和zhangsan发的消息
+-- insert into message values (1, 1, 1, '今晚吃啥', '2000-05-01 17:00:00');
+-- insert into message values (2, 2, 1, '随便', '2000-05-01 17:01:00');
+-- insert into message values (3, 1, 1, '那吃面?', '2000-05-01 17:02:00');
+-- insert into message values (4, 2, 1, '不想吃', '2000-05-01 17:03:00');
+-- insert into message values (5, 1, 1, '那你想吃啥', '2000-05-01 17:04:00');
+-- insert into message values (6, 2, 1, '随便', '2000-05-01 17:05:00');
+-- insert into message values (11, 1, 1, '那吃米饭炒菜?', '2000-05-01 17:06:00');
+-- insert into message values (8, 2, 1, '不想吃', '2000-05-01 17:07:00');
+-- insert into message values (9, 1, 1, '那你想吃啥?', '2000-05-01 17:08:00');
+-- insert into message values (10, 2, 1, '随便', '2000-05-01 17:09:00');
+--
+-- -- wuhao和lisi发的消息
+-- insert into message values(7, 1, 2, '晚上一起约?', '2000-05-02 12:00:00');
 
 
 -- 创建添加好友请求表
@@ -83,8 +83,8 @@ create table add_friend(
     input varchar(255), -- 添加信息
     postTime datetime -- 添加时间
 );
-insert into add_friend values(1, 2, 'aaa', now());
-insert into add_friend values(2, 1, 'aaa', now());
+-- insert into add_friend values(1, 2, 'aaa', now());
+-- insert into add_friend values(2, 1, 'aaa', now());
 
 
 

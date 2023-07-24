@@ -35,8 +35,4 @@ public class CheckCodeTools {
         return result;
 
     }
-
-
-
-
 }

@@ -99,8 +99,8 @@ function getFriendList() {
                 }
 
             }else {
-                // 暂无好友
-                friendList.innerHTML = "<p style='margin-left: 20px; color: rgb(238, 238, 238)'>暂无好友</p>";
+                // // 暂无好友
+                // friendList.innerHTML = "<p style='margin-left: 20px; color: rgb(238, 238, 238)'>暂无好友</p>";
             }
         },
         error:function() {
@@ -122,37 +122,38 @@ function getSessionList() {
         success:function(res) {
             if(res.data != null && res.data.length > 0) {
                 // 存在会话
-                
+
                 // 首先清空当前会话列表
                 sessionListUL.innerHTML = "";
-                for(let session of res.data) {
+                for (let session of res.data) {
                     // 对于lastMessage长度进行处理
-                    if(session.lastMessage.length > 10) {
+                    if (session.lastMessage.length > 10) {
                         session.lastMessage = session.lastMessage.substring(0, 10) + "...";
                     }
-                    
+
                     let li = document.createElement("li");
                     // 添加sessionId到li标签中
                     li.setAttribute("message-session-id", session.sessionId);
 
-                    li.innerHTML += '<h3>' + session.friends[0].friendName + '</h3>';    
-                    li.innerHTML += '<p>' + session.lastMessage +'</p>' ;
-                    
+                    li.innerHTML += '<h3>' + session.friends[0].friendName + '</h3>';
+                    li.innerHTML += '<p>' + session.lastMessage + '</p>';
+
                     // 添加li标签到dom元素中
                     sessionListUL.appendChild(li);
 
                     // 为每个li标签添加点击事件
-                    li.onclick = function() {
+                    li.onclick = function () {
                         clickSession(li);
                     }
-                    
+
                 }
 
-            }else {
-                // 当前没有会话
-                sessionListUL.innerHTML = "<p style='margin-left: 20px; color: rgb(238, 238, 238)'>当前没有会话！</p>";
-
             }
+            // }else {
+            //     // 当前没有会话
+            //     sessionListUL.innerHTML = "<p style='margin-left: 20px; color: rgb(238, 238, 238)'>当前没有会话！</p>";
+            //
+            // }
         }
     });
 }

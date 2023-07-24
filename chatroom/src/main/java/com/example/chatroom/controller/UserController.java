@@ -131,9 +131,11 @@ public class UserController {
      */
     @GetMapping("/email")
     public UnifyResult getCode(String email) {
-        if (email == null) {
+        if (!StringUtils.hasLength(email)) {
             return UnifyResult.fail(-1, "参数错误");
         }
+
+
         // 生成随机数，用作验证码
         Random random = new Random();
         StringBuilder code = new StringBuilder();
@@ -145,7 +147,7 @@ public class UserController {
         // 设置主题
         message.setSubject("网页聊天室验证码");
         // 设置内容
-        message.setText(code.toString());
+        message.setText("欢迎注册MyChat，您的验证码是：" + code.toString());
         // 设置发送者邮箱
         message.setFrom("2945608334@qq.com");
         message.setTo(email);
@@ -154,19 +156,7 @@ public class UserController {
         return UnifyResult.success(code);
     }
 
-    /**
-     * 修改密码。邮箱验证
-     * @param username
-     * @return
-     */
-    @PostMapping("/verifyEmail")
-    public UnifyResult verifyEmail(String username) {
-        if(!StringUtils.hasLength(username)) {
-            return UnifyResult.fail(-1, "参数有误！");
-        }
-        String emailDB = userService.getEmail(username);
-        return UnifyResult.success(emailDB);
-    }
+
 
     /**
      * 修改密码
@@ -179,6 +169,11 @@ public class UserController {
         // 非空校验
         if(!StringUtils.hasLength(newPassword) && !StringUtils.hasLength(username)) {
             return UnifyResult.fail(-1, "参数有误！");
+        }
+        // 校验是否存在这个用户
+        User user = userService.selectByName(username);
+        if(user == null) {
+            return UnifyResult.fail(-2, "不存在当前用户！");
         }
         int result = userService.changePassword(passwordEncoder.encode(newPassword), username);
         return UnifyResult.success(result);
