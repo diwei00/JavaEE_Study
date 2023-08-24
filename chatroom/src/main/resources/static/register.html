@@ -58,9 +58,9 @@
         </div>
     </div>
     <script>
-        let code = null;
+
         function submit() {
-            // 记录验证码
+
             var username = jQuery("#username");
             var password = jQuery("#password");
             var password2 = jQuery("#password2");
@@ -104,10 +104,10 @@
                 return false;
             }
             // 验证码校验
-            if(code != codeInput.val().trim()) {
-                alert("验证码错误！");
-                codeInput.val("");
-                return;
+            if(codeInput.val().trim() == "") {
+                alert("请先输入验证码！");
+                codeInput.focus();
+                return false;
             }
             jQuery.ajax({
                 url: "/user/reg",
@@ -115,22 +115,26 @@
                 data: {
                     "username": username.val().trim(),
                     "password": password.val().trim(),
-                    "email": email.val().trim()
+                    "email": email.val().trim(),
+                    "code": codeInput.val().trim()
                 },
                 success:function(res) {
-                    if(res.data.userId <= 0) {
-                        alert("注册失败，用户名重复！");
+                    // 用户名重复
+                    if(res.data.userId == -3) {
+                        alert("注册失败，" + res.msg);
                         username.val("");
-                        password.val("");
-                        password2.val("");
-                        email.val("");
+                    }else if(res.code == -2) {
+                        // 验证码错误
+                        alert("注册失败，" + res.msg);
                         codeInput.val("");
-                    
+                    }else if(res.code == -1) {
+                        alert("注册失败，" + res.msg);
                     }else {
                         // 注册成功
                         alert("注册成功！");
                         location.href = "login.html";
                     }
+
                 }
             });
         }
@@ -138,6 +142,7 @@
         function getCode() {
             var email = jQuery("#email");
             var emailStr = email.val().trim();
+            var username = jQuery("#username");
             // 非空校验
             if(emailStr == "") {
                 alert("请先输入邮箱地址！");
@@ -151,24 +156,61 @@
                 email.focus();
                 return false;
             }
+            // 按钮倒计时60s
+            countdownButton();
+
             jQuery.ajax({
                 url: "user/email",
-                type: "GET",
+                type: "POST",
                 data: {
-                    email: emailStr
+                    email: emailStr,
+                    username: username.val().trim()
                 },
                 success:function(res) {
-                    if(res.data != null) {
+                    if(res.data == 1) {
                         alert("验证码发送成功！");
-                        code = res.data;
+                    }else if(res.code == -2) {
+                        alert("注册失败，" + res.msg);
+                        username.val("");
+                    }else if(res.code == -1) {
+                        alert("注册失败，" + res.msg);
 
                     }else {
                         alert("验证码发送失败！");
                     }
+
+
                 }
             });
             
         }
+
+        function countdownButton() {
+            var countdownBtn = document.getElementById('get-code');
+            var count = 60;
+            var countdown;
+
+            jQuery("#get-code").attr("style", "background-color: #666");
+            // 禁用按钮
+            document.getElementById("get-code").disabled = true;
+
+            clearInterval(countdown);
+            countdownBtn.innerHTML = count; // 显示初始倒计时数值
+
+            countdown = setInterval(function() {
+                count--;
+                countdownBtn.innerHTML = count; // 更新倒计时显示
+
+                if (count <= 0) {
+                    clearInterval(countdown); // 倒计时结束，清除计时器
+                    // 解除禁用
+                    document.getElementById("get-code").disabled = false;
+                    jQuery("#get-code").removeAttr("style");
+                    countdownBtn.innerHTML = "重新获取验证码";
+                }
+            }, 1000);
+        }
+
     </script>
 </body>
 </html>

@@ -7,6 +7,7 @@ import com.example.chatroom.entity.User;
 import com.example.chatroom.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.time.Duration;
 import java.util.Random;
 import java.util.zip.DataFormatException;
 
@@ -35,6 +37,15 @@ public class UserController {
 
     // 用于加盐加密，由于关闭了框架的加载，这里需要new对象
     BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+
+    @Autowired
+    private StringRedisTemplate redisTemplate;
+
+    // 验证码key，前缀
+    private static final String codeKeyPrefix = "chatroom:code:";
+    // 验证码key，后缀，全局唯一
+    private int count = 0;
+
 
     /**
      * 登录功能
@@ -78,21 +89,27 @@ public class UserController {
      * @return
      */
     @PostMapping("/reg")
-    public UnifyResult register(User user) {
+    public UnifyResult register(User user, String code) {
         // 非空校验
         if(!StringUtils.hasLength(user.getUsername()) || !StringUtils.hasLength(user.getPassword())
             || !StringUtils.hasLength(user.getEmail())) {
             return UnifyResult.fail(-1, "参数有误！");
         }
 
+        // 进行验证码校验
+        String codeDB = redisTemplate.opsForValue().get(codeKeyPrefix + user.getUsername());
+        if(codeDB == null || !codeDB.equals(code)) {
+            return UnifyResult.fail(-2, "验证码错误！");
+        }
+
         try {
             // 密码进行加盐加密存储
             user.setPassword(passwordEncoder.encode(user.getPassword()));
-            int result = userService.insert(user);
+            userService.insert(user);
         } catch (DuplicateKeyException e) {
             // 注册失败返回空对象
             User userFail = new User();
-            return UnifyResult.fail(-1, "注册失败，用户名重复！", userFail);
+            return UnifyResult.fail(-3, "用户名重复！", userFail);
 
         }
         // 注册成功返回 userId 和 password
@@ -129,8 +146,8 @@ public class UserController {
      * @param email
      * @return
      */
-    @GetMapping("/email")
-    public UnifyResult getCode(String email) {
+    @PostMapping("/email")
+    public UnifyResult getCode(String email, String username) {
         if (!StringUtils.hasLength(email)) {
             return UnifyResult.fail(-1, "参数错误");
         }
@@ -147,13 +164,23 @@ public class UserController {
         // 设置主题
         message.setSubject("网页聊天室验证码");
         // 设置内容
-        message.setText("欢迎注册MyChat，您的验证码是：" + code.toString());
+        message.setText("您的验证码是：" + code.toString() + "。有效期一分钟哦！");
         // 设置发送者邮箱
         message.setFrom("2945608334@qq.com");
+        // 判定用户名在这一时刻是否有其他用户注册
+        if(redisTemplate.opsForValue().get(codeKeyPrefix + username) != null) {
+            return UnifyResult.fail(-2, "此刻有其他用户注册此用户名！");
+        }
         message.setTo(email);
 
         mailSender.send(message);
-        return UnifyResult.success(code);
+
+
+
+        // 将验证码存储在redis中，点击注册后，后端进行校验，过期时间60s
+        redisTemplate.opsForValue().set(codeKeyPrefix + username, String.valueOf(code), Duration.ofSeconds(60));
+
+        return UnifyResult.success(1);
     }
 
 
@@ -165,10 +192,15 @@ public class UserController {
      * @return
      */
     @PostMapping ("/changePassword")
-    public UnifyResult changePassword(String newPassword, String username) {
+    public UnifyResult changePassword(String newPassword, String username, String code) {
         // 非空校验
-        if(!StringUtils.hasLength(newPassword) && !StringUtils.hasLength(username)) {
+        if(!StringUtils.hasLength(newPassword) && !StringUtils.hasLength(username) || !StringUtils.hasLength(code)) {
             return UnifyResult.fail(-1, "参数有误！");
+        }
+        // redis中读取验证码
+        String codeDB = redisTemplate.opsForValue().get(codeKeyPrefix + username);
+        if(codeDB == null || !codeDB.equals(code)) {
+            return UnifyResult.fail(-3, "验证码错误！");
         }
         // 校验是否存在这个用户
         User user = userService.selectByName(username);

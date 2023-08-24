@@ -509,6 +509,13 @@ function addFriend(div, input) {
     let addUserName = div.getAttribute("username");
     let friendList = document.querySelectorAll(".main .left #friend-list h4");
     let username = document.querySelector(".main .left .user").innerHTML;
+
+    // 新用户自己添加自己时，由于还没有用户，for循环进不去，因此在这里进行判断
+    if(addUserName == username) {
+        alert("你们已经是好友，无需再次添加！");
+        input.value = "";
+        return;
+    }
     for(let friend of friendList) {
         if(addUserName == friend.innerHTML || addUserName == username) {
             alert("你们已经是好友，无需再次添加！");

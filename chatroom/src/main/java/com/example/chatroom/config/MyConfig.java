@@ -55,6 +55,7 @@ public class MyConfig implements WebMvcConfigurer {
                 .excludePathPatterns("/user/verifyEmail")
                 .excludePathPatterns("/user/changePassword")
                 .excludePathPatterns("/user/getcode")
-                .excludePathPatterns("/test.html");
+                .excludePathPatterns("/test.html")
+                .excludePathPatterns("/favicon.ico");
     }
 }
