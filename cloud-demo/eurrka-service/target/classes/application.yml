@@ -1,0 +1,10 @@
+server:
+  port: 9990
+#  注册微服务信息到eureka服务注册中心（服务名称，服务地址）
+spring:
+  application:
+    name: eureka-server # 配置微服务名称
+eureka:
+  client:
+    service-url:
+      defaultZone:  http://127.0.0.1:9990/eureka  # 配置微服务地址
