@@ -1,0 +1,13 @@
+# 这个配置文件在application.yml加载之前加载
+# 读取nacos中p配置文件和本地application.yml结合在一起
+# 因此需要知道nacos的地址，和配置文件名称
+spring:
+  application:
+    name: user-server # 服务名称
+  profiles:
+    active: dev #开发环境，这里是dev
+  cloud:
+    nacos:
+      server-addr: localhost:8000 # Nacos地址
+      config:
+        file-extension: yaml # 文件后缀名

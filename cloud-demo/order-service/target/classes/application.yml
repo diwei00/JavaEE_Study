@@ -7,7 +7,14 @@ spring:
     password: wuhao1126
     driver-class-name: com.mysql.jdbc.Driver
   application:
-    name: order-server
+    name: order-server # 配置服务名称
+  cloud:
+    nacos:
+      server-addr: localhost:8848 # 添加nacos地址
+      discovery:
+        cluster-name: HZ # 配置集群名称
+#        namespace: ec69ff24-f1c8-4416-9835-856eb7e81ee3
+
 mybatis:
   type-aliases-package: cn.itcast.user.pojo
   configuration:
@@ -17,17 +24,17 @@ logging:
     cn.itcast: debug
   pattern:
     dateformat: MM-dd HH:mm:ss:SSS
-eureka:
-  client:
-    service-url:
-      defaultZone:  http://127.0.0.1:9990/eureka
-user-service: # 给某个微服务配置负载均衡规则，这里是user-service服务
+#eureka:
+#  client:
+#    service-url:
+#      defaultZone:  http://127.0.0.1:9990/eureka # 配置eureka地址
+user-server: # 给某个微服务配置负载均衡规则，这里是user-server服务
   ribbon:
-    NFLoadBalancerRuleClassName: com.netflix.loadbalancer.RandomRule # 负载均衡规则
+    NFLoadBalancerRuleClassName: com.alibaba.cloud.nacos.ribbon.NacosRule # 负载均衡规则
 ribbon:
   eager-load:
-    enabled: true
+    enabled: false
     clients:
-      - user-server
+      - user-server # 争对服务配置饥饿加载
 
 

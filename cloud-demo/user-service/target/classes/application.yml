@@ -10,10 +10,10 @@ spring:
     name: user-server
   cloud:
     nacos:
-      server-addr: localhost:8848 # 添加nacos地址
+      server-addr: localhost:8000 # 添加nacos地址
       discovery:
         cluster-name: HZ # 配置集群名称
-        ephemeral: false # 设置为非临时实例
+        ephemeral: true # 设置为非临时实例（默认临时实例）
 #        namespace: ec69ff24-f1c8-4416-9835-856eb7e81ee3 # 配置命名空间，只有在一个空间里的服务才可以访问
 mybatis:
   type-aliases-package: cn.itcast.user.pojo
