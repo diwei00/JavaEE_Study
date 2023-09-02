@@ -10,7 +10,7 @@ spring:
     name: user-server
   cloud:
     nacos:
-      server-addr: localhost:8000 # 添加nacos地址
+      server-addr: localhost:8848 # 添加nacos地址（nginx地址：8000）
       discovery:
         cluster-name: HZ # 配置集群名称
         ephemeral: true # 设置为非临时实例（默认临时实例）

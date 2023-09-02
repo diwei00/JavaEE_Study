@@ -38,3 +38,28 @@ ribbon:
       - user-server # 争对服务配置饥饿加载
 
 
+
+# 配置feign日志级别
+# NONE：不记录任何信息，默认日志级别
+# BASIC：仅记录请求的方法，URL，以及相应状态吗3和相应时间
+# HEADERS：在BASIC基础上，额外记录请求和响应头信息
+# FULL：记录请求和响应明细，包括请求头，请求体，元数据
+# 注意：建议使用 NONE BASIC，服务器记录日志信息也需要消耗一定的资源
+
+# feign优化：使用具有连接池的客户端
+#  URLConnection：默认实现，不支持连接池
+#  Apache HttpClient：支持连接池
+#  OKHttp：支持连接池
+feign:
+  client:
+    config:
+      default:  # 争对所有微服务都生效。如果写某个具体微服务信息，就只争对这个微服务生效
+        logger-level: FULL
+  httpclient:
+    enabled: true # 开启feign对HttpClient的支持
+    max-connections: 200 # 最大的连接数
+    max-connections-per-route: 50 # 每个路径的最大连接数
+
+
+
+

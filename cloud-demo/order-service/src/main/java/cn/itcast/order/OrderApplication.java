@@ -1,16 +1,20 @@
 package cn.itcast.order;
 
-import com.netflix.loadbalancer.IRule;
-import com.netflix.loadbalancer.RandomRule;
+import cn.itcast.feign.clients.UserClient;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
+import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.Bean;
 import org.springframework.web.client.RestTemplate;
 
 @MapperScan("cn.itcast.order.mapper")
 @SpringBootApplication
+// 配置defaultConfiguration参数，feign日志级别全局生效
+// basePackages：声明项目启动时需要扫描的包。示例：basePackages = "cn.itcast.feign.clients"
+// clients：指定具体要注入的bean，更推荐这种做法
+@EnableFeignClients(clients = {UserClient.class})  // 项目启动注册feign到spring容器中
 public class OrderApplication {
 
     public static void main(String[] args) {
