@@ -44,12 +44,14 @@ public class UserController {
 
     /**
      * 路径： /user/110
+     * @RequestHeader 得到请求头，验证网关过滤器
      *
      * @param id 用户id
      * @return 用户
      */
     @GetMapping("/{id}")
-    public User queryById(@PathVariable("id") Long id) {
+    public User queryById(@PathVariable("id") Long id, @RequestHeader("wu") String str) {
+        System.out.println(str);
         return userService.queryById(id);
     }
 }

@@ -12,6 +12,7 @@
         <module>order-service</module>
         <module>eurrka-service</module>
         <module>feign-api</module>
+        <module>gateway</module>
     </modules>
 
     <packaging>pom</packaging>
