@@ -105,13 +105,15 @@ public class UserController {
         try {
             // 密码进行加盐加密存储
             user.setPassword(passwordEncoder.encode(user.getPassword()));
-            userService.insert(user);
+            int result = userService.insert(user);
+            System.out.println(result);
         } catch (DuplicateKeyException e) {
             // 注册失败返回空对象
             User userFail = new User();
             return UnifyResult.fail(-3, "用户名重复！", userFail);
 
         }
+
         // 注册成功返回 userId 和 password
         user.setPassword("");
         user.setEmail("");

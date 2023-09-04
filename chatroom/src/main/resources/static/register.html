@@ -120,7 +120,7 @@
                 },
                 success:function(res) {
                     // 用户名重复
-                    if(res.data.userId == -3) {
+                    if(res.code == -3) {
                         alert("注册失败，" + res.msg);
                         username.val("");
                     }else if(res.code == -2) {

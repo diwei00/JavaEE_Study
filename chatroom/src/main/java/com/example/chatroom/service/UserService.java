@@ -5,10 +5,12 @@ import com.example.chatroom.mapper.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.zip.DataFormatException;
 
 @Service
+
 public class UserService {
     @Autowired
     UserMapper userMapper;
