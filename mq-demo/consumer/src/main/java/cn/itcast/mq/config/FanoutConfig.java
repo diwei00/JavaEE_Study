@@ -15,6 +15,12 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class FanoutConfig {
 
+    // 声明队列
+    @Bean
+    public Queue simpleQueue() {
+        return new Queue("simple.queue1");
+    }
+
     /**
      * 声明交换机
      * FanoutExchange：广播交换机，会给每个和自己绑定的队列都发送消息

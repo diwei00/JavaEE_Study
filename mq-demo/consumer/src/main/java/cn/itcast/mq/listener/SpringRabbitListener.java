@@ -10,17 +10,22 @@ import org.springframework.stereotype.Component;
 
 import javax.lang.model.type.ExecutableType;
 import java.time.LocalDateTime;
+import java.util.Map;
 
 // 消费队列中的消息
 @Component
 public class SpringRabbitListener {
 
+
+//
 //     监听simple.queue队列
 //     队列中只要有消息，这里就可以拿到消息
-    @RabbitListener(queues = "simple.queue")
-    public void listenSimpleQueueMessage(String msg) {
-
+    // 直接使用引用类型，消息转换器可以反序列化为对象
+    @RabbitListener(queues = "simple.queue1")
+    public void listenSimpleQueueMessage(Map<String, String> msg) {
         System.out.println("消费到消息："  + msg);
+        System.out.println(msg.get("name"));
+        System.out.println(msg.get("age"));
 
     }
 
