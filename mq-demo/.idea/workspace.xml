@@ -20,6 +20,19 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
   </component>
+  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
+  "lastFilter": {
+    "state": "OPEN"
+  }
+}]]></component>
+  <component name="GithubPullRequestsUISettings">
+    <option name="selectedUrlAndAccountId">
+      <UrlAndAccount>
+        <option name="accountId" value="65ecfc9d-6e23-4bbe-8294-02b27e5a76fe" />
+        <option name="url" value="https://github.com/diwei00/JavaEE_Study.git" />
+      </UrlAndAccount>
+    </option>
+  </component>
   <component name="MavenImportPreferences">
     <option name="generalSettings">
       <MavenGeneralSettings>
@@ -52,7 +65,7 @@
     "project.structure.last.edited": "Modules",
     "project.structure.proportion": "0.0",
     "project.structure.side.proportion": "0.0",
-    "settings.editor.selected.configurable": "MavenSettings",
+    "settings.editor.selected.configurable": "configurable.group.build",
     "spring.configuration.checksum": "3a06fd391ad2f2dbd744107994677167",
     "vue.rearranger.settings.migration": "true"
   }
@@ -156,7 +169,7 @@
       <option name="presentableId" value="Default" />
       <updated>1681917400050</updated>
       <workItem from="1694234426357" duration="75000" />
-      <workItem from="1694321296581" duration="4460000" />
+      <workItem from="1694321296581" duration="8508000" />
     </task>
     <task id="LOCAL-00001" summary="RabbitMQ基础学习">
       <created>1694274052556</created>

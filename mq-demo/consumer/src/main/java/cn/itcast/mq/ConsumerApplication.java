@@ -15,6 +15,9 @@ public class ConsumerApplication {
     /**
      * 接收消息转换器，将json数据反序列化为对象
      * 接收数据时，可以直接使用引用类型
+     *
+     * 注意：
+     *   发送方和接收方需要使用相同的消息转换器
      * @return
      */
     @Bean
