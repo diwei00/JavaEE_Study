@@ -12,11 +12,15 @@ import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestHighLevelClient;
+import org.elasticsearch.common.geo.GeoPoint;
+import org.elasticsearch.common.unit.DistanceUnit;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.SearchHits;
+import org.elasticsearch.search.sort.SortBuilders;
+import org.elasticsearch.search.sort.SortOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -31,6 +35,7 @@ public class HotelService extends ServiceImpl<HotelMapper, Hotel> implements IHo
 
     /**
      * 实现搜索加分页功能
+     * 添加距离排序
      * @param requestParams
      * @return
      */
@@ -45,6 +50,18 @@ public class HotelService extends ServiceImpl<HotelMapper, Hotel> implements IHo
         int page = requestParams.getPage();
         int size = requestParams.getSize();
         request.source().from((page - 1) * size).size(size);
+
+        // 距离排序
+        String location = requestParams.getLocation();
+        location = "31.034661, 21.612282";
+
+        if(location != null && !location.equals("")) {
+            request.source().sort(SortBuilders
+                    .geoDistanceSort("location", new GeoPoint(location))
+                    .order(SortOrder.ASC)
+                    .unit(DistanceUnit.KILOMETERS)
+            );
+        }
 
 
         try {
@@ -97,11 +114,6 @@ public class HotelService extends ServiceImpl<HotelMapper, Hotel> implements IHo
 
         // 放入source
         request.source().query(boolQueryBuilder);
-
-
-
-
-
     }
 
     private PageResult handleResponse(SearchResponse response) {
@@ -118,6 +130,13 @@ public class HotelService extends ServiceImpl<HotelMapper, Hotel> implements IHo
             String json = hit.getSourceAsString();
             // 反序列化为对象
             HotelDoc hotelDoc = JSON.parseObject(json, HotelDoc.class);
+            // 获取排序值(就是按照距离排序的值)
+            Object[] sortValues = hit.getSortValues();
+            if(sortValues.length > 0) {
+                Object sortValue = sortValues[0];
+                hotelDoc.setDistance(sortValue);
+            }
+
             // 放入集合
             hotelDocs.add(hotelDoc);
         }
