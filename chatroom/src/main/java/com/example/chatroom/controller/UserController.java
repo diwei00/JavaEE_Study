@@ -6,6 +6,7 @@ import com.example.chatroom.common.UnifyResult;
 import com.example.chatroom.entity.User;
 import com.example.chatroom.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.mail.SimpleMailMessage;
@@ -14,11 +15,16 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.time.Duration;
 import java.util.Random;
+import java.util.UUID;
 import java.util.zip.DataFormatException;
 
 @RestController
@@ -45,6 +51,10 @@ public class UserController {
     private static final String codeKeyPrefix = "chatroom:code:";
     // 验证码key，后缀，全局唯一
     private int count = 0;
+
+    // 文件实际保存路径
+    @Value("${userImgpath}")
+    private String userImgPath;
 
 
     /**
@@ -177,8 +187,6 @@ public class UserController {
 
         mailSender.send(message);
 
-
-
         // 将验证码存储在redis中，点击注册后，后端进行校验，过期时间60s
         redisTemplate.opsForValue().set(codeKeyPrefix + username, String.valueOf(code), Duration.ofSeconds(60));
 
@@ -232,6 +240,57 @@ public class UserController {
         // 响应图片名字到前端
         return UnifyResult.success("/image/" + codeArr[0]);
 
+    }
+
+    //  @SessionAttribute(ApplicationVariable.SESSION_KEY_USERINFO) User user
+    @PostMapping("/uploadUserImg")
+    public UnifyResult uploadUserImg(MultipartFile multipartFile, HttpServletRequest request) {
+        // 参数校验
+        if(multipartFile == null) {
+            return UnifyResult.fail(-1, "上传失败，缺少文件参数！");
+        }
+        File file = new File(userImgPath);
+        if(!file.exists()) {
+            // 创建此文件夹
+            file.mkdir();
+        }
+        // 构造文件名
+        String[] suffix = multipartFile.getOriginalFilename().split("\\.");
+        String fileSuffix = suffix[suffix.length - 1];
+        String filename = UUID.randomUUID().toString() + "." + fileSuffix;
+
+        // 存储文件
+        FileInputStream fileInputStream = null;
+        BufferedOutputStream outputStream = null;
+        try {
+            fileInputStream = (FileInputStream) multipartFile.getInputStream();
+            outputStream = new BufferedOutputStream(Files.newOutputStream(Paths.get(file.getPath(), filename)));
+            outputStream.write(multipartFile.getBytes());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }finally {
+            try {
+                assert fileInputStream != null;
+                fileInputStream.close();
+                assert outputStream != null;
+                outputStream.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        // 将文件名存储在数据库中，后续请求根据url映射，找到用户头像
+        HttpSession session =  request.getSession(false);
+        User user = (User) session.getAttribute(ApplicationVariable.SESSION_KEY_USERINFO);
+        int result = userService.saveUserImg(filename, user.getUserId());
+        if(result < 1) {
+            return UnifyResult.fail(-1, "存储用户头像失败！");
+        }
+        // 由于前端拿到的用户数据是从后端session中获取的，这里用户信息改变需要同步到session中
+        user.setImg(filename);
+        session.setAttribute(ApplicationVariable.SESSION_KEY_USERINFO, user);
+
+
+        return UnifyResult.success(filename);
     }
 
 }

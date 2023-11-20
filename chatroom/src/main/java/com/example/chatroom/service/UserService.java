@@ -39,4 +39,8 @@ public class UserService {
     public int changePassword(String newPassword, String username) {
         return userMapper.changePassword(newPassword, username);
     }
+
+    public int saveUserImg(String userImgName, Integer userId) {
+        return userMapper.saveUserImg(userImgName, userId);
+    }
 }

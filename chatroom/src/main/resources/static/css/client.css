@@ -62,6 +62,11 @@
     color: white;
     padding: 0 20px;
 }
+#user-img {
+    border-radius: 5px;
+    width: 50px;
+    height: 50px;
+}
 
 .main .left .search {
     height: 40px;
@@ -227,7 +232,7 @@
 }
 .main .right #deleteFriend {
     display: flex;
-    width: 10p;
+    width: 10px;
     height: 7px;
     justify-content: flex-start;
 }
@@ -374,3 +379,12 @@
     background-color: rgb(89, 182, 63);
     color: white;
 }
+
+.image-upload {
+    display: none; // 设置上传文件的input隐藏
+}
+
+/*#user-img:hover {*/
+/*    background-color: rgb(89, 182, 63);*/
+/*}*/
+

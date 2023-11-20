@@ -51,6 +51,7 @@ initSwitchTab();
 // 获取用户信息
 function getUserInfo() {
     var username = jQuery("#username");
+    var userImage = jQuery("#user-img");
     jQuery.ajax({
        url: "/user/userInfo",
        type: "GET",
@@ -60,6 +61,8 @@ function getUserInfo() {
                // 数据响应成功
                username.attr("user-id", res.data.userId);
                username.html(res.data.username);
+               userImage.attr("src", '/userImg/' + res.data.img);
+
            }else {
                 alert("当前用户未登录！");
                 location.href = "login.html";
@@ -685,4 +688,35 @@ function handleAgreeFriend(resp) {
     }
 
 
+}
+
+
+/**
+ * 上传头像
+ */
+$(document).on("click", "#user-img", function () {
+    // 点击图片的同时，点击上传文件的input
+    let chooseImage = $('.image-upload').click();
+
+});
+
+//
+function postData() {
+    let formData = new FormData();
+    formData.append("multipartFile", $('.image-upload')[0].files[0]);
+    $.ajax({
+        url: "/user/uploadUserImg",
+        type: "POST",
+        data: formData,
+        processData: false, // 告诉jQuery不要去处理发送的数据
+        contentType: false, // 告诉jQuery不要去设置Content-Type请求头
+        dataType: 'json',
+        success:function (res) {
+            if(res.code == 200 && res.data != null) {
+                // 响应成功，设置新地址到img标签中
+                $("#user-img").attr("src","/userImg/" +  res.data);
+            }
+
+        }
+    });
 }

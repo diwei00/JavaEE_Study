@@ -20,8 +20,10 @@
             <!-- 左侧区域, 显示好友列表和会话列表 -->
             <div class="left">
                 <!-- 当前登录用户的用户名 -->
-                <div class="user" id="username">
-                    
+                <div class="user">
+                    <img src="#" id="user-img"  title="上传头像" align="center">
+                    <input class="image-upload" type="file" onchange="postData()" name="picture" />
+                    <span class="user" id="username"></span>
                 </div>
                 <!-- 这是搜索框 -->
                 <div class="search">
@@ -139,6 +141,12 @@
             </div>
         </div>
     </div>
+
+
+    <script>
+
+    </script>
+
 
     <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
     <script src="js/client.js"></script>

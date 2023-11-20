@@ -18,4 +18,6 @@ public interface UserMapper {
 
     int changePassword(@Param("newPassword") String newPassword, @Param("username") String username);
 
+    int saveUserImg(@Param("userImgName") String userImgName, @Param("userId") Integer userId);
+
 }

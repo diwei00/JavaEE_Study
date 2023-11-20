@@ -17,6 +17,10 @@
         update user set password=#{newPassword} where username=#{username}
     </update>
 
+    <update id="saveUserImg">
+        update user set img = #{userImgName} where userId = #{userId}
+    </update>
+
 
 
 

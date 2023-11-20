@@ -24,6 +24,9 @@ public class MyConfig implements WebMvcConfigurer {
     @Value("${imgpath}")
     private String imagePath;
 
+    @Value("${userImgpath}")
+    private String userImgPath;
+
     /**
      * 注册静态资源处理器
      *
@@ -32,7 +35,10 @@ public class MyConfig implements WebMvcConfigurer {
      */
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        // 验证码静态资源映射
         registry.addResourceHandler("/image/**").addResourceLocations("file:" + imagePath);
+        // 头像静态资源映射
+        registry.addResourceHandler("/userImg/**").addResourceLocations("file:" + userImgPath);
     }
 
     /**
@@ -58,4 +64,5 @@ public class MyConfig implements WebMvcConfigurer {
                 .excludePathPatterns("/test.html")
                 .excludePathPatterns("/favicon.ico");
     }
+
 }
