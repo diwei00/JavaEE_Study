@@ -10,4 +10,5 @@ public class Friend {
 
     private int friendId;
     private String friendName;
+    private String userImg;
 }

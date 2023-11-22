@@ -10,7 +10,7 @@
     </select>
 
     <select id="getFriendsBySessionId" resultType="com.example.chatroom.entity.Friend">
-        select userId as friendId, username as friendName from user
+        select userId as friendId, username as friendName, img as userImg from user
         where userId in
         (select userId from message_session_user where sessionId = #{sessionId} and userId != #{selfUserId})
 

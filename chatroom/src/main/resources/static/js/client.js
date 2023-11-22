@@ -86,14 +86,22 @@ function getFriendList() {
                 // 得到好友列表
                 // 首先清空好友列表
                 friendList.innerHTML = "";
-                
+                debugger
                 for(let friend of res.data) {
                     // 保存friendId到li标签上
                     let li = document.createElement("li");
                     li.setAttribute("friend-id", friend.friendId);
 
-                    li.innerHTML = '<h4>' + friend.friendName + '</h4>';
+                    // li.innerHTML = '<h4>' + friend.friendName + '</h4>';
+
+                    let h4 = document.createElement("h4");
+                    let img = document.createElement("img");
+                    h4.innerHTML = friend.friendName;
+                    img.src = "/userImg/" + friend.userImg;
+                    li.appendChild(img);
+                    li.appendChild(h4);
                     friendList.appendChild(li);
+
 
                     // 为每个li标签添加点击属性
                     li.onclick = function() {
@@ -125,7 +133,6 @@ function getSessionList() {
         success:function(res) {
             if(res.data != null && res.data.length > 0) {
                 // 存在会话
-
                 // 首先清空当前会话列表
                 sessionListUL.innerHTML = "";
                 for (let session of res.data) {
@@ -135,11 +142,23 @@ function getSessionList() {
                     }
 
                     let li = document.createElement("li");
+                    let img = document.createElement("img");
+                    let span = document.createElement("span");
+                    // li.innerHTML += '<h3>' + session.friends[0].friendName + '</h3>';
+                    // li.innerHTML += '<p>' + session.lastMessage + '</p>';
+                    let h3 = document.createElement("h3");
+                    let p = document.createElement("p");
                     // 添加sessionId到li标签中
                     li.setAttribute("message-session-id", session.sessionId);
 
-                    li.innerHTML += '<h3>' + session.friends[0].friendName + '</h3>';
-                    li.innerHTML += '<p>' + session.lastMessage + '</p>';
+
+                    h3.innerHTML = session.friends[0].friendName;
+                    p.innerHTML = session.lastMessage;
+                    img.src = "/userImg/" + session.friends[0].userImg;
+                    span.appendChild(h3);
+                    span.appendChild(p);
+                    li.appendChild(img);
+                    li.appendChild(span);
 
                     // 添加li标签到dom元素中
                     sessionListUL.appendChild(li);
@@ -196,10 +215,11 @@ function getHistoryMessage(sessionId) {
     let titleDiv = document.querySelector(".right .title");
     titleDiv.innerHTML = "";
     let messageShowDiv = document.querySelector(".right .message-show");
+    debugger
     messageShowDiv.innerHTML = "";
 
     // 设置当前点击会话右侧好友名
-    let h3 = document.querySelector("#session-list .selected>h3");
+    let h3 = document.querySelector("#session-list .selected span>h3");
     if(h3 != null) {
         titleDiv.innerHTML = h3.innerHTML;
     }
@@ -234,7 +254,7 @@ function scrollBottom(elem) {
 }
 function addMessage(message, messageShowDiv) {
     // 得到当前登录用户名
-    let username = document.querySelector(".left .user").innerHTML;
+    let username = document.querySelector(".left .user #username").innerHTML;
 
     // 这个div展示一条消息
     let div = document.createElement('div');
@@ -700,7 +720,7 @@ $(document).on("click", "#user-img", function () {
 
 });
 
-//
+// 提交用户头像
 function postData() {
     let formData = new FormData();
     formData.append("multipartFile", $('.image-upload')[0].files[0]);
@@ -715,8 +735,21 @@ function postData() {
             if(res.code == 200 && res.data != null) {
                 // 响应成功，设置新地址到img标签中
                 $("#user-img").attr("src","/userImg/" +  res.data);
+            }else {
+                alert(res.msg);
             }
 
         }
     });
 }
+
+// 实现回车键发送消息
+function enterEvent() {
+    // 为textarea绑定回车事件
+    $("textarea").on("keydown", function (event) {
+        if(event.which  == 13) {
+            $("#sendBtn").click();
+        }
+    })
+}
+enterEvent();

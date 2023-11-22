@@ -112,6 +112,17 @@
             
         }
 
+        // 为验证码输入绑定回车事件，点击回车自动登录
+        function enterEvent() {
+
+            $("#code_input").on("keydown", function (event) {
+                if(event.which  == 13) {
+                    $("#submit").click();
+                }
+            })
+        }
+        enterEvent();
+
 
 
     </script>

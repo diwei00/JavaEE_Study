@@ -27,7 +27,7 @@ public class FriendController {
      * @param request
      * @return
      */
-    @GetMapping("friendList")
+    @GetMapping("/friendList")
     public UnifyResult selectFriendList(HttpServletRequest request) {
         // 由于拦截器，这个接口用户肯定会登录，为了确保系统安全性这里判断了一下
         HttpSession session = request.getSession(false);

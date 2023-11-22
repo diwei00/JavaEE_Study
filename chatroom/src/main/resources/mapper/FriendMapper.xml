@@ -3,7 +3,7 @@
 <mapper namespace="com.example.chatroom.mapper.FriendMapper">
     <!--  根据userId查找friend表得到好友friendId，然后查找user表得到好友信息  -->
     <select id="selectFriendList" resultType="com.example.chatroom.entity.Friend">
-        select userId as friendId,username as friendName from user
+        select userId as friendId,username as friendName,img as userImg from user
         where userId in
         (select friendId from friend where userId=#{userId})
     </select>

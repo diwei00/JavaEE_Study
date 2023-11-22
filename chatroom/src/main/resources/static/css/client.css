@@ -165,6 +165,8 @@
     padding: 10px 20px;
     color: white;
     border-top: 1px solid black;
+    display: flex;
+    align-content: flex-end;
 }
 
 .main .left .list .selected {
@@ -172,18 +174,34 @@
 }
 
 /* 这个样式是给会话列表使用的 */
-.main .left .list li h3,
+.main .left .list li h3 {
+    height: 20px;
+    font-size: 15px;
+    line-height: 20px;
+    margin-bottom: 5px;
+}
 .main .left .list li p {
     height: 20px;
-    font-size: 14px;
+    font-size: 11px;
     line-height: 20px;
+    color: #cccccc;
+
+}
+.main .left .list li span {
+    padding: 0 9px;
+}
+.main .left .list li img {
+    width: 43px;
+    height: 43px;
+    border-radius: 5px;
 }
 
 /* 这个样式是给好友列表使用的 */
 .main .left .list li h4 {
     height: 40px;
     line-height: 40px;
-    font-size: 20px;
+    font-size: 17px;
+    padding: 0 9px;
     
 }
 

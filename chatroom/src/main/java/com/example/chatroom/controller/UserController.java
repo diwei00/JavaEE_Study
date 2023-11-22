@@ -106,7 +106,7 @@ public class UserController {
             return UnifyResult.fail(-1, "参数有误！");
         }
 
-        // 进行验证码校验
+        // 进行验证码校验（从redis中取验证码）
         String codeDB = redisTemplate.opsForValue().get(codeKeyPrefix + user.getUsername());
         if(codeDB == null || !codeDB.equals(code)) {
             return UnifyResult.fail(-2, "验证码错误！");
@@ -115,8 +115,9 @@ public class UserController {
         try {
             // 密码进行加盐加密存储
             user.setPassword(passwordEncoder.encode(user.getPassword()));
+            // 设置用户默认头像
+            user.setImg("defaultUserImg.png");
             int result = userService.insert(user);
-            System.out.println(result);
         } catch (DuplicateKeyException e) {
             // 注册失败返回空对象
             User userFail = new User();
@@ -242,12 +243,27 @@ public class UserController {
 
     }
 
-    //  @SessionAttribute(ApplicationVariable.SESSION_KEY_USERINFO) User user
+    /**
+     * 上传头像
+     * @param multipartFile
+     * @param request
+     * @return
+     */
     @PostMapping("/uploadUserImg")
     public UnifyResult uploadUserImg(MultipartFile multipartFile, HttpServletRequest request) {
         // 参数校验
         if(multipartFile == null) {
             return UnifyResult.fail(-1, "上传失败，缺少文件参数！");
+        }
+        // 文件类型校验
+        if(!multipartFile.getContentType().split("/")[1].equals("png") &&
+                !multipartFile.getContentType().split("/")[1].equals("jpg") &&
+                !multipartFile.getContentType().split("/")[1].equals("jpeg")) {
+            return UnifyResult.fail(-1, "上传失败，文件格式错误！");
+        }
+        // 文件大小校验
+        if(multipartFile.getSize() > 20 * 1024 * 1024) {
+            return UnifyResult.fail(-1, "上传失败，文件大于20MB");
         }
         File file = new File(userImgPath);
         if(!file.exists()) {
@@ -281,6 +297,9 @@ public class UserController {
         // 将文件名存储在数据库中，后续请求根据url映射，找到用户头像
         HttpSession session =  request.getSession(false);
         User user = (User) session.getAttribute(ApplicationVariable.SESSION_KEY_USERINFO);
+        if(user == null) {
+            return UnifyResult.fail(-1, "操作失败，用户未登录！");
+        }
         int result = userService.saveUserImg(filename, user.getUserId());
         if(result < 1) {
             return UnifyResult.fail(-1, "存储用户头像失败！");

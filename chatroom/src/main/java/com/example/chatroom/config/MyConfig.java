@@ -24,6 +24,7 @@ public class MyConfig implements WebMvcConfigurer {
     @Value("${imgpath}")
     private String imagePath;
 
+    // 读取用户头像配置
     @Value("${userImgpath}")
     private String userImgPath;
 
