@@ -570,19 +570,34 @@ function addFriend(div, input) {
 function handleAddFriend(resp) {
     // 构建添加好友列表
     let addFriendList = document.querySelector(".main .left #add-friend-list");
-    let li = document.createElement('li');
+    let li = document.createElement("li");
+    let div = document.createElement("div");
+    let img = document.createElement("img");
+    let span = document.createElement("span");
+    let p = document.createElement("p");
+    let h3 = document.createElement("h3");
+
+    img.src = "/userImg/" + resp.img;
+    p.innerHTML = resp.input;
+    h3.innerHTML = resp.username;
+
     // 用li标签存储当前申请用户id
     li.setAttribute("userId", resp.userId);
-    li.innerHTML = '<h3>'+ resp.username +'</h3>'
-    + '<p>'+ resp.input +'</p>';
+    // li.innerHTML = '<h3>'+ friend.username +'</h3>'
+    // + '<p>'+ friend.input +'</p>';
 
     let agreeButton = document.createElement("button");
     let refuseButton = document.createElement("button");
     agreeButton.innerHTML = "同意"
     refuseButton.innerHTML = "拒绝"
+
+    span.appendChild(h3);
+    div.appendChild(img);
+    span.appendChild(p);
+    div.appendChild(span);
+    li.appendChild(div);
     li.appendChild(agreeButton);
     li.appendChild(refuseButton);
-
     addFriendList.appendChild(li);
 
     // 置顶当前li标签
@@ -615,17 +630,33 @@ function getHistoryAddFriend() {
                 // 遍历构造到好友请求列表
                 for(let friend of res.data) {
                     let li = document.createElement("li");
+                    let div = document.createElement("div");
+                    let img = document.createElement("img");
+                    let span = document.createElement("span");
+                    let p = document.createElement("p");
+                    let h3 = document.createElement("h3");
+
+                    img.src = "/userImg/" + friend.img;
+                    p.innerHTML = friend.input;
+                    h3.innerHTML = friend.username;
+
                     // 用li标签存储当前申请用户id
                     li.setAttribute("userId", friend.userId);
-                    li.innerHTML = '<h3>'+ friend.username +'</h3>'
-                    + '<p>'+ friend.input +'</p>';
+                    // li.innerHTML = '<h3>'+ friend.username +'</h3>'
+                    // + '<p>'+ friend.input +'</p>';
+
                     let agreeButton = document.createElement("button");
                     let refuseButton = document.createElement("button");
                     agreeButton.innerHTML = "同意"
                     refuseButton.innerHTML = "拒绝"
+
+                    span.appendChild(h3);
+                    div.appendChild(img);
+                    span.appendChild(p);
+                    div.appendChild(span);
+                    li.appendChild(div);
                     li.appendChild(agreeButton);
                     li.appendChild(refuseButton);
-
                     addFriendList.appendChild(li);
 
                     // 为按钮绑定点击事件
@@ -655,7 +686,7 @@ function agreeAddFriend(li) {
     websocket.send(req);
     console.log("同意好友请求" + req);
 
-    /// 遍历所有li标签，删除所有关于点击用户的li标签
+    // 遍历所有li标签，删除所有关于点击用户的li标签
     deleteHtml(li);
 
 }
@@ -743,13 +774,25 @@ function postData() {
     });
 }
 
-// 实现回车键发送消息
+// 实现回车键发送消息，回车键点击点击搜索好友
 function enterEvent() {
     // 为textarea绑定回车事件
-    $("textarea").on("keydown", function (event) {
-        if(event.which  == 13) {
-            $("#sendBtn").click();
-        }
-    })
+    // 保证页面加载之后执行此代码
+    $(document).ready(function () {
+        $("textarea").on("keydown", function (event) {
+            if(event.which  == 13) {
+                $("#sendBtn").click();
+            }
+        });
+    });
+    debugger
+    $(document).ready(function () {
+        $("#search-input").on("keydown", function (event) {
+            if(event.which == 13) {
+                $("#search-button").click();
+            }
+        });
+    });
+
 }
 enterEvent();

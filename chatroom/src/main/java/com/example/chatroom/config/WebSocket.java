@@ -16,6 +16,7 @@ import com.example.chatroom.service.MessageService;
 import com.example.chatroom.service.MessageSessionService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.CloseStatus;
@@ -32,6 +33,7 @@ import java.util.List;
  * 构造userId与WebSocketSession对象之间的映射关系，就可以根据sessionId查找userId进而查到对应的WebSocketSession，实现服务器转发消息功能
  */
 @Component
+@Slf4j
 public class WebSocket extends TextWebSocketHandler {
 
     @Autowired
@@ -51,7 +53,7 @@ public class WebSocket extends TextWebSocketHandler {
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
         // websocket建立成功后自动调用
-        System.out.println("连接成功");
+        log.info("连接成功");
         // 通过拦截器得到HttpSession中的value
         User user = (User) session.getAttributes().get(ApplicationVariable.SESSION_KEY_USERINFO);
         if(user == null) {
@@ -64,10 +66,10 @@ public class WebSocket extends TextWebSocketHandler {
     @Override
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
         // 收到消息之后，自动调用
-        System.out.println("[接收消息] " + message.toString());
+        log.info("[接收消息] " + message.toString());
         User user = (User) session.getAttributes().get(ApplicationVariable.SESSION_KEY_USERINFO);
         if(user == null) {
-            System.out.println("当前用户未登录，无法进行消息转发！");
+            log.info("当前用户未登录，无法进行消息转发！");
             return;
         }
         MessageRequestDTO messageRequest = null;
@@ -75,7 +77,7 @@ public class WebSocket extends TextWebSocketHandler {
         AgreeAddFriendRequestDTO agreeAddFriendRequest = null;
         // 判断websocket类型，根据不同类型进行不同类型的消息转发工作
         if(message.getPayload().toString().contains("message")) {
-            System.out.println(message.getPayload());
+            log.info(message.getPayload());
             // 客户端发送的消息转换为java对象
              messageRequest = objectMapper.readValue(message.getPayload(), MessageRequestDTO.class);
             // 进行聊天消息转发
@@ -89,7 +91,7 @@ public class WebSocket extends TextWebSocketHandler {
             // 进行同意好友消息转发
             transferMessageFriend(user, agreeAddFriendRequest);
         }else {
-            System.out.println("message type 有误！");
+            log.info("message type 有误！");
         }
 
     }
@@ -114,7 +116,7 @@ public class WebSocket extends TextWebSocketHandler {
         String resp1 = objectMapper.writeValueAsString(agreeAddFriendResponse);
         WebSocketSession webSocketSession1 = onlineUserManager.getSession(user.getUserId());
         webSocketSession1.sendMessage(new TextMessage(resp1));
-        System.out.println("[同意好友消息转发] " + resp1);
+        log.info("[同意好友消息转发] " + resp1);
 
         // 向当前被处理用户通知
         AgreeAddFriendResponseVO agreeAddFriendResponse2 = new AgreeAddFriendResponseVO();
@@ -126,7 +128,7 @@ public class WebSocket extends TextWebSocketHandler {
         webSocketSession2.sendMessage(new TextMessage(resp2));
         // 3. 保存用户之间好友信息
         friendService.agreeAddFriend(user.getUserId(), agreeAddFriendRequest.getUserId());
-        System.out.println("[同意好友消息转发] " + resp2);
+        log.info("[同意好友消息转发] " + resp2);
     }
 
     /**
@@ -142,6 +144,9 @@ public class WebSocket extends TextWebSocketHandler {
         String username = friendService.selectFriendNameByUserId(user.getUserId());
         addFriendResponse.setUsername(username);
         addFriendResponse.setUserId(user.getUserId());
+        // todo: bug img可能拿不到
+        addFriendResponse.setImg(user.getImg());
+        System.err.println(user.getImg());
 
 
         String resp = objectMapper.writeValueAsString(addFriendResponse);
@@ -151,7 +156,7 @@ public class WebSocket extends TextWebSocketHandler {
         if(webSocketSession != null) {
             webSocketSession.sendMessage(new TextMessage(resp));
         }
-        System.out.println("[添加好友消息转发] " + addFriendResponse.toString());
+        log.info("[添加好友消息转发] " + addFriendResponse.toString());
 
         // 3. 存储数据库
         friendService.addAddFriend(user.getUserId(), addFriendRequest.getUserId(), addFriendRequest.getInput());
@@ -173,7 +178,7 @@ public class WebSocket extends TextWebSocketHandler {
         messageResponse.setContent(messageRequest.getContent());
         // 将响应对象转换为json字符串
         String messageRespJson = objectMapper.writeValueAsString(messageResponse);
-        System.out.println("[消息转发] " + messageRespJson);
+        log.info("[消息转发] " + messageRespJson);
 
         // 查找数据库，得到当前会话中的所有用户
         // 需要给自己也转发一份，因此这里也需要查询到自己
@@ -199,7 +204,7 @@ public class WebSocket extends TextWebSocketHandler {
     @Override
     public void handleTransportError(WebSocketSession session, Throwable exception) throws Exception {
         // 连接出现异常自动调用
-        System.out.println("连接出现异常" + exception.toString());
+        log.error("连接出现异常" + exception.toString());
         User user = (User) session.getAttributes().get(ApplicationVariable.SESSION_KEY_USERINFO);
         if(user == null) {
             return;
@@ -211,7 +216,7 @@ public class WebSocket extends TextWebSocketHandler {
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
         // 连接正常关闭之后正常调用
-        System.out.println("连接正常关闭" + status.toString());
+        log.info("连接正常关闭" + status.toString());
         User user = (User) session.getAttributes().get(ApplicationVariable.SESSION_KEY_USERINFO);
         if(user == null) {
             return;

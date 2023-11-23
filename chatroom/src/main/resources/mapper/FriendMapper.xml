@@ -24,7 +24,7 @@
 
     <!--  查找当前用户都有哪些用户添加他了，当前用户就是被加用户  -->
     <select id="getAddFriendList" resultType="com.example.chatroom.entity.vo.AddFriendResponseVO">
-        select fromId as userId, username, `input` from add_friend,user
+        select fromId as userId, username, `input`,user.img from add_friend,user
         where user.userId = add_friend.fromId
         and add_friend.userId=#{userId}
         order by postTime desc

@@ -65,7 +65,9 @@ public class FriendController {
     @GetMapping("/getAddFriend")
     public UnifyResult getAddFriendList(@SessionAttribute(ApplicationVariable.SESSION_KEY_USERINFO) User user) {
 
+        // 查询好友申请ing列表
         List<AddFriendResponseVO> addFriendList = friendService.getAddFriendList(user.getUserId());
+
         return UnifyResult.success(addFriendList);
 
     }

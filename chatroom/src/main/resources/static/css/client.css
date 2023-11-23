@@ -211,6 +211,18 @@
     padding: 10px 20px;
     color: white;
     border-top: 1px solid black;
+    display: block;
+}
+.main .left #add-friend-list li div{
+    display: flex;
+    align-content: flex-end;
+
+}
+.main .left #add-friend-list li div img{
+    width: 43px;
+    height: 43px;
+    border-radius: 5px;
+
 }
 
 .main .left #add-friend-list li button{
