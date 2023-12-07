@@ -377,16 +377,20 @@
     /* 如果里面的内容太多了, 就自动提供一个滚动条 */
     overflow: auto;
 }
+.main .right .friends-show img {
+    border-radius: 5px;
+    width: 35px;
+    height: 35px;
+}
 .main .right .friends-show span {
     height: 35px;
     width: 10%;
     line-height: 35px;
-    
-    
+    margin-left: 10px;
 }
 .main .right .friends-show input {
     height: 35px;
-    width: 60%;
+    width: 50%;
     margin-right: 10px;
     margin-left: 10px;
     padding-left: 8px;

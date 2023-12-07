@@ -9,7 +9,7 @@
     </select>
 
     <select id="searchFriendList" resultType="com.example.chatroom.entity.Friend">
-        select username as friendName,userId as friendId from user
+        select username as friendName,userId as friendId, img as userImg from user
         where username like concat('%', #{username}, '%')
     </select>
 

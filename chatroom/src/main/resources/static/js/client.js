@@ -489,18 +489,31 @@ function searchFriends() {
                 if(res.data != null && res.data.length > 0) {
                     // 查找到好友
                     for(let user of res.data) {
+                        // 创建div，显示一条结果
                         let div = document.createElement('div');
                         div.className = "friend";
                         div.setAttribute("userId", user.friendId);
                         div.setAttribute("username",  user.friendName);
 
+                        // 创建img标签
+                        let img = document.createElement("img");
+                        img.src = "/userImg/" + user.userImg;
+                        div.appendChild(img);
+
+                        // 创建span标签
+                        let span = document.createElement("span");
+                        span.setAttribute("userId", user.friendId);
+                        span.innerHTML = user.friendName;
+                        div.appendChild(span);
+
+                        // 创建input标签
                         let input = document.createElement('input');
                         input.type = "text";
                         input.placeholder = "发送添加好友申请";
-
-
-                        div.innerHTML += '<span userId='+ user.friendId+'>'+ user.friendName +'</span>';
                         div.appendChild(input);
+
+                        // 创建button标签
+                        // div.innerHTML += '<span userId='+ user.friendId+'>'+ user.friendName +'</span>';
                         let button = document.createElement("button");
                         button.innerHTML = "添加";
                         div.appendChild(button);
@@ -570,6 +583,7 @@ function addFriend(div, input) {
 function handleAddFriend(resp) {
     // 构建添加好友列表
     let addFriendList = document.querySelector(".main .left #add-friend-list");
+    // 创建标签
     let li = document.createElement("li");
     let div = document.createElement("div");
     let img = document.createElement("img");
@@ -577,6 +591,7 @@ function handleAddFriend(resp) {
     let p = document.createElement("p");
     let h3 = document.createElement("h3");
 
+    // 设置标签数据
     img.src = "/userImg/" + resp.img;
     p.innerHTML = resp.input;
     h3.innerHTML = resp.username;
@@ -591,6 +606,7 @@ function handleAddFriend(resp) {
     agreeButton.innerHTML = "同意"
     refuseButton.innerHTML = "拒绝"
 
+    // 添加标签到dom树中
     span.appendChild(h3);
     div.appendChild(img);
     span.appendChild(p);
@@ -785,7 +801,6 @@ function enterEvent() {
             }
         });
     });
-    debugger
     $(document).ready(function () {
         $("#search-input").on("keydown", function (event) {
             if(event.which == 13) {

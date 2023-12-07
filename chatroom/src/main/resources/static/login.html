@@ -7,6 +7,9 @@
     <link rel="stylesheet" href="css/common.css">
     <link rel="stylesheet" href="css/login.css">
     <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <script src="https://unpkg.com/vue@2/dist/vue.js"></script>
+    <script src="https://unpkg.com/element-ui@2.15.14/lib/index.js"></script>
 </head>
 <body>
     <!-- 导航栏 -->
@@ -34,8 +37,8 @@
                 <img onclick="refreshCode()" id="codeimg"
                       style="display: none;height: 40px;width: 110px">
             </div>
-            <div class="row">
-                <button id="submit" onclick="submit()">登录</button>
+            <div class="row" id="submitDiv">
+                <button id="submit" @click="submit()">登录</button>
             </div>
             
         </div>
@@ -60,57 +63,71 @@
         function refreshCode() {
             initCode();
         }
-        function submit() {
-            var username = jQuery("#username");
-            var password = jQuery("#password");
-            var codeInput = jQuery("#code_input");
-            if(username.val().trim() == "" ) {
-                alert("请先输入用户名！");
-                username.focus();
-                return false;
-            }
-            if(password.val().trim() == "") {
-                alert("请先输入密码！");
-                password.focus();
-                return false;
-            }
-            if(codeInput.val().trim() == "") {
-                alert("请先输入验证码！");
-                codeInput.focus();
-                return false;
-            }
-            
-            jQuery.ajax({
-                url: "/user/login",
-                type: "POST",
-                data: {
-                    "username": username.val().trim(),
-                    "password": password.val().trim(),
-                    "code": codeInput.val().trim()
-                },
-                success:function(res) {
-                    if(res.code <= 0) {
-                        // 登录失败
-                        alert("抱歉登录失败！" + res.msg);
-                        initCode();
-                        if(res.code == -1) {
-                            // 用户名或密码错误
-                            username.val("");
-                            password.val("");
-                            codeInput.val("");
-                        }else {
-                            // 验证码错误
-                            codeInput.val("");
-                        }
-                       
-                    }else {
-                        // 登录成功
-                        location.href = "client.html";
+        var main = {
+            methods: {
+                submit() {
+                    var flagThis = this;
+                    function message(message, type) {
+                        flagThis.$message({
+                            message: message,
+                            type: type,
+                            center: true,
+                            offset: 60
+                        });
                     }
+                    var username = jQuery("#username");
+                    var password = jQuery("#password");
+                    var codeInput = jQuery("#code_input");
+                    if (username.val().trim() == "") {
+                        message("请先输入用户名", "error");
+                        username.focus();
+                        return false;
+                    }
+                    if (password.val().trim() == "") {
+                        message("请先输入密码", "error");
+                        password.focus();
+                        return false;
+                    }
+                    if (codeInput.val().trim() == "") {
+                        message("请先输入验证码", "error");
+                        codeInput.focus();
+                        return false;
+                    }
+                    jQuery.ajax({
+                        url: "/user/login",
+                        type: "POST",
+                        data: {
+                            "username": username.val().trim(),
+                            "password": password.val().trim(),
+                            "code": codeInput.val().trim()
+                        },
+                        success: function (res) {
+                            if (res.code <= 0) {
+                                // 登录失败
+                                message("登录失败" + res.msg, "error");
+                                initCode();
+                                if (res.code == -1) {
+                                    // 用户名或密码错误
+                                    username.val("");
+                                    password.val("");
+                                    codeInput.val("");
+                                } else {
+                                    // 验证码错误
+                                    codeInput.val("");
+                                }
+
+                            } else {
+                                // 登录成功
+                                location.href = "client.html";
+                            }
+                        }
+                    });
                 }
-            });
-            
+            }
         }
+        var Ctor = Vue.extend(main)
+        new Ctor().$mount('#submitDiv')
+
 
         // 为验证码输入绑定回车事件，点击回车自动登录
         function enterEvent() {
