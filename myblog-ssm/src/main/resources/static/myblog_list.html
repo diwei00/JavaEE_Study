@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>内容管理</title>
+    <link rel="stylesheet" href="css/conmmon.css">
+    <link rel="stylesheet" href="css/blog_list.css">
+    <link rel="stylesheet" href="css/head.css">
+    <script src="js/jquery.min.js"></script>
+    <script src="js/logout.js"></script>
+    <script src="js/urltools.js"></script>
+
+    <style>
+        .nav{
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 50px;
+        }
+        .container{
+            padding-top: 50px;      
+            height: 100%;
+        }
+    
+        .container-left {
+            height: 100%;
+            width: 300px;
+            /* 加上滚动条 */
+            overflow: auto;
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 10px;
+            
+        }
+        #catalogue {
+            display: inline-block;
+            margin: 10px 2px 0px 2px;
+            border-radius: 5px;
+            text-decoration: none;
+            color: black;
+            width: 210px;
+            height: 40px;
+            padding: 10.5px;
+           
+           
+        }
+        #catalogue:hover {
+            background-color: gray;
+            color: #fff;
+            transition: all 0.5s;
+            
+        }
+       
+        .blog-pagnation-wrapper{
+            height: 40px;
+            margin: 16px 0;
+            text-align: center;
+            position: fixed;
+            bottom: 0;
+            width: 995px;
+        }
+        .blog-pagnation-item{
+            display: inline-block;
+            padding: 8px;
+            border: 1px solid #d0d0d5;
+            color: #333;
+        }
+        .blog-pagnation-item:hover{
+            background: #4e4eeb;
+            color: #fff;
+        }
+        .blog-pagnation-item.actvie{
+            background: #4e4eeb;
+            color: #fff;
+        }
+        /* 隐藏滚动条 */
+        ::-webkit-scrollbar {
+            display: none;
+        }
+
+
+
+    </style>
+</head>
+
+<body>
+    <!-- 导航栏 -->
+    <div class="nav">
+        <div class="dropdown">
+            <img src="img/head.jpg" alt="">
+            <ul class="dropdown-content">
+                <li>
+                    <button>上传头像</button>
+                </li>
+                <li>
+                    <!-- <a href="change_password.html">修改密码</a> -->
+                    <button onclick="checkPassword()">修改密码</button>
+                </li>
+                <li>
+                    <button>个人主页</button>
+                </li>
+            </ul>
+
+        </div>
+        <span class="title">我的博客系统</span>
+        <!-- 用来占据中间位置 -->
+        <span class="spacer"></span>
+        <a href="blog_list.html">博客大厅</a>
+        <a href="blog_add.html">写博客</a>
+        <a href="javascript:logout()">注销</a>
+    </div>
+    <!-- 版心 -->
+    <div class="container">
+        <!-- 左侧目录 -->
+        <div class="container-left">
+            <h3 style="text-align: center;margin-top: 5px;" id="catalogue2">内容管理</h3>
+            <div id="catalogueList">
+
+            </div>
+
+        </div>
+        
+        <!-- 右侧内容详情 -->
+        <div class="container-right">
+            <!-- 每一篇博客包含标题, 摘要, 时间 -->
+            <div id="artlist">
+                
+            </div>
+            
+            <div class="blog-pagnation-wrapper" id="pageDiv" style="display: none">
+                <hr style="margin-bottom: 5px;">
+                <button class="blog-pagnation-item" onclick="doFirst()">首页</button> 
+                <button class="blog-pagnation-item" onclick="doPrev()">上一页</button>  
+                <button class="blog-pagnation-item" onclick="doNext()">下一页</button>
+                <button class="blog-pagnation-item" onclick="doLast()">末页</button>
+            </div>
+            
+        </div>
+       
+    </div>
+    <script>
+        var pageSize = 4;
+        var pageIndex = 1;
+        var pageCount = 0;
+        // 初始化参数
+        function pageInit() {
+            var paramPageSize = getParamByKey("pageSize");
+            var paramPageIndex = getParamByKey("pageIndex");
+            if(paramPageSize != null) {
+                pageSize = paramPageSize;
+            }
+            if(paramPageIndex != null) {
+                pageIndex = paramPageIndex;
+            }
+            doAjax();
+        }
+        pageInit();
+        // 点击首页
+        function doFirst() {
+            if(pageIndex <= 1) {
+                alert("已经在首页啦！");
+                return false;
+            }
+            pageIndex = 1;
+            location.href = "myblog_list.html?pageIndex=" + pageIndex + "&pageSize=" + pageSize;
+        }
+        // 点击上一页
+        function doPrev() {
+            if(pageIndex <= 1) {
+                alert("已经在首页啦！");
+                return false;
+            }
+            pageIndex--;
+            location.href = "myblog_list.html?pageIndex=" + pageIndex + "&pageSize=" + pageSize;
+        }
+        // 点击下一页
+        function doNext() {
+            if(pageIndex >= pageCount) {
+                alert("已经在末页啦！");
+                return false;
+            }
+            pageIndex++;
+            location.href = "myblog_list.html?pageIndex=" + pageIndex + "&pageSize=" + pageSize;
+        }
+        // 点击末页
+        function doLast() {
+            if(pageIndex >= pageCount) {
+                alert("已经在末页啦！");
+                return false;
+            }
+            location.href = "myblog_list.html?pageIndex=" + pageCount + "&pageSize=" + pageSize;
+
+        }
+
+        function doAjax() {
+            jQuery.ajax({
+                url: "/art/mylist",
+                type: "POST",
+                data: {
+                    "pageSize": pageSize,
+                    "pageIndex": pageIndex
+                },
+                success:function(res) {
+                    if(res.code == 200 && res.data.length > 0) {
+                        // 得到数据，遍历拼接到list中
+                        // 循环拼接
+                        var arthtml = "";
+
+                        for(var i = 0; i < res.data.length; i++) {
+                            var art = res.data[i];
+                            // 拼接博客列表
+                            arthtml += '<div class="blog">';
+                            arthtml += '<div class="title">' + art.title + '</div>';
+                            arthtml += '<div class="date">';
+                            arthtml += '时间：';
+                            arthtml += '<span id="createtime">' + art.createtime + '</span>&nbsp;&nbsp;&nbsp;';
+                            if(art.state == 0) {
+                                arthtml += '<span id="draft" style="color: coral;">草稿</span>&nbsp;&nbsp;&nbsp;';
+                            }
+                            if(art.state == 1) {
+                                arthtml += '<span id="draft" style="color: coral;">原创</span>&nbsp;&nbsp;&nbsp;';
+                            }
+                            arthtml += '</div>';
+                            arthtml += '<div class="desc">' + art.content + '</div>';
+                            arthtml += '<div style="float: right;">';
+                            arthtml += '<a href="blog_content.html?id=' + art.id + '" class="detail2">查看全文 &gt;&gt;</a>&nbsp;&nbsp;';
+                            arthtml += '<a href="blog_edit.html?id=' + art.id + '" class="detail2">修改 &gt;&gt;</a>&nbsp;&nbsp;';
+                            arthtml += '<a href=javascript:del(' + art.id + ') class="detail2">删除 &gt;&gt;</a>';
+                            arthtml += '</div>';
+                            arthtml += '</div>';
+
+
+
+                        }
+                        jQuery("#artlist").html(arthtml);
+                        jQuery("#pageDiv").show();
+
+                    }else {
+                        jQuery("#pageDiv").hide();
+                        jQuery("#artlist").html("<h2 style='margin-left:100px;margin-top:30px;'>暂无文章</h2>");
+
+                    }
+
+                }
+            });
+        }
+        function getMyArtCount() {
+            jQuery.ajax({
+                url: "/art/count",
+                type: "POST",
+                data: {},
+                success:function(res) {
+                    if(res.code == 200 && res.data > 0) {
+                        // 计算总页数，向上取整
+                        pageCount = Math.ceil(res.data / pageSize);
+                    }
+                }
+            });
+        }
+        getMyArtCount();
+
+
+
+
+        function del(id) {
+            if(confirm("请确认是否要删除文章！")) {
+                jQuery.ajax({
+                    url: "/art/del",
+                    type: "POST",
+                    data: {
+                        "id": id
+                    },
+                    success:function(res) {
+                        if(res.code == 200 && res.data == 1) {
+                            alert("删除成功！");
+                            location.href = location.href;
+                        }else {
+                            alert("操作失败，请重试！" + res.msg);
+                        }
+                    }
+
+                });
+            }
+        }
+        function checkPassword() {
+            location.href = "change_password.html";
+        }
+
+        // 获取文章目录
+        function getMyCatalogue() {
+            jQuery.ajax({
+               url: "/art/getMyCatalogue",
+               type: "POST",
+               data: {},
+               success:function (res) {
+                   if(res.code === 200 && res.data.length > 0) {
+                       var cataloguehtml = "";
+                       for(var i = 0; i < res.data.length; i++) {
+                           var item = res.data[i];
+                           // 拼接博客目录
+                           cataloguehtml += '<table>';
+                           cataloguehtml += '<tr>'
+                           cataloguehtml += '<td><a id="catalogue" href="blog_content.html?id='+ item.id +'">'+ item.title +'</a></td>'
+                           cataloguehtml += '<td style="width: 35px;font-size: 15px;color: coral" >'+ item.rcount +'</td>'
+                           cataloguehtml += '<td style="width: 45px;text-align: left;font-size: 15px;color: coral">阅读</td>';
+                           cataloguehtml += '</tr>';
+                           cataloguehtml += '<table>';
+                           cataloguehtml += '<hr>';
+                       }
+                       jQuery("#catalogueList").html(cataloguehtml);
+                   }else {
+                       jQuery("#catalogueList").html("<h2 style='margin-left:100px;margin-top:30px;'>暂无文章</h2>");
+                       jQuery("#catalogue2").hide();
+                   }
+               }
+            });
+        }
+        getMyCatalogue();
+    </script>
+    
+</body>
+
+</html>

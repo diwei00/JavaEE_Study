@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.mapper.CommentMapper">
+
+    <insert id="addComment">
+        insert into commentinfo(aid, uid, content, createtime) values (#{aid}, #{uid}, #{content}, #{createtime})
+    </insert>
+
+    <select id="getComment" resultType="com.example.demo.entity.vo.CommentInfoVO">
+        select c.createtime,c.content,u.username
+        from commentinfo c left join userinfo u on c.uid=u.id
+        where aid=#{aid}
+        order by c.id desc
+    </select>
+
+
+</mapper>

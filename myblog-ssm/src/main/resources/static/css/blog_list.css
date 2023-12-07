@@ -1,0 +1,80 @@
+/* 表示一篇博客 */
+.blog {
+    width: 100%;
+    padding: 18px 20px;
+}
+
+/* 博客的标题 */
+.blog .title {
+    color: black;
+    font-size: 20px;
+    font-weight: 700;
+    text-align: center;
+    padding: 10px 0;
+}
+
+/* 博客的摘要 */
+.blog .desc {
+    color: #000;
+    text-indent: 2em;
+    margin-top: 10px;
+}
+
+/* 博客的日期 */
+.blog .date {
+    color: #008000;
+    margin-top: 10px;
+    text-align: center;
+}
+
+/* 查看详情 按钮 */
+.blog .detail {
+    display: block;
+    width: 80px;
+    height: 35px;
+    line-height: 34px;
+    color: black;
+    text-align: center;
+    text-decoration: none;
+    margin: 10px auto 0 auto;
+    border: 2px solid black;
+    border-radius: 10%;
+    font-size: 12px;
+    float: right;
+    
+
+    /* 给颜色加上过渡效果 */
+    transition: all 0.5s;
+}
+.blog .detail2 {
+    display: inline-block;
+    width: 80px;
+    height: 35px;
+    line-height: 34px;
+    color: black;
+    text-align: center;
+    text-decoration: none;
+    margin: 10px auto 0 auto;
+    border: 2px solid black;
+    border-radius: 10%;
+    text-align: center;
+    font-size: 12px;
+    
+
+    /* 给颜色加上过渡效果 */
+    transition: all 0.5s;
+}
+
+/* 查看详情按钮的鼠标 hover 效果 */
+.blog .detail:hover {
+    background-color:grey;
+    color: #fff;
+}
+.blog .detail2:hover {
+    background-color:grey;
+    color: #fff;
+}
+/* 隐藏滚动条 */
+::-webkit-scrollbar {
+    display: none;
+}

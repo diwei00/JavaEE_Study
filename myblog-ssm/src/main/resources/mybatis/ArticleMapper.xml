@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.mapper.ArticleMapper">
+    <!--  添加数据之后，返回文章id到对象的这个属性中  -->
+    <insert id="add" useGeneratedKeys="true" keyProperty="id">
+        insert into articleinfo(title, content, uid, state) values(#{title}, #{content}, #{uid}, #{state})
+    </insert>
+
+    <select id="getDetailById" resultType="com.example.demo.entity.ArticleInfo">
+        select * from articleinfo where id = #{id} and uid = #{uid}
+    </select>
+
+    <update id="update">
+        update articleinfo set title = #{title},content = #{content},updatetime = #{updatetime},state = #{state} where id = #{id} and uid = #{uid}
+    </update>
+
+    <select id="getDetail" resultType="com.example.demo.entity.vo.ArticleInfoVO">
+        select a.*,u.username from articleinfo a left join userinfo u on a.uid=u.id where a.id=#{id}
+    </select>
+
+    <update id="increaseRCount">
+        update articleinfo set rcount=rcount+1 where id=#{id}
+    </update>
+
+    <select id="getListByUid" resultType="com.example.demo.entity.ArticleInfo">
+        select title,createtime,content,id,state from articleinfo where uid=#{uid} order by id desc limit #{pageSize} offset #{offsetValue}
+    </select>
+
+    <delete id="deleteById">
+        delete from articleinfo where id=#{id} and uid=#{uid}
+    </delete>
+
+    <select id="getListByPage" resultType="com.example.demo.entity.ArticleInfo">
+        select title,createtime,content,id from articleinfo where state = 1 order by id desc limit #{pageSize} offset #{offset}
+    </select>
+
+    <select id="getArtCount" resultType="int">
+        select count(id) from articleinfo where uid=#{uid} and state = 1
+
+    </select>
+
+    <select id="getCount" resultType="int">
+        select count(id) from articleinfo where state = 1
+    </select>
+
+
+    <!--  保存草稿  -->
+    <insert id="saveDraft">
+        insert into articleinfo(title, content, uid, state) values (#{title}, #{content}, #{uid}, #{state})
+    </insert>
+
+
+
+    <update id="modifState">
+        update articleinfo set state=1,createtime=#{createtime} where id=#{id}
+    </update>
+
+    <select id="getMyCatalogue" resultType="com.example.demo.entity.ArticleInfo">
+        select id,title,rcount from articleinfo where uid=#{uid} and state = 1 order by id desc
+    </select>
+
+    <select id="getAllCatalogue" resultType="com.example.demo.entity.ArticleInfo">
+        select id,title,rcount from articleinfo where state = 1 order by id desc
+
+    </select>
+
+</mapper>

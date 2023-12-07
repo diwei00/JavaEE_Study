@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>个人主页</title>
+    <link rel="stylesheet" href="css/conmmon.css">
+    <link rel="stylesheet" href="css/blog_list.css">
+</head>
+<body>
+    <style>
+        #column {
+            display: inline-block;
+            justify-content: space-between;
+            align-items: center;
+            width: 246.4px;
+            height: 50px;  
+            font-size: 18px;
+            text-align: center;
+            padding-top: 11px;
+            
+            background-color: orange;
+        }
+
+    </style>
+        <div class="nav">
+        <div class="dropdown">
+            <img src="img/head.jpg" alt="">
+        </div>
+        <span class="title">我的博客系统</span>
+        <!-- 用来占据中间位置 -->
+        <span class="spacer"></span>
+        <a href="blog_list.html">博客大厅</a>
+        <a href="blog_add.html">写博客</a>
+        <a href="javascript:logout()">注销</a>
+    </div>
+    <div class="container">
+        <div class="container-right" style="width: 100%">
+
+            <div id="list">
+                <div id="column">
+                    <span >关注的人</span>
+                </div>
+                <div id="column">
+                    <span >粉丝</span>
+                </div>
+                <div id="column">   
+                    <span >发布的评论</span>
+                </div>
+                <div id="column">
+                    <span >收到的评论</span>    
+                </div>
+
+            </div>
+        </div>
+       
+       
+    </div>
+
+
+    
+</body>
+</html>
