@@ -785,7 +785,6 @@ function postData() {
             }else {
                 alert(res.msg);
             }
-
         }
     });
 }
