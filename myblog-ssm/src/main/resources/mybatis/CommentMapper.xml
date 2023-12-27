@@ -9,9 +9,33 @@
     <select id="getComment" resultType="com.example.demo.entity.vo.CommentInfoVO">
         select c.createtime,c.content,u.username
         from commentinfo c left join userinfo u on c.uid=u.id
-        where aid=#{aid}
+        where aid = #{aid}
         order by c.id desc
     </select>
+
+    <select id="selectPublishCommentByUid" resultType="com.example.demo.entity.vo.ReceiveCommentVO">
+        select a.title, c.content from commentinfo c
+        left join articleinfo a on c.aid = a.id
+        where c.uid = #{uid}
+    </select>
+
+    <!--  查询该用户已有评论的文章  -->
+    <select id="selectArticleByUid" resultType="com.example.demo.entity.vo.ReceiveCommentVO">
+        select a.id, a.title, u.username as userName from articleinfo a
+        left join userinfo u on u.id = a.uid
+        where a.uid = #{uid}
+        and a.id in (select aid from commentinfo)
+
+    </select>
+
+    <select id="selectCommentByAid" resultType="java.lang.String">
+        select content from  commentinfo where aid = #{aid}
+    </select>
+
+
+
+
+
 
 
 </mapper>

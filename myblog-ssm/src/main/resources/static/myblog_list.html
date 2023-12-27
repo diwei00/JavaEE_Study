@@ -100,7 +100,7 @@
                     <button onclick="checkPassword()">修改密码</button>
                 </li>
                 <li>
-                    <button>个人主页</button>
+                    <button onclick="commentIndex()">评论主页</button>
                 </li>
             </ul>
 
@@ -319,6 +319,10 @@
             });
         }
         getMyCatalogue();
+
+        function commentIndex() {
+            location.href = "comment_index.html";
+        }
     </script>
     
 </body>
