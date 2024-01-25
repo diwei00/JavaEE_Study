@@ -3,7 +3,7 @@
 <mapper namespace="com.example.demo.mapper.ArticleMapper">
     <!--  添加数据之后，返回文章id到对象的这个属性中  -->
     <insert id="add" useGeneratedKeys="true" keyProperty="id">
-        insert into articleinfo(title, content, uid, state) values(#{title}, #{content}, #{uid}, #{state})
+        insert into articleinfo(title, content, uid, state, createtime) values(#{title}, #{content}, #{uid}, #{state}, now())
     </insert>
 
     <select id="getDetailById" resultType="com.example.demo.entity.ArticleInfo">

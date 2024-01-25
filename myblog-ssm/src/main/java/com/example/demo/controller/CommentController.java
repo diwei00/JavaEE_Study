@@ -128,4 +128,8 @@ public class CommentController {
         result.add(receiveCommentList);
         return AjaxResult.success(result);
     }
+
+    public static void main(String[] args) {
+        String str = "";
+    }
 }
