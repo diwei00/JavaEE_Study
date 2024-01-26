@@ -4,11 +4,13 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.itheima.mp.domain.po.User;
+import com.itheima.mp.service.IUserService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @SpringBootTest
@@ -16,6 +18,9 @@ class UserMapperTest {
 
     @Autowired
     private UserMapper userMapper;
+
+    @Autowired
+    private IUserService userService;
 
     @Test
     void testInsert() {
@@ -123,6 +128,68 @@ class UserMapperTest {
         QueryWrapper<User> wrapper = new QueryWrapper<User>()
                 .in("id", idList);
         userMapper.deductBalanceByIds(wrapper, 10);
+    }
 
+
+    /**
+     * 批量新增
+     * 逐条插入数据
+     * 网络通信最多，sql执行次数最多，效率最低
+     * 156129
+     */
+    @Test
+    void testSaveOneByOne() {
+        long b = System.currentTimeMillis();
+        for (int i = 1; i <= 100000; i++) {
+            userMapper.insert(buildUser(i));
+        }
+        long e = System.currentTimeMillis();
+        System.out.println("耗时：" + (e - b));
+    }
+
+    private User buildUser(int i) {
+        User user = new User();
+        user.setUsername("user_" + i);
+        user.setPassword("123");
+        user.setPhone("" + (18688190000L + i));
+        user.setBalance(2000);
+        user.setInfo("{\"age\": 24, \"intro\": \"英文老师\", \"gender\": \"female\"}");
+        user.setCreateTime(LocalDateTime.now());
+        user.setUpdateTime(user.getCreateTime());
+        return user;
+    }
+
+    /**
+     * mybatis-plus 批处理数据
+     * 性能提升了10倍左右
+     * 底层是采用jdbc预编译模式，先把数据转换为sql
+     * 这里一次转换为1000条sql，然后进行网络通信，mysql服务器执行这1000条sql
+     * 12297
+     *
+     * 目标：将1000条sql合并为1条sql（最佳性能）
+     * 配置mysql连接时参数，rewriteBatchedStatements=true，重写批处理sql语句，合并为一条（mysql驱动做的）
+     * 4611
+     */
+    @Test
+    void testSaveBatch() {
+        List<User> list = new ArrayList<>(1000);
+        long a = System.currentTimeMillis();
+        for(int i = 0; i < 100000; i++) {
+            list.add(buildUser(i));
+            if(i % 1000 == 0) {
+                userService.saveBatch(list);
+                list.clear();
+            }
+        }
+        long b = System.currentTimeMillis();
+        System.out.println(b - a);
+    }
+
+    // 删除数据
+    @Test
+    void deleteData() {
+        QueryWrapper<User> wrapper = new QueryWrapper<>();
+        wrapper.lambda().gt(User::getId, 7);
+        userMapper.delete(wrapper);
     }
 }

@@ -8,6 +8,7 @@ import lombok.Data;
 
 import java.time.LocalDateTime;
 
+// mybatis-plus 会按照驼峰转下划线进行转换
 @Data
 @TableName("user") // 指定数据库表名
 public class User {

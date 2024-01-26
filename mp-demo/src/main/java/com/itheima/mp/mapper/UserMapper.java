@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.itheima.mp.domain.po.User;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Update;
 
 import java.util.List;
 
@@ -32,4 +33,7 @@ public interface UserMapper extends BaseMapper<User> {
 
     // 这里条件构造器别名必须为ew（规定）
     void deductBalanceByIds(@Param("ew") QueryWrapper<User> wrapper, @Param("money") Integer money);
+
+    @Update("update user set balance = balance - #{money} where id = #{id}")
+    Integer deductBalanceById(@Param("id") Long id, @Param("money") Integer money);
 }
