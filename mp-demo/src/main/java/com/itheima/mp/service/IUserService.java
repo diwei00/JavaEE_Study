@@ -12,4 +12,8 @@ public interface IUserService extends IService<User> {
     Boolean deductBalance(Long id, Integer money);
 
     List<UserVO> getUserList(UserDTO userDTO);
+
+    UserVO getUserAndAddressById(Long id);
+
+    List<UserVO> getUsers(List<Long> ids);
 }

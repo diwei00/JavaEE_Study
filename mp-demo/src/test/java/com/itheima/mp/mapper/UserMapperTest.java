@@ -3,7 +3,11 @@ package com.itheima.mp.mapper;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
+import com.baomidou.mybatisplus.extension.toolkit.Db;
+import com.itheima.mp.domain.po.Address;
 import com.itheima.mp.domain.po.User;
+import com.itheima.mp.domain.po.UserInfo;
+import com.itheima.mp.enums.UserStatus;
 import com.itheima.mp.service.IUserService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,14 +29,15 @@ class UserMapperTest {
     @Test
     void testInsert() {
         User user = new User();
-        user.setId(6L);
-        user.setUsername("Lucy2");
+//        user.setId(7L);
+        user.setUsername("Lucy5");
         user.setPassword("123");
         user.setPhone("18688990011");
         user.setBalance(200);
-        user.setInfo("{\"age\": 24, \"intro\": \"英文老师\", \"gender\": \"female\"}");
+        user.setInfo(new UserInfo(10, "语文老师", "aaa"));
         user.setCreateTime(LocalDateTime.now());
         user.setUpdateTime(LocalDateTime.now());
+        user.setStatus(UserStatus.NORMAL);
         userMapper.insert(user);
     }
 
@@ -153,7 +158,7 @@ class UserMapperTest {
         user.setPassword("123");
         user.setPhone("" + (18688190000L + i));
         user.setBalance(2000);
-        user.setInfo("{\"age\": 24, \"intro\": \"英文老师\", \"gender\": \"female\"}");
+        user.setInfo(new UserInfo(10, "语文老师", "aaa"));
         user.setCreateTime(LocalDateTime.now());
         user.setUpdateTime(user.getCreateTime());
         return user;
@@ -191,5 +196,23 @@ class UserMapperTest {
         QueryWrapper<User> wrapper = new QueryWrapper<>();
         wrapper.lambda().gt(User::getId, 7);
         userMapper.delete(wrapper);
+    }
+
+    @Test
+    void deleteFlag() {
+        // 配置逻辑删除后，这里sql自动变为逻辑删除
+        // UPDATE address SET deleted=1 WHERE id=? AND deleted=0
+        Db.removeById(59L, Address.class);
+    }
+
+    @Test
+    void selectAddress() {
+        // 配置逻辑删除后，查询会自动过滤删除标志
+        //  SELECT * FROM address WHERE id=? AND deleted=0
+        Address address = Db.getById(60L, Address.class);
+//        System.out.println(address);
+
+        User user = Db.getById(1L, User.class);
+        System.out.println(user);
     }
 }

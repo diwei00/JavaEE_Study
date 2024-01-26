@@ -36,15 +36,16 @@ public class UserController {
 
     @ApiOperation("根据id查询用户")
     @GetMapping("getUser/{id}")
-    public User getUser(@PathVariable("id") Long id) {
-        return userService.getById(id);
+    public UserVO getUser(@PathVariable("id") Long id) {
+
+        return userService.getUserAndAddressById(id);
     }
 
     @ApiOperation("根据id集合查询用户")
     @GetMapping("/getUserList/{id}")
     public List<UserVO> getUserList(@PathVariable("id") List<Long> ids) {
-        List<User> userList = userService.listByIds(ids);
-        return BeanUtil.copyToList(userList, UserVO.class);
+//        List<User> userList = userService.listByIds(ids);
+        return userService.getUsers(ids);
     }
 
 

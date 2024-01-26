@@ -4,13 +4,17 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler;
+import com.itheima.mp.domain.vo.AddressVO;
+import com.itheima.mp.enums.UserStatus;
 import lombok.Data;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 // mybatis-plus 会按照驼峰转下划线进行转换
 @Data
-@TableName("user") // 指定数据库表名
+@TableName(value = "user",autoResultMap = true) // 指定数据库表名
 public class User {
 
     /**
@@ -45,13 +49,18 @@ public class User {
 
     /**
      * 详细信息
+     * 指定该字段的类型处理器
+     * 插入数据库时，该字段会转换为json。
+     * 查询数据时，json会转为该对象
+     * 对象嵌套需要指定ResultMap，可以使用mybatis-plus自动指定
      */
-    private String info;
+    @TableField(typeHandler = JacksonTypeHandler.class)
+    private UserInfo info;
 
     /**
      * 使用状态（1正常 2冻结）
      */
-    private Integer status;
+    private UserStatus status;
 
     /**
      * 账户余额
@@ -67,4 +76,6 @@ public class User {
      * 更新时间
      */
     private LocalDateTime updateTime;
+
+
 }
