@@ -1,12 +1,18 @@
-package com.itheima.mp.domain.dto;
+package com.itheima.mp.domain.query;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
+@EqualsAndHashCode(callSuper = true)
+@AllArgsConstructor
+@NoArgsConstructor
 @Data
 @ApiModel(description = "用户查询条件实体")
-public class UserDTO{
+public class UserQuery extends PageQuery{
     @ApiModelProperty("用户名关键字")
     private String name;
 

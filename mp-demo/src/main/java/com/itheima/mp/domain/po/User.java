@@ -14,7 +14,7 @@ import java.util.List;
 
 // mybatis-plus 会按照驼峰转下划线进行转换
 @Data
-@TableName(value = "user",autoResultMap = true) // 指定数据库表名
+@TableName(value = "user",autoResultMap = true) // 指定数据库表名，查询返回结果集自动映射（对象嵌套需要）
 public class User {
 
     /**

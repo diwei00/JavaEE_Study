@@ -3,6 +3,8 @@ package com.itheima.mp.mapper;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
+import com.baomidou.mybatisplus.core.metadata.OrderItem;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.toolkit.Db;
 import com.itheima.mp.domain.po.Address;
 import com.itheima.mp.domain.po.User;
@@ -214,5 +216,24 @@ class UserMapperTest {
 
         User user = Db.getById(1L, User.class);
         System.out.println(user);
+    }
+
+    @Test
+    void pageQuery() {
+        int pageNumber = 0;
+        int pageSize = 2;
+        // 构造page对象
+        Page<User> page = new Page<>(pageNumber, pageSize);
+        // 指定排序规则（排序字段， 是否升序）
+        page.addOrder(new OrderItem("balance", false));
+        // 设置一页最多数据条数
+        page.setMaxLimit(1000L);
+        Page<User> p = userService.page(page);
+        // 获取查询结果
+        List<User> userList = p.getRecords();
+
+        System.out.println("total = " + p.getTotal());
+        System.out.println("pages = " + p.getPages());
+        userList.forEach(System.out::println);
     }
 }

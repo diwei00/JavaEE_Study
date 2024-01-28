@@ -1,7 +1,8 @@
 package com.itheima.mp.controller;
 
 import cn.hutool.core.bean.BeanUtil;
-import com.itheima.mp.domain.dto.UserDTO;
+import com.itheima.mp.domain.dto.PageDTO;
+import com.itheima.mp.domain.query.UserQuery;
 import com.itheima.mp.domain.dto.UserFormDTO;
 import com.itheima.mp.domain.po.User;
 import com.itheima.mp.domain.vo.UserVO;
@@ -57,8 +58,15 @@ public class UserController {
 
     @ApiOperation("复杂条件查询用户")
     @GetMapping("/list")
-    public List<UserVO> getUserList(UserDTO userDTO) {
-        return userService.getUserList(userDTO);
+    public List<UserVO> getUserList(UserQuery userQuery) {
+        return userService.getUserList(userQuery);
+    }
+
+
+    @ApiOperation("分页查询用户")
+    @GetMapping("/page")
+    public PageDTO<UserVO> getUserListPage(UserQuery userQuery) {
+        return userService.getUserListPage(userQuery);
     }
 
 

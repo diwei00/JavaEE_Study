@@ -1,9 +1,12 @@
 package com.itheima.mp.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
+import com.baomidou.mybatisplus.core.metadata.OrderItem;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.baomidou.mybatisplus.extension.toolkit.Db;
-import com.itheima.mp.domain.dto.UserDTO;
+import com.itheima.mp.domain.dto.PageDTO;
+import com.itheima.mp.domain.query.UserQuery;
 import com.itheima.mp.domain.po.Address;
 import com.itheima.mp.domain.po.User;
 import com.itheima.mp.domain.vo.AddressVO;
@@ -13,8 +16,10 @@ import com.itheima.mp.service.IUserService;
 import com.itheima.mp.mapper.UserMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -53,13 +58,13 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>implements IUs
     }
 
     @Override
-    public List<UserVO> getUserList(UserDTO userDTO) {
+    public List<UserVO> getUserList(UserQuery userQuery) {
         // lambdaQuery实现复杂条件查询（动态sql）
         List<User> userList = this.lambdaQuery()
-                .like(userDTO.getName() != null, User::getUsername, userDTO.getName())
-                .eq(userDTO.getStatus() != null, User::getStatus, userDTO.getStatus())
-                .ge(userDTO.getMinBalance() != null, User::getBalance, userDTO.getMinBalance())
-                .le(userDTO.getMaxBalance() != null, User::getBalance, userDTO.getMaxBalance())
+                .like(userQuery.getName() != null, User::getUsername, userQuery.getName())
+                .eq(userQuery.getStatus() != null, User::getStatus, userQuery.getStatus())
+                .ge(userQuery.getMinBalance() != null, User::getBalance, userQuery.getMinBalance())
+                .le(userQuery.getMaxBalance() != null, User::getBalance, userQuery.getMaxBalance())
                 .list();
 
         // one() 查询一个结果
@@ -126,5 +131,34 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>implements IUs
             result.add(vo);
         }
         return result;
+    }
+
+    @Override
+    public PageDTO<UserVO> getUserListPage(UserQuery query) {
+//        // 构造page对象
+//        Page<User> page = Page.of(query.getPageNumber(), query.getPageSize());
+//        // 指定排序规则
+//        if(StringUtils.hasLength(query.getSortBy())) {
+//            // 前端指定字段排序
+//            page.addOrder(new OrderItem(query.getSortBy(), query.getIsAsc()));
+//        }else {
+//            // 默认字段排序
+//            page.addOrder(new OrderItem("update_time", false));
+//        }
+
+
+//        Page<User> page = query.toMpPageDefaultSortByCreateTimeDesc();
+        Page<User> page = query.toMpPage();
+
+
+
+
+        // 分页查询
+        Page<User> p = this.lambdaQuery()
+                .like(query.getName() != null, User::getUsername, query.getName())
+                .eq(query.getStatus() != null, User::getStatus, query.getStatus())
+                .page(page);
+
+        return PageDTO.of(p, UserVO.class);
     }
 }
