@@ -27,7 +27,7 @@ import java.util.stream.Collectors;
 // 继承ServiceImpl，此类实现了IService接口中的方法
 // 指定Service对应的mapper（实质还是调用mapper）和操作的实体类（映射表）
 @Service
-public class UserServiceImpl extends ServiceImpl<UserMapper, User>implements IUserService {
+public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IUserService {
 
     @Override
     public Boolean deductBalance(Long id, Integer money) {

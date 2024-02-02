@@ -56,5 +56,6 @@
             <artifactId>swagger-spring-boot-starter</artifactId>
             <version>1.9.0.RELEASE</version>
         </dependency>
+
     </dependencies>
 </project>

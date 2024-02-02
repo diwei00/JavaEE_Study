@@ -4,7 +4,21 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9ae2ac33-7fc2-4ec1-9554-a45332709d3b" name="Changes" comment="RabbitMQ基础学习" />
+    <list default="true" id="9ae2ac33-7fc2-4ec1-9554-a45332709d3b" name="Changes" comment="RabbitMQ基础学习">
+      <change beforePath="$PROJECT_DIR$/../xuecheng-plus-project/xuecheng-plus-project/xuecheng-plus-base/src/main/java/com/xuecheng/base/model/PageResult.java" beforeDir="false" afterPath="$PROJECT_DIR$/../xuecheng-plus-project/xuecheng-plus-project/xuecheng-plus-base/src/main/java/com/xuecheng/base/model/PageResult.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../xuecheng-plus-project/xuecheng-plus-project/xuecheng-plus-content/xuecheng-plus-content-api/src/main/java/com/xuecheng/ContentApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/../xuecheng-plus-project/xuecheng-plus-project/xuecheng-plus-content/xuecheng-plus-content-api/src/main/java/com/xuecheng/ContentApplication.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../xuecheng-plus-project/xuecheng-plus-project/xuecheng-plus-content/xuecheng-plus-content-api/src/main/java/com/xuecheng/content/api/CourseBaseInfoController.java" beforeDir="false" afterPath="$PROJECT_DIR$/../xuecheng-plus-project/xuecheng-plus-project/xuecheng-plus-content/xuecheng-plus-content-api/src/main/java/com/xuecheng/content/api/CourseBaseInfoController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../xuecheng-plus-project/xuecheng-plus-project/xuecheng-plus-content/xuecheng-plus-content-api/src/main/resources/bootstrap.yml" beforeDir="false" afterPath="$PROJECT_DIR$/../xuecheng-plus-project/xuecheng-plus-project/xuecheng-plus-content/xuecheng-plus-content-api/src/main/resources/bootstrap.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../xuecheng-plus-project/xuecheng-plus-project/xuecheng-plus-content/xuecheng-plus-content-model/src/main/java/com/xuecheng/content/model/dto/QueryCourseParamsDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/../xuecheng-plus-project/xuecheng-plus-project/xuecheng-plus-content/xuecheng-plus-content-model/src/main/java/com/xuecheng/content/model/dto/QueryCourseParamsDto.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../xuecheng-plus-project/xuecheng-plus-project/xuecheng-plus-content/xuecheng-plus-content-model/src/main/java/com/xuecheng/content/model/po/CourseBase.java" beforeDir="false" afterPath="$PROJECT_DIR$/../xuecheng-plus-project/xuecheng-plus-project/xuecheng-plus-content/xuecheng-plus-content-model/src/main/java/com/xuecheng/content/model/po/CourseBase.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../xuecheng-plus-project/xuecheng-plus-project/xuecheng-plus-content/xuecheng-plus-content-model/src/main/java/com/xuecheng/content/model/po/CourseCategory.java" beforeDir="false" afterPath="$PROJECT_DIR$/../xuecheng-plus-project/xuecheng-plus-project/xuecheng-plus-content/xuecheng-plus-content-model/src/main/java/com/xuecheng/content/model/po/CourseCategory.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../xuecheng-plus-project/xuecheng-plus-project/xuecheng-plus-content/xuecheng-plus-content-model/src/main/java/com/xuecheng/content/model/po/CourseMarket.java" beforeDir="false" afterPath="$PROJECT_DIR$/../xuecheng-plus-project/xuecheng-plus-project/xuecheng-plus-content/xuecheng-plus-content-model/src/main/java/com/xuecheng/content/model/po/CourseMarket.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../xuecheng-plus-project/xuecheng-plus-project/xuecheng-plus-content/xuecheng-plus-content-model/src/main/java/com/xuecheng/content/model/po/CoursePublish.java" beforeDir="false" afterPath="$PROJECT_DIR$/../xuecheng-plus-project/xuecheng-plus-project/xuecheng-plus-content/xuecheng-plus-content-model/src/main/java/com/xuecheng/content/model/po/CoursePublish.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../xuecheng-plus-project/xuecheng-plus-project/xuecheng-plus-content/xuecheng-plus-content-model/src/main/java/com/xuecheng/content/model/po/CoursePublishPre.java" beforeDir="false" afterPath="$PROJECT_DIR$/../xuecheng-plus-project/xuecheng-plus-project/xuecheng-plus-content/xuecheng-plus-content-model/src/main/java/com/xuecheng/content/model/po/CoursePublishPre.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../xuecheng-plus-project/xuecheng-plus-project/xuecheng-plus-content/xuecheng-plus-content-model/src/main/java/com/xuecheng/content/model/po/CourseTeacher.java" beforeDir="false" afterPath="$PROJECT_DIR$/../xuecheng-plus-project/xuecheng-plus-project/xuecheng-plus-content/xuecheng-plus-content-model/src/main/java/com/xuecheng/content/model/po/CourseTeacher.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../xuecheng-plus-project/xuecheng-plus-project/xuecheng-plus-content/xuecheng-plus-content-model/src/main/java/com/xuecheng/content/model/po/Teachplan.java" beforeDir="false" afterPath="$PROJECT_DIR$/../xuecheng-plus-project/xuecheng-plus-project/xuecheng-plus-content/xuecheng-plus-content-model/src/main/java/com/xuecheng/content/model/po/Teachplan.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../xuecheng-plus-project/xuecheng-plus-project/xuecheng-plus-content/xuecheng-plus-content-model/src/main/java/com/xuecheng/content/model/po/TeachplanMedia.java" beforeDir="false" afterPath="$PROJECT_DIR$/../xuecheng-plus-project/xuecheng-plus-project/xuecheng-plus-content/xuecheng-plus-content-model/src/main/java/com/xuecheng/content/model/po/TeachplanMedia.java" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -20,11 +34,11 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
   </component>
-  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
-  "lastFilter": {
-    "state": "OPEN"
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;
   }
-}]]></component>
+}</component>
   <component name="GithubPullRequestsUISettings">
     <option name="selectedUrlAndAccountId">
       <UrlAndAccount>
@@ -47,29 +61,31 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RequestMappingsPanelOrder0": "0",
-    "RequestMappingsPanelOrder1": "1",
-    "RequestMappingsPanelWidth0": "75",
-    "RequestMappingsPanelWidth1": "75",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "WebServerToolWindowFactoryState": "false",
-    "jdk.selected.JAVA_MODULE": "1.8",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "project.structure.last.edited": "Modules",
-    "project.structure.proportion": "0.0",
-    "project.structure.side.proportion": "0.0",
-    "settings.editor.selected.configurable": "configurable.group.build",
-    "spring.configuration.checksum": "3a06fd391ad2f2dbd744107994677167",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RequestMappingsPanelOrder0&quot;: &quot;0&quot;,
+    &quot;RequestMappingsPanelOrder1&quot;: &quot;1&quot;,
+    &quot;RequestMappingsPanelWidth0&quot;: &quot;75&quot;,
+    &quot;RequestMappingsPanelWidth1&quot;: &quot;75&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;jdk.selected.JAVA_MODULE&quot;: &quot;1.8&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;configurable.group.build&quot;,
+    &quot;spring.configuration.checksum&quot;: &quot;3a06fd391ad2f2dbd744107994677167&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="E:\javaCode\JavaEE_Study\mq-demo\publisher\src\main\resources" />
@@ -170,6 +186,8 @@
       <updated>1681917400050</updated>
       <workItem from="1694234426357" duration="75000" />
       <workItem from="1694321296581" duration="8508000" />
+      <workItem from="1706587801956" duration="79000" />
+      <workItem from="1706785381058" duration="7000" />
     </task>
     <task id="LOCAL-00001" summary="RabbitMQ基础学习">
       <created>1694274052556</created>

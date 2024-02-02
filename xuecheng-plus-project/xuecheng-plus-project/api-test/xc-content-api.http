@@ -1,0 +1,7 @@
+# 使用 http-client 插件进行测试
+POST {{content_host}}/content/course/list?page=1
+Content-Type: application/json
+
+{
+  "auditStatus": "202002"
+}
