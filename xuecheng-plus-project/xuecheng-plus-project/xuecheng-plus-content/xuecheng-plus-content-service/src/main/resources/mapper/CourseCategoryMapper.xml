@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.xuecheng.content.mapper.CourseCategoryMapper">
+<mapper namespace="com.xuecheng.mapper.CourseCategoryMapper">
 
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="com.xuecheng.content.model.po.CourseCategory">
@@ -17,5 +17,16 @@
     <sql id="Base_Column_List">
         id, name, label, parentid, is_show, orderby, is_leaf
     </sql>
+
+    <!--  递归查询树状结构数据  -->
+    <select id="queryTreeNodes" resultType="com.xuecheng.content.model.vo.CourseCategoryTreeVO" parameterType="String">
+        with recursive t1 as (
+            select * from course_category cc where id = #{id}
+            union all
+            select cc1.* from course_category cc1
+            inner join t1 on t1.id = cc1.parentid
+        )
+        select * from t1 order by t1.id, t1.orderby
+    </select>
 
 </mapper>

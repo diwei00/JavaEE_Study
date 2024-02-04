@@ -3,14 +3,12 @@ package com.xuecheng.content.model.dto;
 import lombok.Data;
 import lombok.ToString;
 
-import javax.validation.constraints.NotNull;
-
 /**
  * 课程查询条件对象
  */
 @Data
 @ToString
-public class QueryCourseParamsDto {
+public class QueryCourseParamsDTO {
 
     // 审核状态
     private String auditStatus;
