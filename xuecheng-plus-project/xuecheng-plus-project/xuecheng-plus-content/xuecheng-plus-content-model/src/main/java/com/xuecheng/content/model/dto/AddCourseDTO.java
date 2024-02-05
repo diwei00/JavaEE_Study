@@ -1,8 +1,11 @@
 package com.xuecheng.content.model.dto;
 
+import com.xuecheng.base.exception.ValidationGroups;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
@@ -11,10 +14,14 @@ import javax.validation.constraints.Size;
     添加课程dto
  */
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 @ApiModel(value="AddCourseDto", description="新增课程基本信息")
 public class AddCourseDTO {
 
- @NotEmpty(message = "课程名称不能为空")
+ // 分组校验，指定组别
+ @NotEmpty(message = "添加课程名称不能为空", groups = {ValidationGroups.Inster.class})
+ @NotEmpty(message = "修改课程名称不能为空", groups = {ValidationGroups.Update.class})
  @ApiModelProperty(value = "课程名称", required = true)
  private String name;
 
@@ -40,6 +47,7 @@ public class AddCourseDTO {
 
  @ApiModelProperty(value = "教学模式（普通，录播，直播等）", required = true)
  private String teachmode;
+
 
  @ApiModelProperty(value = "课程介绍")
  private String description;

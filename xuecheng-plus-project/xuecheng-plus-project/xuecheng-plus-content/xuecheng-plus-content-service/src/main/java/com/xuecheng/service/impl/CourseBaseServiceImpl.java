@@ -6,6 +6,7 @@ import com.xuecheng.base.exception.ServiceException;
 import com.xuecheng.base.model.PageParams;
 import com.xuecheng.base.model.PageResult;
 import com.xuecheng.content.model.dto.AddCourseDTO;
+import com.xuecheng.content.model.dto.EditCourseDTO;
 import com.xuecheng.content.model.dto.QueryCourseParamsDTO;
 import com.xuecheng.content.model.po.CourseBase;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -99,6 +100,8 @@ public class CourseBaseServiceImpl extends ServiceImpl<CourseBaseMapper, CourseB
         return getCourseBaseInfo(courseBase.getId());
     }
 
+
+
     private CourseBaseInfoVO getCourseBaseInfo(Long courseId) {
         // 查询课程基本信息
         CourseBase courseBase = this.baseMapper.selectById(courseId);
@@ -144,6 +147,39 @@ public class CourseBaseServiceImpl extends ServiceImpl<CourseBaseMapper, CourseB
             courseMarketInfo.setId(courseMarket.getId());
             return courseMarketMapper.updateById(courseMarketInfo);
         }
+
+    }
+
+
+    @Override
+    public CourseBaseInfoVO getCourseBaseById(Long courseId) {
+        return getCourseBaseInfo(courseId);
+    }
+
+    @Override
+    public CourseBaseInfoVO modifyCourseBase(EditCourseDTO editCourseDTO, Long companyId) {
+        // 业务逻辑校验
+        Long courseId = editCourseDTO.getId();
+        CourseBase courseBase = this.baseMapper.selectById(courseId);
+        if(courseBase == null) {
+            throw new ServiceException("课程不存在！");
+        }
+        if(!companyId.equals(courseBase.getCompanyId())) {
+            throw new ServiceException("修改失败，当前机构只能修改当前机构课程！");
+        }
+
+        BeanUtils.copyProperties(editCourseDTO, courseBase);
+        courseBase.setChangeDate(LocalDateTime.now());
+
+        this.baseMapper.updateById(courseBase);
+
+        // 封装营销信息的数据
+        CourseMarket courseMarket = new CourseMarket();
+        BeanUtils.copyProperties(editCourseDTO, courseMarket);
+        // 持久化
+        saveCourseMarket(courseMarket);
+        // 查询课程信息
+        return this.getCourseBaseInfo(courseId);
 
     }
 }

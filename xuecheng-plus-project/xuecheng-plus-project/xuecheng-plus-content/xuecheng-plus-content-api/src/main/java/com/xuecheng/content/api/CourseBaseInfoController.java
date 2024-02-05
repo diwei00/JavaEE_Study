@@ -1,8 +1,10 @@
 package com.xuecheng.content.api;
 
+import com.xuecheng.base.exception.ValidationGroups;
 import com.xuecheng.base.model.PageParams;
 import com.xuecheng.base.model.PageResult;
 import com.xuecheng.content.model.dto.AddCourseDTO;
+import com.xuecheng.content.model.dto.EditCourseDTO;
 import com.xuecheng.content.model.dto.QueryCourseParamsDTO;
 import com.xuecheng.content.model.po.CourseBase;
 import com.xuecheng.content.model.vo.CourseBaseInfoVO;
@@ -10,6 +12,7 @@ import com.xuecheng.service.ICourseBaseService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -31,11 +34,24 @@ public class CourseBaseInfoController {
 
     @ApiOperation("新增课程基本信息")
     @PostMapping("/course")
-    public CourseBaseInfoVO createCourseBase(@RequestBody AddCourseDTO addCourseDTO) {
-
+    public CourseBaseInfoVO createCourseBase(@RequestBody @Validated({ValidationGroups.Inster.class})
+                                                 AddCourseDTO addCourseDTO) {
         // todo: 机构id，用户登录之后获取
         Long companyId = 1232141425L;
         return courseBaseService.createCourseBase(addCourseDTO, companyId);
+    }
+
+    @ApiOperation("根据课程 id 查询课程基础信息")
+    @GetMapping("/course/{courseId}")
+    public CourseBaseInfoVO getCourseBaseById(@PathVariable Long courseId){
+        return courseBaseService.getCourseBaseById(courseId);
+    }
+
+    @ApiOperation("修改课程信息")
+    @PutMapping("/course")
+    public CourseBaseInfoVO modifyCourseBase(@RequestBody @Validated EditCourseDTO editCourseDTO) {
+        // todo: 机构id，用户登录之后获取
+        return courseBaseService.modifyCourseBase(editCourseDTO, 1232141425L);
 
     }
 

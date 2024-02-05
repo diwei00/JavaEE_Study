@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 
 /**
  * <p>
- * 
+ *    课程计划-媒资关联表实体对象
  * </p>
  *
  */
