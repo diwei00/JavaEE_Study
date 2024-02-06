@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-@Api("课程分类接口")
+@Api(value = "课程分类接口", tags = "课程分类接口")
 @RestController
 public class CourseCategoryController {
 

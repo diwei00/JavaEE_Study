@@ -16,6 +16,11 @@
            <artifactId>xuecheng-plus-content-model</artifactId>
            <version>0.0.1-SNAPSHOT</version>
        </dependency>
+       <!--   nacos管理微服务配置文件依赖     -->
+       <dependency>
+           <groupId>com.alibaba.cloud</groupId>
+           <artifactId>spring-cloud-starter-alibaba-nacos-config</artifactId>
+       </dependency>
        <!-- MySQL 驱动 -->
        <dependency>
            <groupId>mysql</groupId>

@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Api("课程计划接口")
+@Api(value = "课程计划接口", tags = "课程计划接口")
 @RestController
 public class TeachplanController {
 

@@ -37,6 +37,7 @@
     <!-- <dependencyManagement> 标签用来管理依赖，但不负责依赖导入，使用之前需要保证依赖已经全部导入  -->
     <dependencyManagement>
         <dependencies>
+
             <dependency>
                 <groupId>org.springframework.cloud</groupId>
                 <artifactId>spring-cloud-dependencies</artifactId>
@@ -51,6 +52,7 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
+            <!--    服务注册到nacos依赖       -->
             <dependency>
                 <groupId>com.alibaba.cloud</groupId>
                 <artifactId>spring-cloud-alibaba-dependencies</artifactId>

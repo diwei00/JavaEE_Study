@@ -1,10 +1,12 @@
 # 使用 http-client 插件进行测试
-POST {{content_host}}/content/course/list?page=1
+POST {{gateway_host}}/content/course/list?page=1
 Content-Type: application/json
 
 {
   "auditStatus": "202002"
 }
+
+
 
 ### 创建课程
 POST {{content_host}}/content/course
@@ -28,3 +30,8 @@ Content-Type: application/json
   "grade": "204001",
   "description": ""
 }
+
+
+
+###
+POST {{gateway_host}}/media/files/?page=1
