@@ -9,7 +9,7 @@ import lombok.ToString;
  */
 @Data
 @ToString
-public class QueryMediaParamsDto {
+public class QueryMediaParamsDTO {
 
     @ApiModelProperty("媒资文件名称")
     private String filename;
