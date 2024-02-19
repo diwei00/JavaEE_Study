@@ -9,6 +9,8 @@ import com.xuecheng.media.model.po.MediaFiles;
 import com.xuecheng.media.model.vo.UploadFileResultVO;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+
 /**
  * 媒资文件管理业务类
  */
@@ -44,6 +46,10 @@ public interface MediaFileService {
     // 合并分块
     RestResponse mergeChunks(Long companyId, String fileMd5, int chunkTotal,
                              UploadFileParamsDTO uploadFileParamsDto);
+
+    File downloadFileFromMinIO(String bucket, String objectName);
+
+    boolean addMediaFilesToMinIO(String localFilePath, String mimeType, String bucket, String objectName);
 
 
 }
