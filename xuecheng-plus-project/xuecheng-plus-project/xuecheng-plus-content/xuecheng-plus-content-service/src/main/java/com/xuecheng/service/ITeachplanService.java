@@ -1,8 +1,10 @@
 package com.xuecheng.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.xuecheng.content.model.dto.BindTeachplanMediaDTO;
 import com.xuecheng.content.model.dto.SaveTeachplanDTO;
 import com.xuecheng.content.model.po.Teachplan;
+import com.xuecheng.content.model.po.TeachplanMedia;
 import com.xuecheng.content.model.vo.TeachplanVO;
 
 import java.util.List;
@@ -18,4 +20,7 @@ public interface ITeachplanService extends IService<Teachplan> {
     List<TeachplanVO> getTreeNodes(Long courseId);
 
     void saveTeachplan(SaveTeachplanDTO teachplanDTO);
+
+
+    TeachplanMedia associationMedia(BindTeachplanMediaDTO bindTeachplanMediaDto);
 }

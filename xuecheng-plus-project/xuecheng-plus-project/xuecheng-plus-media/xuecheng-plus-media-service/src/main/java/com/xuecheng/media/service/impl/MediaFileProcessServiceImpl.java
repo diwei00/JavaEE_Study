@@ -32,12 +32,20 @@ public class MediaFileProcessServiceImpl implements MediaFileProcessService {
     private MediaProcessHistoryMapper mediaProcessHistoryMapper;
 
 
+    /**
+     * 获取未处理任务
+     * @param shardIndex 分片序号
+     * @param shardTotal 分片总数
+     * @param count      获取记录数
+     * @return
+     */
     @Override
     public List<MediaProcess> getMediaProcessList(int shardIndex, int shardTotal, int count) {
         return mediaProcessMapper.selectListByShardIndex(shardTotal, shardIndex, count);
     }
 
     /**
+     * 分布式锁开启任务
      * @param id 任务id
      * @return true: 成功  false: 失败
      */
@@ -47,7 +55,14 @@ public class MediaFileProcessServiceImpl implements MediaFileProcessService {
         return result > 0;
     }
 
-    // 视频处理成功，更新数据库状态
+    /**
+     * 视频处理成功，更新数据库状态
+     * @param taskId 任务 id
+     * @param status 任务状态
+     * @param fileId 文件 id
+     * @param url url
+     * @param errorMsg 错误信息
+     */
     @Transactional
     @Override
     public void saveProcessFinishStatus(Long taskId, String status, String fileId, String url, String errorMsg) {
