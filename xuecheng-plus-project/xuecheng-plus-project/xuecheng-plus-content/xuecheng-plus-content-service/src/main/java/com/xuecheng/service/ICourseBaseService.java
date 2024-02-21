@@ -26,4 +26,6 @@ public interface ICourseBaseService extends IService<CourseBase> {
     CourseBaseInfoVO getCourseBaseById(Long courseId);
 
     CourseBaseInfoVO modifyCourseBase(EditCourseDTO editCourseDTO, Long companyId);
+
+    CourseBaseInfoVO getCourseBaseInfo(Long courseId);
 }

@@ -102,7 +102,7 @@ public class CourseBaseServiceImpl extends ServiceImpl<CourseBaseMapper, CourseB
 
 
 
-    private CourseBaseInfoVO getCourseBaseInfo(Long courseId) {
+    public CourseBaseInfoVO getCourseBaseInfo(Long courseId) {
         // 查询课程基本信息
         CourseBase courseBase = this.baseMapper.selectById(courseId);
         if(courseBase == null){
