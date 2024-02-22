@@ -2,16 +2,21 @@ package com.xuecheng.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.nacos.api.utils.StringUtils;
+import com.xuecheng.base.exception.CommonError;
 import com.xuecheng.base.exception.ServiceException;
 import com.xuecheng.content.model.po.CourseBase;
 import com.xuecheng.content.model.po.CourseMarket;
+import com.xuecheng.content.model.po.CoursePublish;
 import com.xuecheng.content.model.po.CoursePublishPre;
 import com.xuecheng.content.model.vo.CourseBaseInfoVO;
 import com.xuecheng.content.model.vo.CoursePreviewVO;
 import com.xuecheng.content.model.vo.TeachplanVO;
 import com.xuecheng.mapper.CourseBaseMapper;
 import com.xuecheng.mapper.CourseMarketMapper;
+import com.xuecheng.mapper.CoursePublishMapper;
 import com.xuecheng.mapper.CoursePublishPreMapper;
+import com.xuecheng.messagesdk.model.po.MqMessage;
+import com.xuecheng.messagesdk.service.MqMessageService;
 import com.xuecheng.service.ICourseBaseService;
 import com.xuecheng.service.ICoursePublishService;
 import com.xuecheng.service.ITeachplanService;
@@ -35,6 +40,10 @@ public class CoursePublishServiceImpl implements ICoursePublishService {
     private CourseMarketMapper courseMarketMapper;
     @Autowired
     private CoursePublishPreMapper coursePublishPreMapper;
+    @Autowired
+    private CoursePublishMapper coursePublishMapper;
+    @Autowired
+    private MqMessageService mqMessageService;
 
 
     /**
@@ -58,8 +67,10 @@ public class CoursePublishServiceImpl implements ICoursePublishService {
 
     /**
      * 提交审核
+     * 注意：设计课程预发布表，实现课程提交后机构修改课程与平台审核课程解耦合
+     *
      * @param companyId 机构id
-     * @param courseId 课程id
+     * @param courseId  课程id
      */
     @Transactional
     @Override
@@ -87,7 +98,7 @@ public class CoursePublishServiceImpl implements ICoursePublishService {
         BeanUtils.copyProperties(courseBaseInfo, coursePublishPre);
         // 课程营销信息
         CourseMarket courseMarket = courseMarketMapper.selectById(courseId);
-        //转为 json
+        // 转为 json
         String courseMarketJson = JSON.toJSONString(courseMarket);
         // 将课程营销信息 json 数据放入课程预发布表
         coursePublishPre.setMarket(courseMarketJson);
@@ -116,5 +127,71 @@ public class CoursePublishServiceImpl implements ICoursePublishService {
         // 更新课程基本表的审核状态
         courseBase.setAuditStatus("202003");
         courseBaseMapper.updateById(courseBase);
+    }
+
+    @Transactional
+    @Override
+    public void publish(Long companyId, Long courseId) {
+
+        // 约束校验
+        // 查询课程预发布表
+        CoursePublishPre coursePublishPre = coursePublishPreMapper.selectById(courseId);
+        if (coursePublishPre == null) {
+            throw new ServiceException("请先提交课程审核，审核通过才可以发布");
+        }
+        // 本机构只允许提交本机构的课程
+        if (!coursePublishPre.getCompanyId().equals(companyId)) {
+            throw new ServiceException("不允许提交其它机构的课程");
+        }
+        // 课程审核状态
+        String auditStatus = coursePublishPre.getStatus();
+        // 审核通过方可发布
+        if (!"202004".equals(auditStatus)) {
+            throw new ServiceException("操作失败，课程审核通过方可发布");
+        }
+        // 保存课程发布信息
+        saveCoursePublish(courseId);
+        // 保存消息表
+        saveCoursePublishMessage(courseId);
+        // 删除课程预发布表对应记录
+        coursePublishPreMapper.deleteById(courseId);
+    }
+
+    private void saveCoursePublish(Long courseId) {
+        // 整合课程发布信息
+        // 查询课程预发布表
+        CoursePublishPre coursePublishPre = coursePublishPreMapper.selectById(courseId);
+        if (coursePublishPre == null) {
+            throw new ServiceException("课程预发布数据为空");
+        }
+        CoursePublish coursePublish = new CoursePublish();
+        // 拷贝到课程发布对象
+        BeanUtils.copyProperties(coursePublishPre, coursePublish);
+        coursePublish.setStatus("203002");
+        CoursePublish coursePublishUpdate = coursePublishMapper.selectById(courseId);
+        if (coursePublishUpdate == null) {
+            // 不存在，插入
+            coursePublishMapper.insert(coursePublish);
+        } else {
+            // 存在，更新
+            coursePublishMapper.updateById(coursePublish);
+        }
+        // 更新课程基本表的发布状态
+        CourseBase courseBase = courseBaseMapper.selectById(courseId);
+        courseBase.setStatus("203002");
+        courseBaseMapper.updateById(courseBase);
+    }
+
+    /**
+     * @param courseId 课程id
+     * @return void
+     * @description 保存消息表记录
+     */
+    private void saveCoursePublishMessage(Long courseId) {
+        MqMessage mqMessage = mqMessageService.addMessage("course_publish",
+                String.valueOf(courseId), null, null);
+        if (mqMessage == null) {
+            throw new ServiceException(CommonError.UNKOWN_ERROR.toString());
+        }
     }
 }

@@ -16,4 +16,12 @@ public interface ICoursePublishService {
      * @param courseId 课程id
      */
     void commitAudit(Long companyId,Long courseId);
+
+
+    /**
+     * 课程发布
+     * @param companyId 机构id
+     * @param courseId 课程id
+     */
+    void publish(Long companyId,Long courseId);
 }

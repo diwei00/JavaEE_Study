@@ -28,7 +28,7 @@ public interface MediaFileService {
 
 
     UploadFileResultVO uploadFile(Long companyId,
-                                  UploadFileParamsDTO uploadFileParamsDto, String localFilePath);
+                                  UploadFileParamsDTO uploadFileParamsDto, String localFilePath, String objectName);
 
 
     MediaFiles addMediaFilesToDb(Long companyId, String
