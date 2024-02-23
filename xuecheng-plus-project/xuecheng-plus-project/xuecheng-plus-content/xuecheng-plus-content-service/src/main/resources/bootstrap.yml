@@ -6,6 +6,9 @@ spring:
   cloud:
     nacos:
       server-addr: 192.168.101.128:8848
+      discovery:
+        namespace: dev
+        group: xuecheng-plus-project
       config:
         namespace: dev
         group: xuecheng-plus-project

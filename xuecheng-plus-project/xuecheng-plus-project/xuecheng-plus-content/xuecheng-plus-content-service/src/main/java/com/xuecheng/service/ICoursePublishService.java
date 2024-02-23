@@ -2,6 +2,8 @@ package com.xuecheng.service;
 
 import com.xuecheng.content.model.vo.CoursePreviewVO;
 
+import java.io.File;
+
 public interface ICoursePublishService {
     /**
      * @description 获取课程预览信息
@@ -24,4 +26,19 @@ public interface ICoursePublishService {
      * @param courseId 课程id
      */
     void publish(Long companyId,Long courseId);
+
+
+    /**
+     * 课程静态化
+     * @param courseId 课程id
+     * @return
+     */
+    File generateCourseHtml(Long courseId);
+
+    /**
+     * 上传课程静态化页面
+     * @param courseId 课程id
+     * @param file 静态化页面
+     */
+    void uploadCourseHtml(Long courseId,File file);
 }

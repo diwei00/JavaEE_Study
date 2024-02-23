@@ -60,7 +60,7 @@ public class MediaFilesController {
         String absolutePath = tempFile.getAbsolutePath();
         // 上传文件
         UploadFileResultVO uploadFileResultDto = mediaFileService.
-                uploadFile(companyId, uploadFileParamsDto, absolutePath, null);
+                uploadFile(companyId, uploadFileParamsDto, absolutePath, objectName);
         return uploadFileResultDto;
     }
 
