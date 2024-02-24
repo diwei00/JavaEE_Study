@@ -12,6 +12,7 @@ import com.xuecheng.service.ICourseBaseService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -44,6 +45,11 @@ public class CourseBaseInfoController {
     @ApiOperation("根据课程 id 查询课程基础信息")
     @GetMapping("/course/{courseId}")
     public CourseBaseInfoVO getCourseBaseById(@PathVariable Long courseId){
+        // SpringSecurity校验完成用户身份，会将jwt令牌中用户数据存储在当前线程上下文中
+        // 这里可以获取到SpringSecurity上下文对象，获取用户数据
+        // 取出当前用户身份
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        System.out.println(principal);
         return courseBaseService.getCourseBaseById(courseId);
     }
 
