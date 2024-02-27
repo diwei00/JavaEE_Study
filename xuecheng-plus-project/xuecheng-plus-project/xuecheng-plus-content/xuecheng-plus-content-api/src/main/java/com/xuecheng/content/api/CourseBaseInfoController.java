@@ -9,6 +9,7 @@ import com.xuecheng.content.model.dto.QueryCourseParamsDTO;
 import com.xuecheng.content.model.po.CourseBase;
 import com.xuecheng.content.model.vo.CourseBaseInfoVO;
 import com.xuecheng.service.ICourseBaseService;
+import com.xuecheng.utile.SecurityUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,8 +49,9 @@ public class CourseBaseInfoController {
         // SpringSecurity校验完成用户身份，会将jwt令牌中用户数据存储在当前线程上下文中
         // 这里可以获取到SpringSecurity上下文对象，获取用户数据
         // 取出当前用户身份
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        System.out.println(principal);
+//        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        SecurityUtil.XcUser user = SecurityUtil.getUser();
+        System.out.println(user);
         return courseBaseService.getCourseBaseById(courseId);
     }
 

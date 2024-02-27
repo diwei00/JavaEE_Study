@@ -80,12 +80,23 @@ POST {{auth_host}}/auth/oauth/token?client_id=XcWebApp&client_secret=XcWebApp&gr
 
 
 ### 密码模式 使用场景：客户端和服务器在同一个系统（会暴露用户敏感信息到客户端）
-POST {{auth_host}}/auth/oauth/token?client_id=XcWebApp&client_secret=XcWebApp&grant_type=password&username=zhangsan&password=123
+POST {{auth_host}}/auth/oauth/token?client_id=XcWebApp&client_secret=XcWebApp&grant_type=password&username=t1&password=111111
 
 ###校验 jwt 令牌
-POST {{auth_host}}/auth/oauth/check_token?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOlsieHVlY2hlbmctcGx1cyJdLCJ1c2VyX25hbWUiOiJ6aGFuZ3NhbiIsInNjb3BlIjpbImFsbCJdLCJleHAiOjE3MDg3NzU5NzAsImF1dGhvcml0aWVzIjpbInAxIl0sImp0aSI6IjEyNzYzY2ZlLWRlNzQtNDc4Yy04MTVjLWY3NjE5ZGRhZWYxNyIsImNsaWVudF9pZCI6IlhjV2ViQXBwIn0.nhhzyS7ed-uPbCMWxYFq9twb_0fR3IFeF89n62aveDw
+POST {{auth_host}}/auth/oauth/check_token?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOlsieHVlY2hlbmctcGx1cyJdLCJ1c2VyX25hbWUiOiJ7XCJjb21wYW55SWRcIjpcIjEyMzIxNDE0MjVcIixcImNyZWF0ZVRpbWVcIjpcIjIwMjItMDktMjhUMDg6MzI6MDNcIixcImlkXCI6XCI1MlwiLFwibmFtZVwiOlwiTeiAgeW4iFwiLFwic2V4XCI6XCIxXCIsXCJzdGF0dXNcIjpcIlwiLFwidXNlcm5hbWVcIjpcInQxXCIsXCJ1dHlwZVwiOlwiMTAxMDAyXCJ9Iiwic2NvcGUiOlsiYWxsIl0sImV4cCI6MTcwOTAxMzI0NSwiYXV0aG9yaXRpZXMiOlsidGVzdCJdLCJqdGkiOiI4NjZjMWFmMC0yMjZlLTQ4N2EtYWZiMC03OTdhMDdhMjEwZGYiLCJjbGllbnRfaWQiOiJYY1dlYkFwcCJ9.hszYzGg5rvfsbY0SPsIKNpZQWhE_cQII9pnIDzZF8YY
 
 
 ### 校验服务认证配置
-GET http://localhost:63040/content/course/2
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOlsieHVlY2hlbmctcGx1cyJdLCJ1c2VyX25hbWUiOiJ6aGFuZ3NhbiIsInNjb3BlIjpbImFsbCJdLCJleHAiOjE3MDg3NzYxOTIsImF1dGhvcml0aWVzIjpbInAxIl0sImp0aSI6IjhjM2FiYjM3LWI5MjktNGU0ZS05Nzk1LWIzMmQ5YTBiNzQ3NiIsImNsaWVudF9pZCI6IlhjV2ViQXBwIn0.gvvl5uiWalCP92769NtWX-WVMUDFx3mJSTP5A3SAIaU
+GET http://localhost:63010/content/course/2
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOlsieHVlY2hlbmctcGx1cyJdLCJ1c2VyX25hbWUiOiJ7XCJjb21wYW55SWRcIjpcIjEyMzIxNDE0MjVcIixcImNyZWF0ZVRpbWVcIjpcIjIwMjItMDktMjhUMDg6MzI6MDNcIixcImlkXCI6XCI1MlwiLFwibmFtZVwiOlwiTeiAgeW4iFwiLFwic2V4XCI6XCIxXCIsXCJzdGF0dXNcIjpcIlwiLFwidXNlcm5hbWVcIjpcInQxXCIsXCJ1dHlwZVwiOlwiMTAxMDAyXCJ9Iiwic2NvcGUiOlsiYWxsIl0sImV4cCI6MTcwOTAxMzc0NywiYXV0aG9yaXRpZXMiOlsidGVzdCJdLCJqdGkiOiJlZmE5YzQwNS05YjY3LTRlYWEtOTU2Mi1lMDNmNWQ5MjU0ZGQiLCJjbGllbnRfaWQiOiJYY1dlYkFwcCJ9.LRpW6ygP1gXOT3u-cvbdT2YJO-9dyzUH9us5TJEZJow
+
+
+################扩展认证请求参数后######################
+###密码模式
+POST {{auth_host}}/auth/oauth/token?client_id=XcWebApp&client_secret=XcWebApp&grant_type=password&username={"username":"stu1","authType":"password","password":"111111"}
+
+### 申请验证码
+POST {{checkcode_host}}/checkcode/pic
+
+### 校验验证码 携带用户验证码和key
+POST{{checkcode_host}}/checkcode/verify?key=checkcode:68d98885b87c4f2fba901c75c695beb0&code=81ou

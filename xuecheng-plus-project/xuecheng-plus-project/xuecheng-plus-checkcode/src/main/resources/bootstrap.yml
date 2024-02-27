@@ -1,6 +1,6 @@
 spring:
   application:
-    name: auth-service
+    name: checkcode
   cloud:
     nacos:
       server-addr: 192.168.101.128:8848
@@ -19,9 +19,13 @@ spring:
           - data-id: logging-${spring.profiles.active}.yaml
             group: xuecheng-plus-common
             refresh: true
-          - data-id: feign-${spring.profiles.active}.yaml
+          - data-id: redis-${spring.profiles.active}.yaml
             group: xuecheng-plus-common
             refresh: true
 
   profiles:
     active: dev
+
+
+
+
