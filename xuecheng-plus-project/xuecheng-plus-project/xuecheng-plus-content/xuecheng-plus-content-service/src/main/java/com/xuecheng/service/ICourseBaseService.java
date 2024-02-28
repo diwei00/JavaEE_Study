@@ -19,7 +19,7 @@ import com.xuecheng.content.model.vo.CourseBaseInfoVO;
 
 public interface ICourseBaseService extends IService<CourseBase> {
 
-    PageResult<CourseBase> getCourseList(PageParams pageParams, QueryCourseParamsDTO queryCourseParamsDto);
+    PageResult<CourseBase> getCourseList(Long companyId, PageParams pageParams, QueryCourseParamsDTO queryCourseParamsDto);
 
     CourseBaseInfoVO createCourseBase(AddCourseDTO addCourseDTO, Long companyId);
 

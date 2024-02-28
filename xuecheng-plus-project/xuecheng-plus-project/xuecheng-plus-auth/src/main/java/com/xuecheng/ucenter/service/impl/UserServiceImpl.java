@@ -2,9 +2,11 @@ package com.xuecheng.ucenter.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.xuecheng.ucenter.mapper.XcMenuMapper;
 import com.xuecheng.ucenter.mapper.XcUserMapper;
 import com.xuecheng.ucenter.model.dto.AuthParamsDTO;
 import com.xuecheng.ucenter.model.dto.XcUserExt;
+import com.xuecheng.ucenter.model.po.XcMenu;
 import com.xuecheng.ucenter.model.po.XcUser;
 import com.xuecheng.ucenter.service.AuthService;
 import lombok.extern.slf4j.Slf4j;
@@ -17,12 +19,18 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 @Slf4j
 @Service
 public class UserServiceImpl implements UserDetailsService {
     @Autowired
     private XcUserMapper xcUserMapper;
+
+    @Autowired
+    private XcMenuMapper menuMapper;
 
     // spring容器
     @Autowired
@@ -60,15 +68,28 @@ public class UserServiceImpl implements UserDetailsService {
      */
     public UserDetails getUserPrincipal(XcUserExt user) {
         //用户权限,如果不加报 Cannot pass a null GrantedAuthoritycollection
-        String[] authorities = {"p1"};
+        String[] authorities = {};
+        //查询用户权限
+        List<XcMenu> xcMenus = menuMapper.selectPermissionByUserId(user.getId());
+        List<String> permissions = new ArrayList<>();
+        if (xcMenus.size() <= 0) {
+            //用户权限,如果不加则报 Cannot pass a null GrantedAuthoritycollection
+            // 默认权限
+            permissions.add("p1");
+        } else {
+            xcMenus.forEach(menu -> {
+                permissions.add(menu.getCode());
+            });
+        }
+        authorities = permissions.toArray(new String[0]);
+
         String password = user.getPassword();
         //为了安全在令牌中不放密码
         user.setPassword(null);
         //将 user 对象转 json
         String userString = JSON.toJSONString(user);
         //创建 UserDetails 对象
-        UserDetails userDetails =
-                User.withUsername(userString).password(password).authorities(authorities).build();
+        UserDetails userDetails = User.withUsername(userString).password(password).authorities(authorities).build();
         return userDetails;
     }
 }

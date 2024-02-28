@@ -13,6 +13,7 @@ import com.xuecheng.utile.SecurityUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -25,12 +26,25 @@ public class CourseBaseInfoController {
     @Autowired
     private ICourseBaseService courseBaseService;
 
+    /**
+     *
+     * @param pageParams 分页参数
+     * @param queryCourseParamsDto 查询数据
+     * PreAuthorize注解：
+     *    配置接口权限
+     *    访问接口，携带Token，判断是否拥有该接口权限
+     */
     @ApiOperation("课程查询接口")
+    @PreAuthorize("hasAuthority('xc_teachmanager_course_list')")
     @PostMapping("/course/list")
     public PageResult<CourseBase> getCourseList(PageParams pageParams,
                                                 @RequestBody(required = false) QueryCourseParamsDTO queryCourseParamsDto) {
+        SecurityUtil.XcUser user = SecurityUtil.getUser();
+        //机构 id
+        String companyId = user.getCompanyId();
 
-        return courseBaseService.getCourseList(pageParams, queryCourseParamsDto);
+
+        return courseBaseService.getCourseList(Long.parseLong(companyId), pageParams, queryCourseParamsDto);
 
     }
 

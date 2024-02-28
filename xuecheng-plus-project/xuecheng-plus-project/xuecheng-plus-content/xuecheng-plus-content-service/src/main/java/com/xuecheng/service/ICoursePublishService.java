@@ -1,5 +1,6 @@
 package com.xuecheng.service;
 
+import com.xuecheng.content.model.po.CoursePublish;
 import com.xuecheng.content.model.vo.CoursePreviewVO;
 
 import java.io.File;
@@ -41,4 +42,6 @@ public interface ICoursePublishService {
      * @param file 静态化页面
      */
     void uploadCourseHtml(Long courseId,File file);
+
+    CoursePublish getCoursePublish(Long courseId);
 }

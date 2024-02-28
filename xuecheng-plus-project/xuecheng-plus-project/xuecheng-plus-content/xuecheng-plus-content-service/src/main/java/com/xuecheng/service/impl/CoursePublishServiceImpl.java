@@ -226,6 +226,11 @@ public class CoursePublishServiceImpl implements ICoursePublishService {
         }
     }
 
+    @Override
+    public CoursePublish getCoursePublish(Long courseId) {
+        return coursePublishMapper.selectById(courseId);
+    }
+
     private void saveCoursePublish(Long courseId) {
         // 整合课程发布信息
         // 查询课程预发布表

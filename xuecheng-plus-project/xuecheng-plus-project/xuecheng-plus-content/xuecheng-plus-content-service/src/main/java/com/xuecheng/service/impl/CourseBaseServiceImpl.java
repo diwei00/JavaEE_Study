@@ -49,7 +49,7 @@ public class CourseBaseServiceImpl extends ServiceImpl<CourseBaseMapper, CourseB
      * @return
      */
     @Override
-    public PageResult<CourseBase> getCourseList(PageParams pageParams, QueryCourseParamsDTO queryCourseParamsDto) {
+    public PageResult<CourseBase> getCourseList(Long companyId, PageParams pageParams, QueryCourseParamsDTO queryCourseParamsDto) {
         // 构造page
         Page<CourseBase> page = new Page<>(pageParams.getPageNo(), pageParams.getPageSize());
         LambdaQueryWrapper<CourseBase> wrapper = new LambdaQueryWrapper<>();
@@ -60,7 +60,8 @@ public class CourseBaseServiceImpl extends ServiceImpl<CourseBaseMapper, CourseB
                 .eq(StringUtils.hasLength(queryCourseParamsDto.getAuditStatus()), CourseBase::getAuditStatus,
                         queryCourseParamsDto.getAuditStatus())
                 .eq(StringUtils.hasLength(queryCourseParamsDto.getPublishStatus()), CourseBase::getStatus,
-                        queryCourseParamsDto.getPublishStatus());
+                        queryCourseParamsDto.getPublishStatus())
+                .eq(CourseBase::getCompanyId, companyId);
 
         Page<CourseBase> pageResult = this.baseMapper.selectPage(page, wrapper);
         // 处理结果集
