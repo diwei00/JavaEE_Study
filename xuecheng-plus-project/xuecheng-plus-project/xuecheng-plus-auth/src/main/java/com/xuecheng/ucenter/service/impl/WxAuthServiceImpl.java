@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
+
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.Map;
@@ -29,7 +30,7 @@ import java.util.UUID;
  * 微信扫码认证
  */
 @Slf4j
-@Service("wx_authservice")
+@Service("wx_authservice") // 指定名称，使用策略模式进行调用（根据BeanName）
 public class WxAuthServiceImpl implements AuthService, WxAuthService {
     @Autowired
     private XcUserMapper xcUserMapper;
@@ -46,6 +47,7 @@ public class WxAuthServiceImpl implements AuthService, WxAuthService {
     @Value("${weixin.secret}")
     String secret;
 
+    // 微信登录校验
     @Override
     public XcUserExt execute(AuthParamsDTO authParamsDto) {
         //账号
@@ -61,6 +63,7 @@ public class WxAuthServiceImpl implements AuthService, WxAuthService {
         return xcUserExt;
     }
 
+    // 微信扫码登录，后端执行逻辑
     @Override
     public XcUser wxAuth(String code) {
         //收到 code 调用微信接口申请 access_token

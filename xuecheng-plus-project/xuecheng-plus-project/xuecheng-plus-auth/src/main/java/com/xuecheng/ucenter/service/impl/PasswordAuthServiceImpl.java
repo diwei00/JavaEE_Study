@@ -17,7 +17,7 @@ import org.springframework.stereotype.Service;
  * 策略模式
  * 密码模式校验逻辑
  */
-@Service("password_authservice")
+@Service("password_authservice") // // 指定名称，使用策略模式进行调用（根据BeanName）
 public class PasswordAuthServiceImpl implements AuthService {
 
     @Autowired
