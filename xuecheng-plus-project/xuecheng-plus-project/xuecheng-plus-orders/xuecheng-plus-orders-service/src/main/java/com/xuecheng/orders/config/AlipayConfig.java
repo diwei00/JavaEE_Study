@@ -14,7 +14,7 @@ package com.xuecheng.orders.config;
   public static String notify_url = "http://商户网关地址/alipay.trade.wap.pay-JAVA-UTF-8/notify_url.jsp";
   // 页面跳转同步通知页面路径 需http://或者https://格式的完整路径，不能加?id=123这类自定义参数，必须外网可以正常访问 商户可以自定义同步跳转地址
   public static String return_url = "http://商户网关地址/alipay.trade.wap.pay-JAVA-UTF-8/return_url.jsp";
-  // 请求网关地址
+  // 请求网关地址（沙箱环境）
   public static String URL = "https://openapi-sandbox.dl.alipaydev.com/gateway.do";
   // 编码
   public static String CHARSET = "UTF-8";

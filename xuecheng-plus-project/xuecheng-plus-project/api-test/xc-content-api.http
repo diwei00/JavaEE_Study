@@ -103,3 +103,6 @@ POST{{checkcode_host}}/checkcode/verify?key=checkcode:68d98885b87c4f2fba901c75c6
 
 ### 查询课程发布信息
 GET {{content_host}}/content/r/coursepublish/2
+
+### 查询支付结果
+GET {{order_host}}/orders/payresult?payNo=1763419735707119616

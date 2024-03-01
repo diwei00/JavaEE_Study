@@ -3,7 +3,9 @@ package com.xuecheng.orders.model.po;
 import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import java.io.Serializable;
@@ -18,6 +20,8 @@ import java.time.LocalDateTime;
  */
 @Data
 @ToString
+@AllArgsConstructor
+@NoArgsConstructor
 @TableName("xc_pay_record")
 public class XcPayRecord implements Serializable {
 
