@@ -135,15 +135,15 @@ public class OrderController {
         boolean verify_result = AlipaySignature.rsaCheckV1(params, ALIPAY_PUBLIC_KEY, AlipayConfig.CHARSET, "RSA2");
         if (verify_result) {//验证成功
             //商户订单号
-            String out_trade_no = new String(request.getParameter("out_trade_no").getBytes("ISO-8859-1")," UTF - 8");
+            String out_trade_no = new String(request.getParameter("out_trade_no").getBytes("ISO-8859-1"),"UTF-8");
             //支付宝交易号
-            String trade_no = new String(request.getParameter("trade_no").getBytes("ISO-8859-1")," UTF - 8");
+            String trade_no = new String(request.getParameter("trade_no").getBytes("ISO-8859-1"),"UTF-8");
             //交易状态
-            String trade_status = new String(request.getParameter("trade_status").getBytes("ISO-8859-1")," UTF - 8");
+            String trade_status = new String(request.getParameter("trade_status").getBytes("ISO-8859-1"),"UTF-8");
             //appid
             String app_id = new String(request.getParameter("app_id").getBytes("ISO-8859-1"), "UTF-8");
             //total_amount
-            String total_amount = new String(request.getParameter("total_amount").getBytes("ISO-8859-1")," UTF - 8");
+            String total_amount = new String(request.getParameter("total_amount").getBytes("ISO-8859-1"),"UTF-8");
             //交易成功处理
             if (trade_status.equals("TRADE_SUCCESS")) {
                 PayStatusDto payStatusDto = new PayStatusDto();
@@ -157,6 +157,4 @@ public class OrderController {
             }
         }
     }
-
-
 }

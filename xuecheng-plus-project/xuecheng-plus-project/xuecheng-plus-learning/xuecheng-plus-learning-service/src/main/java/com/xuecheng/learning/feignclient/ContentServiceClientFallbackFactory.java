@@ -15,7 +15,7 @@ public class ContentServiceClientFallbackFactory implements FallbackFactory<Cont
 
             @Override
             public CoursePublish getCoursepublish(Long courseId) {
-                log.error("调用内容管理服务发生熔断:{}", throwable.toString(),throwable);
+                log.error("调用内容管理服务发生熔断:{}", throwable.toString(), throwable);
                 return null;
             }
         };

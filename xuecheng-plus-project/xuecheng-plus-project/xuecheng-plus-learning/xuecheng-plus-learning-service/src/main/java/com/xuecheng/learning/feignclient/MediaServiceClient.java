@@ -7,11 +7,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 
- @FeignClient(value = "media-api",fallbackFactory = MediaServiceClientFallbackFactory.class)
- @RequestMapping("/media")
- public interface MediaServiceClient {
+@FeignClient(value = "media-api", fallbackFactory = MediaServiceClientFallbackFactory.class)
+@RequestMapping("/media")
+public interface MediaServiceClient {
 
-  @GetMapping("/open/preview/{mediaId}")
-  RestResponse<String> getPlayUrlByMediaId(@PathVariable("mediaId") String mediaId);
+    @GetMapping("/open/preview/{mediaId}")
+    RestResponse<String> getPlayUrlByMediaId(@PathVariable("mediaId") String mediaId);
 
- }
+}
