@@ -34,7 +34,7 @@ public class ResouceServerConfig extends ResourceServerConfigurerAdapter {
     public void configure(HttpSecurity http) throws Exception {
         http.csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/content/r/**", "/course/**").authenticated()//所有/r/**的请求放行
+                .antMatchers("/content/r/**", "/content/course/**").authenticated()//所有/r/**的请求放行
                 .anyRequest().permitAll()
         ;
     }

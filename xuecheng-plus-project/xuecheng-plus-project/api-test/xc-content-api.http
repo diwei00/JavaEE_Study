@@ -106,3 +106,6 @@ GET {{content_host}}/content/r/coursepublish/2
 
 ### 查询支付结果
 GET {{order_host}}/orders/payresult?payNo=1763419735707119616
+
+### 查询课程计划
+GET {{gateway_host}}/content/course/whole/2
