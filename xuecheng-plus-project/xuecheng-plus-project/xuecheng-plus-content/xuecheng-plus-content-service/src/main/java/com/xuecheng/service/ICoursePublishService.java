@@ -44,4 +44,9 @@ public interface ICoursePublishService {
     void uploadCourseHtml(Long courseId,File file);
 
     CoursePublish getCoursePublish(Long courseId);
+
+    /**
+     *  查询缓存中的课程信息
+     */
+    CoursePublish getCoursePublishCache(Long courseId);
 }

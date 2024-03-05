@@ -26,8 +26,11 @@ import freemarker.template.Configuration;
 import freemarker.template.Template;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
+import org.redisson.api.RLock;
+import org.redisson.api.RedissonClient;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
@@ -40,6 +43,8 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
+import java.util.concurrent.TimeUnit;
 
 @Slf4j
 @Service
@@ -60,6 +65,10 @@ public class CoursePublishServiceImpl implements ICoursePublishService {
     private MqMessageService mqMessageService;
     @Autowired
     private MediaServiceClient mediaServiceClient;
+    @Autowired
+    private RedisTemplate redisTemplate;
+    @Autowired
+    private RedissonClient redissonClient;
 
 
     /**
@@ -230,6 +239,65 @@ public class CoursePublishServiceImpl implements ICoursePublishService {
     public CoursePublish getCoursePublish(Long courseId) {
         return coursePublishMapper.selectById(courseId);
     }
+
+    /**
+     * 缓存穿透：查询数据不存在数据，缓存失效，请求打到数据库
+     * 解决方案：
+     * 1）请求增加校验机制
+     * 2）使用布隆过滤器（判断数据库中数据是否存在）
+     * 3）缓存空值
+     * 缓存雪崩：缓存中大量key在同一时间失效，导致请求打到数据库
+     * 解决方案：
+     * 1）使用同步锁控制查询数据库的线程（一个线程查询数据库，存入缓存）
+     * 2）对同一类型信息的 key 设置不同的过期时间
+     * 3）缓存预热，提前将数据存储缓存中
+     * 缓存击穿：热点key失效，大量并发请求打到数据库
+     * 解决方案：
+     * 1）使用同步锁控制查询数据库的线程
+     * 2）热点数据不过期（可以由后台程序提前将热点数据加入缓存，缓存过期时间不过期，由后台程序做好缓存同步）
+     *
+     * @param courseId 课程id
+     * @return
+     */
+    @Override
+    public CoursePublish getCoursePublishCache(Long courseId) {
+        //查询缓存
+        Object jsonObj = redisTemplate.opsForValue().get("course:" + courseId);
+        if (jsonObj != null) {
+            String jsonString = jsonObj.toString();
+            System.out.println("=================从缓存查=================");
+            CoursePublish coursePublish = JSON.parseObject(jsonString, CoursePublish.class);
+            return coursePublish;
+        } else {
+            // 解决缓存击穿问题，由于采用分布式部署，这里需要使用分布式锁
+//            synchronized (this) {
+                // 每门课程设置一个锁（分布式锁）
+                RLock lock = redissonClient.getLock("course:" + courseId);
+                // 获取锁，获取到执行try中代码
+                lock.lock();
+                try {
+                    jsonObj = redisTemplate.opsForValue().get("course:" + courseId);
+                    if (jsonObj != null) {
+                        String jsonString = jsonObj.toString();
+                        CoursePublish coursePublish = JSON.parseObject(jsonString, CoursePublish.class);
+                        return coursePublish;
+                    }
+                    System.out.println("从数据库查询...");
+                    //从数据库查询
+                    CoursePublish coursePublish = coursePublishMapper.selectById(courseId);
+                    // 数据库不存在也缓存，防止缓存穿透
+                    // 同一类信息过期时间使用随机值，防止缓存雪崩
+                    redisTemplate.opsForValue().set("course:" + courseId,
+                            JSON.toJSONString(coursePublish), 30 + new Random().nextInt(100), TimeUnit.SECONDS);
+                    return coursePublish;
+                }finally {
+                    // 释放锁
+                    lock.unlock();
+                }
+
+            }
+    }
+
 
     private void saveCoursePublish(Long courseId) {
         // 整合课程发布信息
