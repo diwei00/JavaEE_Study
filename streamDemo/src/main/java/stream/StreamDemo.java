@@ -104,7 +104,8 @@ public class StreamDemo {
         long count = stringList.stream().count();
         System.out.println(count);
         System.out.println("================");
-        stringList.stream().forEach(s -> System.out.println(s));
+        // 方法引用：会将lambda中的形参作为参数传递给被引用的方法
+        stringList.stream().forEach(System.out::println);
 
         ArrayList<Integer> list2 = new ArrayList<>();
         for (int i = 1; i <= 10; i++) {
