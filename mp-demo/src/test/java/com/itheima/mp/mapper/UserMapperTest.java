@@ -11,6 +11,7 @@ import com.itheima.mp.domain.po.User;
 import com.itheima.mp.domain.po.UserInfo;
 import com.itheima.mp.enums.UserStatus;
 import com.itheima.mp.service.IUserService;
+import com.itheima.mp.service.IUsersService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -27,6 +28,9 @@ class UserMapperTest {
 
     @Autowired
     private IUserService userService;
+
+    @Autowired
+    private IUsersService usersService;
 
     @Test
     void testInsert() {
@@ -235,5 +239,12 @@ class UserMapperTest {
         System.out.println("total = " + p.getTotal());
         System.out.println("pages = " + p.getPages());
         userList.forEach(System.out::println);
+    }
+
+    @Test
+    void testDeleteAll() {
+        // 删除全部数据
+        usersService.remove(new QueryWrapper<>());
+
     }
 }

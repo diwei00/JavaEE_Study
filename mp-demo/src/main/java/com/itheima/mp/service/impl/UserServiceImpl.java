@@ -119,6 +119,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         // 处理数据
         Map<Long, List<AddressVO>> adddressMap = null;
         if(!CollectionUtils.isEmpty(addressVOList)) {
+            // 收集为map，id作为key
             adddressMap = addressVOList.stream().collect(Collectors.groupingBy(AddressVO::getUserId));
         }
 

@@ -174,7 +174,7 @@
       <workItem from="1694321296581" duration="8508000" />
       <workItem from="1706587801956" duration="79000" />
       <workItem from="1706785381058" duration="7000" />
-      <workItem from="1709706919061" duration="784000" />
+      <workItem from="1709706919061" duration="1451000" />
     </task>
     <task id="LOCAL-00001" summary="RabbitMQ基础学习">
       <created>1694274052556</created>
@@ -188,6 +188,17 @@
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="RabbitMQ基础学习" />
