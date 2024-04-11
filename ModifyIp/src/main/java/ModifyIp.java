@@ -9,7 +9,7 @@ import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 /**
- * @Description
+ * @Description 修改IP地址脚本
  * @Author wh
  * @Date 2024/4/10 9:42
  */
@@ -31,14 +31,14 @@ public class ModifyIp {
         }
 
         // 读取文件
+        Stream<Path> fileList = null;
         try {
             // 读取到所有路径流
             String finalNewIp = newIp;
-            Stream<Path> fileList = Files.walk(Paths.get(path));
+            fileList = Files.walk(Paths.get(path));
             fileList
-                    .filter(item -> Files.isDirectory(item))
+                    .filter(item -> Files.isDirectory(item)) // 保留所有目录
                     .forEach(item -> {
-                        // 这里得到存在文件的目录
                         File file = new File(item.toUri());
                         // 拿到该目录下所有子目录
                         File[] files = file.listFiles();
@@ -50,14 +50,12 @@ public class ModifyIp {
                             replaceIP(filePath, finalNewIp);
                         });
                     });
-
-
         } catch (IOException e) {
-            System.out.println("'error: 路径不存在/该路径为文件");
+            System.out.println("'error: 路径不存在");
             e.printStackTrace();
+        }finally {
+            fileList.close();
         }
-
-
     }
 
     // 替换IP
@@ -111,11 +109,5 @@ public class ModifyIp {
                 e.printStackTrace();
             }
         }
-        // E:\tmp\bbb
-        // 192.168.2.20
-        // 手动127.0.0.1的成分
-        // /home/wh/tmp
     }
-
-
 }
