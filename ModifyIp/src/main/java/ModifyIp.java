@@ -42,6 +42,9 @@ public class ModifyIp {
                         File file = new File(item.toUri());
                         // 拿到该目录下所有子目录
                         File[] files = file.listFiles();
+                        if(files == null || files.length == 0) {
+                            return;
+                        }
                         // 过滤非文件子目录
                         Arrays.stream(files).filter(t -> t.isFile()).forEach(t -> {
                             // 拿到子目录文件地址
@@ -54,7 +57,9 @@ public class ModifyIp {
             System.out.println("'error: 路径不存在");
             e.printStackTrace();
         }finally {
-            fileList.close();
+            if(fileList != null) {
+                fileList.close();
+            }
         }
     }
 
@@ -102,8 +107,12 @@ public class ModifyIp {
             e.printStackTrace();
         }finally {
             try {
-                reader.close();
-                writer.close();
+                if(reader != null) {
+                    reader.close();
+                }
+                if(writer != null) {
+                    writer.close();
+                }
             } catch (IOException e) {
                 System.out.println("流关闭失败");
                 e.printStackTrace();

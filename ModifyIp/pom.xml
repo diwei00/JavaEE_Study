@@ -16,6 +16,7 @@
 
     <packaging>jar</packaging>
     <build>
+        <!--   配置打包插件     -->
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

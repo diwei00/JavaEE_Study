@@ -1,5 +1,6 @@
 package com.itheima.mp.domain.vo;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -15,6 +16,7 @@ public class AddressVO{
     private Long userId;
 
     @ApiModelProperty("省")
+    @JsonFormat
     private String province;
 
     @ApiModelProperty("市")
