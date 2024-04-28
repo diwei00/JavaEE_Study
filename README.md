@@ -12,4 +12,4 @@
 
 此项目记录了技术学习过程，以及自己所做的一些项目。
 
-平时喜欢写博客：欢迎大家关注哦！ CSDN：https://blog.csdn.net/weixin_62353436
+平时喜欢写博客，欢迎大家关注哦！ CSDN：https://blog.csdn.net/weixin_62353436
