@@ -71,11 +71,8 @@ public class UserController {
         return userService.getUserListPage(userQuery);
     }
 
-
-
-
-
-
-
-
+    @PostMapping("/test")
+    public String test(String id) {
+        return id;
+    }
 }
