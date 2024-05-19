@@ -10,4 +10,5 @@ import javax.servlet.http.HttpServletResponse;
 public interface UserService {
     String getUserToWord(String id, HttpServletResponse response);
 
+    Boolean getUserToExcel(String ids, HttpServletResponse response);
 }

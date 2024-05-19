@@ -4,18 +4,23 @@ import com.example.poidemo.entity.User;
 import com.example.poidemo.mapper.UserMapper;
 import com.example.poidemo.service.UserService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.apache.poi.xwpf.usermodel.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.nio.file.Files;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @Description
@@ -47,6 +52,75 @@ public class UserServiceImpl implements UserService {
         return "export word!";
     }
 
+    @Override
+    public Boolean getUserToExcel(String ids, HttpServletResponse response) {
+        List<User> users = userMapper.selectBatchIds(Arrays.asList(ids.split(",")));
+        if(CollectionUtils.isEmpty(users)) {
+            log.info("用户不存在，ids={}", ids);
+            return false;
+        }
+        exportExcel("templates/userTemplate.xlsx", response, users);
+
+
+        return true;
+    }
+
+    private void exportExcel(String templatePath, HttpServletResponse response, List<User> users) {
+        ClassPathResource resource = new ClassPathResource(templatePath);
+        try(
+                InputStream fis = resource.getInputStream();
+                // 创建excel文档对象
+                XSSFWorkbook workbook = (XSSFWorkbook)WorkbookFactory.create(fis);
+        ) {
+            // 获取第一个Sheet
+            XSSFSheet sheet = workbook.getSheetAt(0);
+            // 复制sheet
+//            XSSFSheet newSheet = workbook.cloneSheet(0);
+            workbook.setSheetName(workbook.getSheetIndex(sheet), "用户信息");
+            for (int i = 0; i < users.size(); i++) {
+                User user = users.get(i);
+                // 创建行
+                XSSFRow row = sheet.createRow(i + 1);
+                for(int j = 0; j < 5; j++) {
+                    switch (j){
+                        case 0:
+                            // 创建单元格并且设置value
+                            row.createCell(j).setCellValue(user.getUsername());
+                            break;
+                        case 1:
+                            row.createCell(j).setCellValue(user.getAge());
+                            break;
+                        case 2:
+                            row.createCell(j).setCellValue(user.getSex());
+                            break;
+                        case 3:
+                            row.createCell(j).setCellValue(user.getHeight());
+                            break;
+                        case 4:
+                            row.createCell(j).setCellValue(user.getWeight());
+                            break;
+                    }
+                }
+
+            }
+
+            // 下载excel
+            response.setContentType(MediaType.APPLICATION_OCTET_STREAM_VALUE);
+            response.setHeader("Content-Disposition", "attachment;filename=user.xlsx");
+            response.setCharacterEncoding("UTF-8");
+            workbook.write(response.getOutputStream());
+
+        }catch (IOException e) {
+            log.info("获取模板异常！");
+            e.printStackTrace();
+        } catch (InvalidFormatException e) {
+            log.info("模板文件异常！");
+            e.printStackTrace();
+        }
+
+
+
+    }
 
 
     private void exportWord(String templatePath, HttpServletResponse response, Map<String, String> replacements)  {
@@ -76,21 +150,22 @@ public class UserServiceImpl implements UserService {
 //            }
 
             // 导出文档
-            // 将文档转换为字节数组输出流
-            baos = new ByteArrayOutputStream();
-            document.write(baos);
-            byte[] bytes = baos.toByteArray();
+//            // 将文档转换为字节数组输出流
+//            baos = new ByteArrayOutputStream();
+//            document.write(baos);
+//            byte[] bytes = baos.toByteArray();
 
             response.setCharacterEncoding("utf-8"); //设置编码格式
             response.setHeader("Content-Disposition", "attachment; filename=\"userTemplate.docx\"");
             response.setContentType(MediaType.APPLICATION_OCTET_STREAM_VALUE);
-            response.setContentLength(bytes.length);
-
-            // 将字节数组写入HTTP响应
-            outputStream = response.getOutputStream();
-            outputStream.write(bytes);
-            // 刷新输出流缓冲区
-            outputStream.flush();
+            document.write(response.getOutputStream());
+//            response.setContentLength(bytes.length);
+//
+//            // 将字节数组写入HTTP响应
+//            outputStream = response.getOutputStream();
+//            outputStream.write(bytes);
+//            // 刷新输出流缓冲区
+//            outputStream.flush();
 
 
 //            document.write(response.getOutputStream());
