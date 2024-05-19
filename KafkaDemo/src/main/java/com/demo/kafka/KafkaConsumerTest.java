@@ -37,10 +37,8 @@ public class KafkaConsumerTest {
 
         // 消费者对象
         KafkaConsumer<String, String> consumer = new KafkaConsumer<>(configMap);
-
         // 消费者订阅指定主题
         consumer.subscribe(Collections.singletonList("test"));
-
         // 消费数据，主动从kafka拉取数据
         while (true) {
             // 一次可拉取多条
