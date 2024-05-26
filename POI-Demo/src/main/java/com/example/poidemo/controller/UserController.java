@@ -1,5 +1,6 @@
 package com.example.poidemo.controller;
 
+import com.example.poidemo.common.CommonResult;
 import com.example.poidemo.entity.User;
 import com.example.poidemo.service.UserService;
 import io.swagger.annotations.Api;
@@ -31,23 +32,26 @@ public class UserController {
 
    @ApiOperation(value = "导出用户信息", notes = "export", produces = "application/octet-stream")
    @GetMapping("/getWord")
-   public String getUser(String id, HttpServletResponse response) {
+   public CommonResult<String> getUser(String id, HttpServletResponse response) {
       if(!StringUtils.hasLength(id)) {
-         return "id非法";
+         return CommonResult.fail("id非法");
       }
-      return userService.getUserToWord(id, response);
+      userService.getUserToWord(id, response);
+      return CommonResult.success();
+
+
    }
 
    @ApiOperation(value = "导出用户信息", notes = "export", produces = "application/octet-stream")
    @GetMapping("/getExcel")
-   public String getUserExcel(String ids, HttpServletResponse response) {
+   public CommonResult<String> getUserExcel(String ids, HttpServletResponse response) {
       if(!StringUtils.hasLength(ids)) {
-         return "ids非法";
+         return CommonResult.fail("ids非法");
       }
       Boolean result = userService.getUserToExcel(ids, response);
       if(result) {
-         return "导出成功";
+         return CommonResult.success();
       }
-      return "导出失败";
+      return CommonResult.fail();
    }
 }

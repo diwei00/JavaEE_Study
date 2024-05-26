@@ -6,7 +6,7 @@ spring:
     password: wuhao1126
 server:
   servlet:
-    context-path: /test
+    context-path: /api
 logging:
   level:
     com.example: debug

@@ -215,5 +215,10 @@ public class UserServiceImpl implements UserService {
         }
     }
 
+    public void test() {
+        System.out.println("执行UserServiceImpl");
+
+    }
+
 
 }
