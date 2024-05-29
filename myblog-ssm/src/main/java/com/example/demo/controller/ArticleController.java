@@ -1,9 +1,6 @@
 package com.example.demo.controller;
 
-import com.example.demo.common.AjaxResult;
-import com.example.demo.common.ApplicationVariable;
-import com.example.demo.common.StringTools;
-import com.example.demo.common.UserSessionTools;
+import com.example.demo.common.*;
 import com.example.demo.entity.ArticleInfo;
 import com.example.demo.entity.CommentInfo;
 import com.example.demo.entity.Userinfo;
@@ -19,11 +16,14 @@ import javax.servlet.http.HttpSession;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @RestController
 @RequestMapping("/art")
 public class ArticleController {
+    // redis阅读数锁前缀
+    private final String ReadCountLock = "readCountLock:";
     @Autowired
     private ArticleService articleService;
 
@@ -115,17 +115,26 @@ public class ArticleController {
 
     /**
      * 增加阅读量
-     *
+     * 使用redis + ip限制防止恶意刷阅读量（60秒内只能增加一次）
      * @param id
      * @return
      */
     @RequestMapping("/increasercount")
-    public AjaxResult increaseRCount(Integer id) {
+    public AjaxResult increaseRCount(Integer id, HttpServletRequest request) {
         if (id == null || id <= 0) {
             return AjaxResult.fail(-1, "参数非法");
         }
-        int result = articleService.increaseRCount(id);
-        return AjaxResult.success(result);
+        // 1.设置锁，成功：增加阅读量，失败：不增加
+        // key: readCountLock:ip:aid   value: aid
+        // 注意: 这里key需要细化到文章id，保证一个IP下的锁对所有文章都有效果
+        String key = ReadCountLock + IpUtil.getIpAddr(request) + ":" + id;
+        Integer result = null;
+        if(RedisUtil.setKeyIfAbsent(key, id.toString(), 60, TimeUnit.SECONDS)) {
+           // 加锁成功增加阅读量
+            result = articleService.increaseRCount(id);
+        }
+        // 加锁失败，不进行任何操作
+        return AjaxResult.success(result == null ? 0 : result);
     }
 
     /**
@@ -194,6 +203,9 @@ public class ArticleController {
     public AjaxResult getArtCount(HttpServletRequest request) {
         Userinfo userinfo = UserSessionTools.getLoginUser(request);
         int result = articleService.getArtCount(userinfo.getId());
+        if (result == 0) {
+            return AjaxResult.fail(-1, "用户未发表文章");
+        }
         return AjaxResult.success(result);
     }
 
