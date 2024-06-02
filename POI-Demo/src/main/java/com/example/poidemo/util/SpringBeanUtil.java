@@ -5,19 +5,18 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
 /**
- * @Description
+ * @Description 用于从容器中获取对象
  * @Author wh
  * @Date 2024/5/26 17:32
  */
-
 @Component
-public class ApplicationContextUtil {
+public class SpringBeanUtil {
 
    private static ApplicationContext applicationContext;
 
    @Autowired
    public void setApplicationContext(ApplicationContext applicationContext) {
-       ApplicationContextUtil.applicationContext = applicationContext;
+       SpringBeanUtil.applicationContext = applicationContext;
    }
 
 
