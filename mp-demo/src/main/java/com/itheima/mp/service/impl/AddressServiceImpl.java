@@ -16,5 +16,4 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class AddressServiceImpl extends ServiceImpl<AddressMapper, Address> implements IAddressService {
-
 }

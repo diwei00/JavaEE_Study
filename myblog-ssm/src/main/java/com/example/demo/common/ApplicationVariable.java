@@ -23,6 +23,6 @@ public class ApplicationVariable {
     /**
      * 全局线程池
      */
-    public static final ExecutorService executorService = Executors.newFixedThreadPool(100);
+    public static final ExecutorService executorService = Executors.newFixedThreadPool(10);
 
 }
