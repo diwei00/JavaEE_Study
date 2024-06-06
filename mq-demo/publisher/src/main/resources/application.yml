@@ -1,11 +1,30 @@
+server:
+  port: 8082
 logging:
   pattern:
     dateformat: MM-dd HH:mm:ss:SSS
+  level:
+    cn.itcast: debug
 # 配置远程mq
+
+# 注意：
+#    当网络不稳定的时候，利用重试机制可以有效提高消息发送的成功率。
+#    不过SpringAMQP提供的重试机制是阻塞式的重试，也就是说多次重试等待的过程中，当前线程是被阻塞的。
+#    如果对于业务性能有要求，建议禁用重试机制。如果一定要使用，请合理配置等待时长和重试次数，当然也可以考虑使用异步线程来执行发送消息的代码
 spring:
   rabbitmq:
-    host: 192.168.29.130 # 主机名
+    host: 192.168.101.128 # 主机名
     port: 5672 # 端口
-    virtual-host: / # 虚拟主机
+    virtual-host: test # 虚拟主机
     username: wuhao # 用户名
     password: 123 # 密码
+    connection-timeout: 1s # 设置MQ的连接超时时间
+    template:
+      retry:
+        enabled: true # 开启连接超时重试机制
+        initial-interval: 1000ms # 失败后的初始等待时间
+        multiplier: 1 # 失败后下次的等待时长倍数，下次等待时长 = initial-interval * multiplier
+        max-attempts: 3 # 最大重试次数
+    # none：关闭confirm机制，simple：同步阻塞等待MQ的回执，correlated：MQ异步回调返回回执
+    publisher-confirm-type: correlated # 开启publisher confirm机制，并设置confirm类型.
+    publisher-returns: true # 开启publisher return机制

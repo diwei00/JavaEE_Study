@@ -1,14 +1,31 @@
 logging:
   pattern:
     dateformat: MM-dd HH:mm:ss:SSS
+  level:
+    cn.itcast: debug
 # 配置远程mq
 spring:
   rabbitmq:
-    host: 192.168.29.130 # 主机名
+    host: 192.168.101.128 # 主机名
     port: 5672 # 端口
-    virtual-host: / # 虚拟主机
+    virtual-host: test # 虚拟主机
     username: wuhao # 用户名
     password: 123 # 密码
     listener:
       simple:
         prefetch: 1 # 每次只能获取一条消息，处理完成才能获取下一个消息
+        acknowledge-mode: auto # 自动确认
+       # - none：不处理。即消息投递给消费者后立刻ack，消息会立刻从MQ删除。非常不安全，不建议使用
+       # - manual：手动模式。需要自己在业务代码中调用api，发送ack或reject，存在业务入侵，但更灵活
+       # - auto：自动模式。SpringAMQP利用AOP对我们的消息处理逻辑做了环绕增强，当业务正常执行时则自动返回ack.  当业务出现异常时，根据异常判断返回不同结果：
+       #    - 如果是业务异常，会自动返回nack；
+       #    - 如果是消息处理或校验异常，自动返回reject;
+        retry:
+          enabled: true # 开启消费者失败重试
+          initial-interval: 1000ms # 初识的失败等待时长为1秒
+          multiplier: 1 # 失败的等待时长倍数，下次等待时长 = multiplier * last-interval
+          max-attempts: 3 # 最大重试次数
+          stateless: true # true无状态；false有状态。如果业务中包含事务，这里改为false
+
+
+

@@ -1,11 +1,13 @@
 package cn.itcast.mq.listener;
 
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.ExchangeTypes;
 import org.springframework.amqp.rabbit.annotation.Exchange;
 import org.springframework.amqp.rabbit.annotation.Queue;
 import org.springframework.amqp.rabbit.annotation.QueueBinding;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
+import org.springframework.amqp.support.converter.MessageConversionException;
 import org.springframework.stereotype.Component;
 
 import javax.lang.model.type.ExecutableType;
@@ -13,6 +15,8 @@ import java.time.LocalDateTime;
 import java.util.Map;
 
 // 消费队列中的消息
+
+@Slf4j
 @Component
 public class SpringRabbitListener {
 
@@ -76,6 +80,7 @@ public class SpringRabbitListener {
     }
 
 
+
     /**
      * 第二种方式，基于注解：（申明队列和交换机并且绑定）
      * 基于注解声明队列和交换机，同时指定队列的 routing key
@@ -94,7 +99,12 @@ public class SpringRabbitListener {
             key = {"red", "blue"}
     ))
     public void listenDirectQueue1(String msg) {
-        System.out.println("接收到消息(1)：" + msg);
+        log.info("接收到消息(1)：" + msg);
+        if(true) {
+            throw new RuntimeException("故意的");
+        }
+//        System.out.println("接收到消息(1)：" + msg);
+        log.info("消息处理完成");
     }
 
 

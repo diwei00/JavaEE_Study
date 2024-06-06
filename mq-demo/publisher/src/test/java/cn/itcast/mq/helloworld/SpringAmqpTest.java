@@ -1,16 +1,20 @@
 package cn.itcast.mq.helloworld;
 
 
+import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.amqp.rabbit.connection.CorrelationData;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.util.concurrent.ListenableFutureCallback;
 
 import java.util.HashMap;
 import java.util.Map;
 
+@Slf4j
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class SpringAmqpTest {
@@ -74,7 +78,7 @@ public class SpringAmqpTest {
 
         // 消息
         String massage = "hello direct";
-        rabbitTemplate.convertAndSend(exchangeName, "", massage);
+        rabbitTemplate.convertAndSend(exchangeName, "red", massage);
 
     }
 
@@ -97,5 +101,41 @@ public class SpringAmqpTest {
         message.put("name", "wuhao");
         message.put("age", "21");
         rabbitTemplate.convertAndSend(queueName, message);
+    }
+
+    /**
+     * 发送消息，并开启消息发送的回调
+     */
+    @Test
+    public void testPublisherConfirm() {
+
+        // 注意：
+        //    由于每个消息发送时的处理逻辑不一定相同，因此ConfirmCallback需要在每次发消息时定义。
+        //    具体来说，是在调用RabbitTemplate中的convertAndSend方法时，多传递一个参数：
+
+
+        // 1.创建CorrelationData
+        CorrelationData cd = new CorrelationData();
+        // 2.给Future添加ConfirmCallback
+        cd.getFuture().addCallback(new ListenableFutureCallback<CorrelationData.Confirm>() {
+            @Override
+            public void onFailure(Throwable ex) {
+                // 2.1.Future发生异常时的处理逻辑，基本不会触发
+                log.error("send message fail", ex);
+            }
+            @Override
+            public void onSuccess(CorrelationData.Confirm result) {
+                // 2.2.Future接收到回执的处理逻辑，参数中的result就是回执内容
+                if(result.isAck()){
+                    // result.isAck()，boolean类型，true代表ack回执，false 代表 nack回执
+                    log.debug("发送消息成功，收到 ack!");
+                }else{
+                    // result.getReason()，String类型，返回nack时的异常描述
+                    log.error("发送消息失败，收到 nack, reason : {}", result.getReason());
+                }
+            }
+        });
+        // 3.发送消息
+        rabbitTemplate.convertAndSend("itcast.direct", "red", "hello", cd);
     }
 }
