@@ -2,18 +2,19 @@ package com.example.poidemo.controller;
 
 import com.example.poidemo.common.CommonResult;
 import com.example.poidemo.entity.User;
+import com.example.poidemo.entity.UserVO;
 import com.example.poidemo.service.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.poi.util.Removal;
 import org.apache.poi.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StreamUtils;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
 /**
  * @Description
@@ -24,7 +25,7 @@ import javax.servlet.http.HttpServletResponse;
 @RestController
 @RequestMapping("/user")
 @Api(tags = "用户")
-public class UserController {
+public class UserController extends BaseController{
 
    @Autowired
    private UserService userService;
@@ -53,5 +54,11 @@ public class UserController {
          return CommonResult.success();
       }
       return CommonResult.fail();
+   }
+
+   @PostMapping("/test")
+   public CommonResult<UserVO> test(@RequestBody UserVO userVO) {
+      String userName = this.getUserName();
+      return CommonResult.success(userVO);
    }
 }

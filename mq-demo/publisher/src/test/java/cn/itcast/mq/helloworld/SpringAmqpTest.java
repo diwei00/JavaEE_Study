@@ -4,6 +4,10 @@ package cn.itcast.mq.helloworld;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.amqp.AmqpException;
+import org.springframework.amqp.core.Message;
+import org.springframework.amqp.core.MessageBuilder;
+import org.springframework.amqp.core.MessagePostProcessor;
 import org.springframework.amqp.rabbit.connection.CorrelationData;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +15,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.util.concurrent.ListenableFutureCallback;
 
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -137,5 +142,19 @@ public class SpringAmqpTest {
         });
         // 3.发送消息
         rabbitTemplate.convertAndSend("itcast.direct", "red", "hello", cd);
+    }
+
+    @Test
+    public void testSendTTLMessage() {
+
+        rabbitTemplate.convertAndSend("test.direct", "hi", "hi wh", new MessagePostProcessor() {
+            @Override
+            public Message postProcessMessage(Message message) throws AmqpException {
+                message.getMessageProperties().setExpiration("10000");
+                return message;
+            }
+        });
+        log.info("发送延时消息");
+
     }
 }

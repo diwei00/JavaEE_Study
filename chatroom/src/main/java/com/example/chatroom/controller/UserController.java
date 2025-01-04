@@ -42,7 +42,7 @@ public class UserController {
     private CheckCodeTools codeTools;
 
     // 用于加盐加密，由于关闭了框架的加载，这里需要new对象
-    BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+    private static final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     @Autowired
     private StringRedisTemplate redisTemplate;

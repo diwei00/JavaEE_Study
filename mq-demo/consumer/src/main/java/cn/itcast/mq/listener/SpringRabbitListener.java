@@ -44,14 +44,14 @@ public class SpringRabbitListener {
      * @param msg
      * @throws InterruptedException
      */
-    @RabbitListener(queues = "simple.queue")
+//    @RabbitListener(queues = "simple.queue")
     public void listenSimpleQueueMessage1(String msg) throws InterruptedException {
 
         System.out.println("消费到消息(1)："  + msg + " "+ LocalDateTime.now());
         Thread.sleep(20);
 
     }
-    @RabbitListener(queues = "simple.queue")
+//    @RabbitListener(queues = "simple.queue")
     public void listenSimpleQueueMessage2(String msg) throws InterruptedException {
 
         System.out.println("消费到消息(2)："  + msg + "__________________" + LocalDateTime.now());
@@ -147,4 +147,12 @@ public class SpringRabbitListener {
     public void listenTopicQueue2(String msg) {
         System.out.println("接收到消息(2)：" + msg);
     }
+
+    @RabbitListener(queues = "dead.queue")
+    public void listenDeadQueue(String msg) {
+
+        log.info("死信队列接收到消息：" + msg);
+    }
+
+
 }

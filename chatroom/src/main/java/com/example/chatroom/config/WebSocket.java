@@ -182,6 +182,7 @@ public class WebSocket extends TextWebSocketHandler {
 
         // 查找数据库，得到当前会话中的所有用户
         // 需要给自己也转发一份，因此这里也需要查询到自己
+        // todo: 考虑缓存业务会话，减少数据库查询次数
         List<Friend> friends = messageSessionService.getFriendsBySessionId(messageRequest.getSessionId(), -1);
 
         // 向每个用户转发消息
@@ -193,6 +194,7 @@ public class WebSocket extends TextWebSocketHandler {
             }
             webSocketSession.sendMessage(new TextMessage(messageRespJson));
         }
+        // todo: 优化为多线程
         // 存储消息到数据库，用户登录可以看见历史消息
         Message message = new Message();
         message.setFromId(fromUser.getUserId());
