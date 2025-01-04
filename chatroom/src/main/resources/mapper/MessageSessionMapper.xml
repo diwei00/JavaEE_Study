@@ -15,6 +15,20 @@
         (select userId from message_session_user where sessionId = #{sessionId} and userId != #{selfUserId})
 
     </select>
+    <select id="selectAllSessionId" resultType="java.lang.Integer">
+        select sessionId from message_session
+    </select>
+    <select id="selectMaxId" resultType="java.lang.Integer">
+        select max(sessionId) from message_session_user
+    </select>
+    <select id="selectRangeById" resultType="com.example.chatroom.entity.MessageSessionUser">
+        select sessionId as sessionId, userId as userId  from message_session_user
+        where sessionId between #{startId} and #{endId}
+    </select>
+    <select id="selectUsersBySessionId" resultType="java.lang.Integer">
+        select userId from message_session_user
+        where sessionId = #{sessionId}
+    </select>
 
     <insert id="addMessageSession" useGeneratedKeys="true" keyProperty="sessionId">
         insert into message_session values (null, now());

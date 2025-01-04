@@ -3,6 +3,7 @@ package com.example.chatroom.service;
 import com.example.chatroom.entity.Friend;
 import com.example.chatroom.entity.MessageSession;
 
+import com.example.chatroom.entity.MessageSessionUser;
 import com.example.chatroom.entity.dto.MessageSessionDTO;
 import com.example.chatroom.mapper.MessageSessionMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,5 +39,20 @@ public class MessageSessionService {
     }
 
 
+    public List<Integer> selectAllSessionId() {
+        return messageSessionMapper.selectAllSessionId();
+    }
 
+    public Integer selectMaxId() {
+        return messageSessionMapper.selectMaxId();
+    }
+
+
+    public List<MessageSessionUser> selectRangeById(int startId, int endId) {
+        return messageSessionMapper.selectRangeById(startId, endId);
+    }
+
+    public List<Integer> selectUsersBySessionId(Integer sessionId) {
+        return messageSessionMapper.selectUsersBySessionId(sessionId);
+    }
 }

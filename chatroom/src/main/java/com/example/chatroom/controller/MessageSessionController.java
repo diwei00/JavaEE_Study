@@ -8,6 +8,8 @@ import com.example.chatroom.entity.User;
 import com.example.chatroom.entity.dto.MessageSessionDTO;
 import com.example.chatroom.service.MessageService;
 import com.example.chatroom.service.MessageSessionService;
+import com.example.chatroom.util.RedisUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,6 +26,7 @@ import java.util.List;
  * 1）得到会话
  * 2）创建会话
  */
+@Slf4j
 @RestController
 @RequestMapping("/session")
 public class MessageSessionController {
@@ -33,6 +36,9 @@ public class MessageSessionController {
 
     @Autowired
     private MessageService messageService;
+
+    @Autowired
+    private RedisUtil redisUtil;
 
 
     /**
@@ -86,17 +92,22 @@ public class MessageSessionController {
         // 用于存储SessionId
         MessageSession messageSession = new MessageSession();
         messageSessionService.addMessageSession(messageSession);
+        int sessionId = messageSession.getSessionId();
 
         // 存储会话中的用户
         MessageSessionDTO item1 = new MessageSessionDTO();
-        item1.setSessionId(messageSession.getSessionId());
+        item1.setSessionId(sessionId);
         item1.setUserId(user.getUserId());
         messageSessionService.addMessageSessionUser(item1);
 
         MessageSessionDTO item2 = new MessageSessionDTO();
-        item2.setSessionId(messageSession.getSessionId());
+        item2.setSessionId(sessionId);
         item2.setUserId(toUserId);
         messageSessionService.addMessageSessionUser(item2);
+
+        // 缓存业务会话（key:sessionId, value: userId）
+        redisUtil.rightPushAll(sessionId, user.getUserId(), toUserId);
+        log.info("[添加会话] 缓存业务会话 sessionId:{}, userIds:{},{}", sessionId, user.getUserId(), toUserId);
 
         result.put("sessionId", messageSession.getSessionId());
         return UnifyResult.success(result);

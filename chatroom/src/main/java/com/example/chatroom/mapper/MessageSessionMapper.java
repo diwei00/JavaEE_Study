@@ -2,6 +2,7 @@ package com.example.chatroom.mapper;
 
 import com.example.chatroom.entity.Friend;
 import com.example.chatroom.entity.MessageSession;
+import com.example.chatroom.entity.MessageSessionUser;
 import com.example.chatroom.entity.dto.MessageSessionDTO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -21,4 +22,12 @@ public interface MessageSessionMapper {
 
     // 根据SessionId插入当前会话所设计的userId
     void addMessageSessionUser(MessageSessionDTO messageSessionItem);
+
+    List<Integer> selectAllSessionId();
+
+    Integer selectMaxId();
+
+    List<MessageSessionUser> selectRangeById(@Param("startId") int startId, @Param("endId") int endId);
+
+    List<Integer> selectUsersBySessionId(@Param("sessionId") Integer sessionId);
 }

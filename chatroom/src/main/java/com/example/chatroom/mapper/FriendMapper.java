@@ -1,6 +1,7 @@
 package com.example.chatroom.mapper;
 
 import com.example.chatroom.entity.Friend;
+import com.example.chatroom.entity.User;
 import com.example.chatroom.entity.dto.AddFriendRequestDTO;
 import com.example.chatroom.entity.vo.AddFriendResponseVO;
 import org.apache.ibatis.annotations.Mapper;
@@ -24,4 +25,6 @@ public interface FriendMapper {
     int deleteAddFriend(@Param("fromId") Integer fromId, @Param("userId") Integer userId);
 
     int addFriend(@Param("friendId") Integer fromId, @Param("userId") Integer userId);
+
+    User selectFriendByUserId(int userId);
 }

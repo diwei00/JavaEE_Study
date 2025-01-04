@@ -7,4 +7,5 @@ public class AgreeAddFriendResponseVO {
     private String type;
     private String friendName;
     private int friendId;
+    private String img;
 }

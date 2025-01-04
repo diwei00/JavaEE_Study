@@ -14,18 +14,25 @@ import com.example.chatroom.entity.vo.MessageResponseVO;
 import com.example.chatroom.service.FriendService;
 import com.example.chatroom.service.MessageService;
 import com.example.chatroom.service.MessageSessionService;
+import com.example.chatroom.util.RedisUtil;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 /**
  * 配置 WebSocket
@@ -49,6 +56,23 @@ public class WebSocket extends TextWebSocketHandler {
 
     @Autowired
     private FriendService friendService;
+
+    @Autowired
+    private RedisUtil redisUtil;
+
+    // 创建线程池实例
+    private final ThreadPoolExecutor executorServiceToDB;
+
+    public WebSocket() {
+        // 初始化线程池
+        executorServiceToDB = new ThreadPoolExecutor(
+                5, // 核心线程数
+                10, // 最大线程数
+                60L, // 线程空闲时间
+                TimeUnit.SECONDS, // 时间单位
+                new ArrayBlockingQueue<>(100) // 任务队列
+        );
+    }
 
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
@@ -98,8 +122,8 @@ public class WebSocket extends TextWebSocketHandler {
 
     /**
      * 同意好友消息转发
-     * @param user
-     * @param agreeAddFriendRequest
+     * @param user 处理用户
+     * @param agreeAddFriendRequest 被处理用户
      */
     private void transferMessageFriend(User user, AgreeAddFriendRequestDTO agreeAddFriendRequest) throws IOException {
         // 1. 删除好友申请数据库关于这个申请记录
@@ -107,12 +131,12 @@ public class WebSocket extends TextWebSocketHandler {
         // 2. 转发给双方各自好友信息（用户在线）
         // 向当前处理好友请求用户通知
         // 构造响应对象
-        String agreeUserName = friendService.selectFriendNameByUserId(agreeAddFriendRequest.getUserId());
+        User agreeUser = friendService.selectFriendByUserId(agreeAddFriendRequest.getUserId());
         AgreeAddFriendResponseVO agreeAddFriendResponse = new AgreeAddFriendResponseVO();
         agreeAddFriendResponse.setType("friend");
         agreeAddFriendResponse.setFriendId(agreeAddFriendRequest.getUserId());
-        agreeAddFriendResponse.setFriendName(agreeUserName);
-
+        agreeAddFriendResponse.setFriendName(agreeUser.getUsername());
+        agreeAddFriendResponse.setImg(agreeUser.getImg());
         String resp1 = objectMapper.writeValueAsString(agreeAddFriendResponse);
         WebSocketSession webSocketSession1 = onlineUserManager.getSession(user.getUserId());
         webSocketSession1.sendMessage(new TextMessage(resp1));
@@ -123,6 +147,7 @@ public class WebSocket extends TextWebSocketHandler {
         agreeAddFriendResponse2.setType("friend");
         agreeAddFriendResponse2.setFriendName(user.getUsername());
         agreeAddFriendResponse2.setFriendId(user.getUserId());
+        agreeAddFriendResponse2.setImg(user.getImg());
         String resp2 = objectMapper.writeValueAsString(agreeAddFriendResponse2);
         WebSocketSession webSocketSession2 = onlineUserManager.getSession(agreeAddFriendRequest.getUserId());
         webSocketSession2.sendMessage(new TextMessage(resp2));
@@ -144,10 +169,7 @@ public class WebSocket extends TextWebSocketHandler {
         String username = friendService.selectFriendNameByUserId(user.getUserId());
         addFriendResponse.setUsername(username);
         addFriendResponse.setUserId(user.getUserId());
-        // todo: bug img可能拿不到
         addFriendResponse.setImg(user.getImg());
-        System.err.println(user.getImg());
-
 
         String resp = objectMapper.writeValueAsString(addFriendResponse);
         // 2. 转发消息（用户在线就直接接收消息），（不在线，存储数据库，用户登录就会加载数据库，获得好友申请信息）
@@ -182,25 +204,44 @@ public class WebSocket extends TextWebSocketHandler {
 
         // 查找数据库，得到当前会话中的所有用户
         // 需要给自己也转发一份，因此这里也需要查询到自己
-        // todo: 考虑缓存业务会话，减少数据库查询次数
-        List<Friend> friends = messageSessionService.getFriendsBySessionId(messageRequest.getSessionId(), -1);
+        // 首先查缓存，如果缓存为空则查数据库,并将数据写入缓存中
+        List<Integer> friendIds = redisUtil.range(messageRequest.getSessionId(), 0, redisUtil.size(messageRequest.getSessionId()));
+        log.info("[消息转发] 查询到缓存会话sessionId:{}, userIds:{}" , messageRequest.getSessionId(), friendIds.toString());
+        if(CollectionUtils.isEmpty(friendIds)) {
+            List<Friend> friends = messageSessionService.getFriendsBySessionId(messageRequest.getSessionId(), -1);
+            if(!CollectionUtils.isEmpty(friends)) {
+                friendIds = friends.stream().map(Friend::getFriendId).collect(Collectors.toList());
+                log.info("[消息转发] 查询到数据库会话 sessionId:{}, userIds:{}" , messageRequest.getSessionId(), friendIds.toString());
+            }
+            // 缓存数据不存在，则将数据存储到缓存中
+            Integer[] friendIdArr = new Integer[friendIds.size()];
+            friendIds.toArray(friendIdArr);
+            log.info("[消息转发] 缓存数据不存在，将数据存储到缓存中 sessionId:{}, userIds:{}", messageRequest.getSessionId(), friendIds.toString());
+            redisUtil.rightPushAll(messageRequest.getSessionId(), friendIdArr);
+        }
+        if(CollectionUtils.isEmpty(friendIds)) {
+            log.info("[消息转发] 获取好友列表为空, sessionId{}", messageRequest.getSessionId());
+            throw new RuntimeException("获取好友列表为空，sessionId: " + messageRequest.getSessionId());
+        }
 
         // 向每个用户转发消息
-        for(Friend friend : friends) {
-            WebSocketSession webSocketSession = onlineUserManager.getSession(friend.getFriendId());
+        for(Integer userId : friendIds) {
+            WebSocketSession webSocketSession = onlineUserManager.getSession(userId);
             if(webSocketSession == null) {
                 // 如果用户未在线，则不发送，这里将消息存储了数据库，用户登录可以看见历史消息
                 continue;
             }
             webSocketSession.sendMessage(new TextMessage(messageRespJson));
         }
-        // todo: 优化为多线程
         // 存储消息到数据库，用户登录可以看见历史消息
-        Message message = new Message();
-        message.setFromId(fromUser.getUserId());
-        message.setSessionId(messageRequest.getSessionId());
-        message.setContent(messageRequest.getContent());
-        messageService.addMessage(message);
+        // 多线程存储消息到数据库
+        executorServiceToDB.submit(() -> {
+            Message message = new Message();
+            message.setFromId(fromUser.getUserId());
+            message.setSessionId(messageRequest.getSessionId());
+            message.setContent(messageRequest.getContent());
+            messageService.addMessage(message);
+        });
     }
 
     @Override

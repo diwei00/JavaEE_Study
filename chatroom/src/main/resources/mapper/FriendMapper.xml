@@ -30,6 +30,9 @@
         order by postTime desc
 
     </select>
+    <select id="selectFriendByUserId" resultType="com.example.chatroom.entity.User">
+        select username, img from user where userId = #{userId}
+    </select>
 
     <delete id="deleteAddFriend">
         delete from add_friend where fromId=#{fromId} and userId=#{userId}

@@ -86,7 +86,6 @@ function getFriendList() {
                 // 得到好友列表
                 // 首先清空好友列表
                 friendList.innerHTML = "";
-                debugger
                 for(let friend of res.data) {
                     // 保存friendId到li标签上
                     let li = document.createElement("li");
@@ -215,7 +214,6 @@ function getHistoryMessage(sessionId) {
     let titleDiv = document.querySelector(".right .title");
     titleDiv.innerHTML = "";
     let messageShowDiv = document.querySelector(".right .message-show");
-    debugger
     messageShowDiv.innerHTML = "";
 
     // 设置当前点击会话右侧好友名
@@ -292,7 +290,16 @@ function clickFriend(friend) {
         // 不存在点击好友会话
         // 创建li标签
         sessionLi = document.createElement("li");
-        sessionLi.innerHTML = '<h3>'+ friend.friendName +'</h3>' + '<p></p>';
+        let img = document.createElement("img");
+        let span = document.createElement("span");
+        let h3 = document.createElement("h3");
+        let p = document.createElement("p");
+        h3.innerHTML = friend.friendName;
+        img.src = "/userImg/" + friend.img;
+        sessionLi.appendChild(img);
+        span.appendChild(h3);
+        span.appendChild(p);
+        sessionLi.appendChild(span);
         sessionListUL.appendChild(sessionLi);
         // 置顶当前li标签
         sessionListUL.insertBefore(sessionLi, sessionListUL.children[0]);
@@ -745,8 +752,13 @@ function handleAgreeFriend(resp) {
     // 构造好友列表
     let friendList = document.querySelector(".main .left #friend-list");
     let li = document.createElement("li");
+    let img = document.createElement("img");
+    let h4 = document.createElement("h4");
     li.setAttribute("friend-id", resp.friendId);
-    li.innerHTML = '<h4>' + resp.friendName + '</h4>';
+    img.src = '/userImg/' + resp.img;
+    h4.innerHTML = resp.friendName;
+    li.appendChild(img);
+    li.appendChild(h4);
     friendList.appendChild(li);
 
     // 为每个li标签添加点击属性

@@ -27,6 +27,10 @@ public class FriendService {
         return friendMapper.selectFriendNameByUserId(userId);
     }
 
+    public User selectFriendByUserId(int userId) {
+        return friendMapper.selectFriendByUserId(userId);
+    }
+
     public Integer addAddFriend(Integer fromId, Integer userId, String input) {
         return friendMapper.addAddFriend(fromId, userId, input);
     }
