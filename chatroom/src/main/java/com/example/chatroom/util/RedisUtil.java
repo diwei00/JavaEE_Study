@@ -2,10 +2,7 @@ package com.example.chatroom.util;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.connection.DataType;
-import org.springframework.data.redis.core.HashOperations;
-import org.springframework.data.redis.core.ListOperations;
-import org.springframework.data.redis.core.RedisCallback;
-import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.*;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -18,6 +15,10 @@ public class RedisUtil {
 
     @Autowired
     private RedisTemplate redisTemplate;
+
+    // 考虑优化，统一使用StringRedisTemplate
+    @Autowired
+    private StringRedisTemplate stringRedisTemplate;
 
     private HashOperations hashOperations;
     private ListOperations listOperations;
@@ -35,7 +36,7 @@ public class RedisUtil {
      * @param key 键
      * @param value 值
      */
-    public void setString(String key, Object value) {
+    public void setString(String key, String value) {
         redisTemplate.opsForValue().set(key, value);
     }
 
