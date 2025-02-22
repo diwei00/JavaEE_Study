@@ -2,7 +2,7 @@ package com.example.chatroom.controller;
 
 import com.example.chatroom.common.UnifyResult;
 import com.example.chatroom.entity.Message;
-import com.example.chatroom.service.MessageService;
+import com.example.chatroom.service.IMessageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,7 +16,7 @@ import java.util.List;
 public class MessageController {
 
     @Autowired
-    private MessageService messageService;
+    private IMessageService messageService;
 
     /**
      * 获取历史消息

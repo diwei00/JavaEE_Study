@@ -6,12 +6,11 @@ import com.example.chatroom.entity.Friend;
 import com.example.chatroom.entity.MessageSession;
 import com.example.chatroom.entity.User;
 import com.example.chatroom.entity.dto.MessageSessionDTO;
-import com.example.chatroom.service.MessageService;
-import com.example.chatroom.service.MessageSessionService;
+import com.example.chatroom.service.IMessageService;
+import com.example.chatroom.service.IMessageSessionService;
 import com.example.chatroom.util.RedisUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,10 +31,10 @@ import java.util.List;
 public class MessageSessionController {
 
     @Autowired
-    private MessageSessionService messageSessionService;
+    private IMessageSessionService messageSessionService;
 
     @Autowired
-    private MessageService messageService;
+    private IMessageService messageService;
 
     @Autowired
     private RedisUtil redisUtil;

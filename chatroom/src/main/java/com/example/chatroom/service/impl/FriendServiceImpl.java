@@ -1,17 +1,17 @@
-package com.example.chatroom.service;
+package com.example.chatroom.service.impl;
 
 import com.example.chatroom.entity.Friend;
 import com.example.chatroom.entity.User;
-import com.example.chatroom.entity.dto.AddFriendRequestDTO;
 import com.example.chatroom.entity.vo.AddFriendResponseVO;
 import com.example.chatroom.mapper.FriendMapper;
+import com.example.chatroom.service.IFriendService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-public class FriendService {
+public class FriendServiceImpl implements IFriendService {
     @Autowired
     private FriendMapper friendMapper;
 

@@ -1,4 +1,4 @@
-package com.example.chatroom.service;
+package com.example.chatroom.service.impl;
 
 import com.example.chatroom.entity.Friend;
 import com.example.chatroom.entity.MessageSession;
@@ -6,14 +6,14 @@ import com.example.chatroom.entity.MessageSession;
 import com.example.chatroom.entity.MessageSessionUser;
 import com.example.chatroom.entity.dto.MessageSessionDTO;
 import com.example.chatroom.mapper.MessageSessionMapper;
+import com.example.chatroom.service.IMessageSessionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
-public class MessageSessionService {
+public class MessageSessionServiceImpl implements IMessageSessionService {
 
     @Autowired
     private MessageSessionMapper messageSessionMapper;

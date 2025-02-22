@@ -1,17 +1,15 @@
-package com.example.chatroom.service;
+package com.example.chatroom.service.impl;
 
 import com.example.chatroom.entity.User;
 import com.example.chatroom.mapper.UserMapper;
+import com.example.chatroom.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.util.zip.DataFormatException;
 
 @Service
 
-public class UserService {
+public class UserServiceImpl implements IUserService {
     @Autowired
     UserMapper userMapper;
 

@@ -4,7 +4,7 @@ import com.example.chatroom.common.ApplicationVariable;
 import com.example.chatroom.common.CheckCodeTools;
 import com.example.chatroom.common.UnifyResult;
 import com.example.chatroom.entity.User;
-import com.example.chatroom.service.UserService;
+import com.example.chatroom.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DuplicateKeyException;
@@ -12,7 +12,6 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -25,13 +24,12 @@ import java.nio.file.Paths;
 import java.time.Duration;
 import java.util.Random;
 import java.util.UUID;
-import java.util.zip.DataFormatException;
 
 @RestController
 @RequestMapping("/user")
 public class UserController {
     @Autowired
-    private UserService userService;
+    private IUserService userService;
 
     // 邮件发送
     @Autowired

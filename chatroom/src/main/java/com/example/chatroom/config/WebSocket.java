@@ -11,11 +11,10 @@ import com.example.chatroom.entity.dto.MessageRequestDTO;
 import com.example.chatroom.entity.vo.AddFriendResponseVO;
 import com.example.chatroom.entity.vo.AgreeAddFriendResponseVO;
 import com.example.chatroom.entity.vo.MessageResponseVO;
-import com.example.chatroom.service.FriendService;
-import com.example.chatroom.service.MessageService;
-import com.example.chatroom.service.MessageSessionService;
+import com.example.chatroom.service.IFriendService;
+import com.example.chatroom.service.IMessageService;
+import com.example.chatroom.service.IMessageSessionService;
 import com.example.chatroom.util.RedisUtil;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +26,6 @@ import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -49,13 +47,13 @@ public class WebSocket extends TextWebSocketHandler {
     private ObjectMapper objectMapper = new ObjectMapper();
 
     @Autowired
-    private MessageSessionService messageSessionService;
+    private IMessageSessionService messageSessionService;
 
     @Autowired
-    private MessageService messageService;
+    private IMessageService messageService;
 
     @Autowired
-    private FriendService friendService;
+    private IFriendService friendService;
 
     @Autowired
     private RedisUtil redisUtil;

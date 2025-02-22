@@ -1,6 +1,7 @@
-package com.example.chatroom.common;
+package com.example.chatroom.common.exception;
 
 
+import com.example.chatroom.common.UnifyResult;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 

@@ -5,9 +5,8 @@ import com.example.chatroom.common.UnifyResult;
 import com.example.chatroom.entity.Friend;
 import com.example.chatroom.entity.User;
 import com.example.chatroom.entity.vo.AddFriendResponseVO;
-import com.example.chatroom.service.FriendService;
+import com.example.chatroom.service.IFriendService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,7 +19,7 @@ import java.util.List;
 public class FriendController {
 
     @Autowired
-    private FriendService friendService;
+    private IFriendService friendService;
 
     /**
      * 获得好友列表

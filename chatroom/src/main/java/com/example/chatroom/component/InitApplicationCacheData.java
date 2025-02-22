@@ -1,11 +1,7 @@
 package com.example.chatroom.component;
 
-import com.example.chatroom.entity.Friend;
-import com.example.chatroom.entity.MessageSession;
-import com.example.chatroom.entity.MessageSessionUser;
-import com.example.chatroom.service.MessageSessionService;
+import com.example.chatroom.service.IMessageSessionService;
 import com.example.chatroom.util.RedisUtil;
-import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -25,7 +21,7 @@ import java.util.List;
 public class InitApplicationCacheData {
 
     @Autowired
-    private MessageSessionService messageSessionService;
+    private IMessageSessionService messageSessionService;
 
     @Autowired
     private RedisUtil redisUtil;
