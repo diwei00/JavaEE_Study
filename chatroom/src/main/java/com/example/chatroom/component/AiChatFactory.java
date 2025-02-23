@@ -1,6 +1,6 @@
 package com.example.chatroom.component;
 
-import com.example.chatroom.service.chatAi.RequestHandlingStrategy;
+import com.example.chatroom.service.aiChat.RequestHandlingStrategy;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -19,8 +19,8 @@ public class AiChatFactory implements ApplicationContextAware {
 
     private static final Map<Integer, RequestHandlingStrategy> AI_CHAT_FACTORY_MAP = new ConcurrentHashMap<>();
 
-    public static RequestHandlingStrategy getBean(Integer aiChatType) {
-        return AI_CHAT_FACTORY_MAP.get(aiChatType);
+    public static RequestHandlingStrategy getBean(Integer aiChatCode) {
+        return AI_CHAT_FACTORY_MAP.get(aiChatCode);
     }
 
 

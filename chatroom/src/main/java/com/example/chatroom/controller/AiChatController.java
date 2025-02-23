@@ -1,7 +1,7 @@
 package com.example.chatroom.controller;
 
 import com.example.chatroom.component.AiChatFactory;
-import com.example.chatroom.service.chatAi.RequestHandlingStrategy;
+import com.example.chatroom.service.aiChat.RequestHandlingStrategy;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -21,6 +21,6 @@ public class AiChatController {
     @PostMapping("/getAiChatAnswer/{aiChatType}")
     public String getAiChatAnswer(@RequestBody String question, @RequestParam Integer aiChatType) {
         RequestHandlingStrategy aiChatBean = AiChatFactory.getBean(aiChatType);
-        return aiChatBean.handleRequest(question);
+        return aiChatBean.handleRequest(question, 0);
     }
 }

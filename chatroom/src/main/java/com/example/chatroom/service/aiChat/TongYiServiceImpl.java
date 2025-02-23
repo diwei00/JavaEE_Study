@@ -1,4 +1,4 @@
-package com.example.chatroom.service.chatAi;
+package com.example.chatroom.service.aiChat;
 
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.dashscope.aigc.generation.Generation;
@@ -7,8 +7,6 @@ import com.alibaba.dashscope.aigc.generation.GenerationResult;
 import com.alibaba.dashscope.aigc.generation.models.QwenParam;
 import com.alibaba.dashscope.common.Message;
 import com.alibaba.dashscope.common.Role;
-import com.alibaba.dashscope.exception.ApiException;
-import com.alibaba.dashscope.exception.InputRequiredException;
 import com.alibaba.dashscope.exception.NoApiKeyException;
 import com.alibaba.dashscope.utils.Constants;
 import com.example.chatroom.common.exception.ServiceException;
@@ -18,10 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
-import org.springframework.util.StringUtils;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -39,8 +34,17 @@ public class TongYiServiceImpl implements RequestHandlingStrategy{
     @Value("${tongYi.api.key}")
     private String API_KEY;
 
+    /**
+     * 最大重试次数
+     */
+    private static final int MAX_RETRIES = 3;
+
     @Override
-    public String handleRequest(String question) {
+    public String handleRequest(String question, Integer retryCount) {
+        if (retryCount >= MAX_RETRIES) {
+            log.info("请求TongYi失败！已达最大重试次数，retryCount:{}", retryCount);
+            throw new ServiceException(ResponseEnum.ERROR.getMsg());
+        }
         try {
             Constants.apiKey = API_KEY;
             Generation gen = new Generation();
@@ -66,8 +70,8 @@ public class TongYiServiceImpl implements RequestHandlingStrategy{
             GenerationResult result = gen.call(param);
             List<GenerationOutput.Choice> choices = result.getOutput().getChoices();
             if(CollectionUtils.isEmpty(choices)) {
-                log.info("请求TongYi失败！选择项为空");
-                throw new ServiceException(ResponseEnum.ERROR.getMsg());
+                log.info("请求TongYi失败！选择项为空，进行重试... 当前重试次数:{}", retryCount + 1);
+                retryRequest(question, retryCount + 1);
             }
             GenerationOutput.Choice choice = choices.get(0);
             if (Objects.isNull(choice.getMessage()) || StrUtil.isBlank(choice.getMessage().getContent())) {
@@ -82,6 +86,10 @@ public class TongYiServiceImpl implements RequestHandlingStrategy{
             log.info("请求TongYi失败！", e);
             throw new ServiceException(ResponseEnum.ERROR.getMsg());
         }
+    }
+
+    private void retryRequest(String question, Integer retryCount) {
+        handleRequest(question, retryCount);
     }
 
 

@@ -1,7 +1,5 @@
-package com.example.chatroom.service.chatAi;
+package com.example.chatroom.service.aiChat;
 
-import com.alibaba.dashscope.exception.InputRequiredException;
-import com.alibaba.dashscope.exception.NoApiKeyException;
 import com.example.chatroom.entity.enums.AiChatType;
 
 /**
@@ -17,7 +15,7 @@ public interface RequestHandlingStrategy {
     * @param question 问题
     * @return 处理后的结果
     */
-   String handleRequest(String question);
+   String handleRequest(String question, Integer retryCount);
 
 
    /**

@@ -1,4 +1,4 @@
-package com.example.chatroom.service.chatAi;
+package com.example.chatroom.service.aiChat;
 
 import com.alibaba.fastjson.JSON;
 import com.example.chatroom.common.exception.ServiceException;
@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import java.util.Collections;
+import java.util.concurrent.TimeUnit;
 
 @Slf4j
 @Service
@@ -24,12 +25,25 @@ public class DeepSeekServiceImpl implements RequestHandlingStrategy {
     @Value("${deepseek.api.url}")
     private String apiUrl;
 
+    /**
+     * 最大重试次数
+     */
+    private static final int MAX_RETRIES = 3;
 
-    private final OkHttpClient client = new OkHttpClient();
+
+    private final OkHttpClient client = new OkHttpClient.Builder()
+            .connectTimeout(3000, TimeUnit.SECONDS) // 连接超时时间
+            .readTimeout(3000, TimeUnit.SECONDS) // 读取超时时间
+            .writeTimeout(3000, TimeUnit.SECONDS) // 写入超时时间
+            .build();
 
 
     @Override
-    public String handleRequest(String question){
+    public String handleRequest(String question, Integer retryCount){
+        if (retryCount >= MAX_RETRIES) {
+            log.info("请求DeepSeek失败！已达到最大重试次数，retryCount:{}", retryCount);
+            throw new ServiceException(ResponseEnum.ERROR.getMsg());
+        }
         // 构建请求体
         DeepSeekRequest.Message message = DeepSeekRequest.Message.builder()
                 .role("user")
@@ -50,8 +64,12 @@ public class DeepSeekServiceImpl implements RequestHandlingStrategy {
 
         // 发送请求并处理响应
         try (Response response = client.newCall(request).execute()) {
-            if (!response.isSuccessful() || response.body() == null) {
-                log.info("请求DeepSeek失败！ response:{}", JSON.toJSONString(response));
+            if (!response.isSuccessful() && response.code() >= 500 && response.code() < 600) {
+                log.info("请求DeepSeek失败！进行重试... 当前重试次数:{}", retryCount + 1);
+                retryRequest(question, retryCount + 1);
+            }
+            if(response.body() == null) {
+                log.info("DeepSeek响应体为空！");
                 throw new ServiceException(ResponseEnum.ERROR.getMsg());
             }
             String responseBody = response.body().string();
@@ -71,6 +89,10 @@ public class DeepSeekServiceImpl implements RequestHandlingStrategy {
             log.info("请求DeepSeek失败！", e);
             throw new ServiceException(ResponseEnum.ERROR.getMsg());
         }
+    }
+
+    private void retryRequest(String question, Integer retryCount) {
+        handleRequest(question, retryCount);
     }
 
     @Override
